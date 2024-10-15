@@ -40,7 +40,7 @@ class EditAsientoPredefinido extends EditController
         $pageData = parent::getPageData();
         $pageData["menu"] = "accounting";
         $pageData["title"] = "predefined-acc-entry";
-        $pageData["icon"] = "fas fa-blender";
+        $pageData["icon"] = "fa-solid fa-blender";
         return $pageData;
     }
 
@@ -62,7 +62,7 @@ class EditAsientoPredefinido extends EditController
 
     protected function createViewsInfo(string $viewName = 'Info'): void
     {
-        $this->addHtmlView($viewName, 'AsientoPredefinidoInfo', 'AsientoPredefinido', 'help', 'fas fa-info-circle');
+        $this->addHtmlView($viewName, 'AsientoPredefinidoInfo', 'AsientoPredefinido', 'help', 'fa-solid fa-info-circle');
     }
 
     protected function createViewsLineas(string $viewName = 'EditAsientoPredefinidoLinea'): void
@@ -73,7 +73,7 @@ class EditAsientoPredefinido extends EditController
 
     protected function createViewsVariables(string $viewName = 'EditAsientoPredefinidoVariable'): void
     {
-        $this->addEditListView($viewName, 'AsientoPredefinidoVariable', 'variables', 'fas fa-tools');
+        $this->addEditListView($viewName, 'AsientoPredefinidoVariable', 'variables', 'fa-solid fa-tools');
         $this->views[$viewName]->setInLine(true);
     }
 

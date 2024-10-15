@@ -2,10 +2,10 @@
     {{ formToken() }}
     <div class="card shadow mb-5">
         <div class="card-body">
-            <div class="form-row">
+            <div class="row">
                 <div class="col-sm-2">
                     {{ trans("company") }}
-                    <select name="idempresa" class="form-control mb-3">
+                    <select name="idempresa" class="form-select mb-3">
                         {% for empresa in fsc.empresa.all({}, {'nombre': 'ASC'}) %}
                             {% if empresa.idempresa == settings('default', 'idempresa') %}
                                 <option value="{{ empresa.idempresa }}" selected>{{ empresa.nombre }}</option>
@@ -28,9 +28,7 @@
                     <div class="col-sm-3">
                         {{ variable.mensaje }}
                         <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">{{ variable.codigo }}</span>
-                            </div>
+                            <span class="input-group-text">{{ variable.codigo }}</span>
                             <input type="number" value="0" step="any" class="form-control"
                                    name="var_{{ variable.codigo }}" required>
                         </div>
@@ -38,7 +36,7 @@
                 {% endfor %}
             </div>
         </div>
-        <div class="card-footer text-right p-2">
+        <div class="card-footer text-end p-2">
             <button type="submit" class="btn btn-success" name="action" value="gen-accounting">
                 {{ trans("generate") }}
             </button>

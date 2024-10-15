@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of AsientosPredefinidos plugin for FacturaScripts
- * Copyright (C) 2022-2023 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2022-2024 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -19,20 +19,24 @@
 
 namespace FacturaScripts\Plugins\AsientosPredefinidos;
 
-use FacturaScripts\Core\Base\InitClass;
+
+use FacturaScripts\Core\Template\InitClass;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
 class Init extends InitClass
 {
-    public function init()
+    public function init(): void
     {
         // se ejecuta cada vez que carga FacturaScripts (si este plugin está activado).
         $this->loadExtension(new Extension\Controller\ListAsiento());
     }
 
-    public function update()
+    public function uninstall(): void
     {
-        // se ejecuta cada vez que se instala o actualiza el plugin.
+    }
+
+    public function update(): void
+    {
     }
 }

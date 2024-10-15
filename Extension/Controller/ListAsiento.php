@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of AsientoPredefinido plugin for FacturaScripts
- * Copyright (C) 2021 Carlos Garcia Gomez            <carlos@facturascripts.com>
+ * Copyright (C) 2021-2024 Carlos Garcia Gomez            <carlos@facturascripts.com>
  *                    Jeronimo Pedro Sánchez Manzano <socger@gmail.com>
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -37,7 +37,7 @@ class ListAsiento
     protected function createViewsAsientosPredefinidos()
     {
         return function (string $viewName = 'ListAsientoPredefinido') {
-            $this->addView($viewName, 'AsientoPredefinido', 'predefined-acc-entries', 'fas fa-blender');
+            $this->addView($viewName, 'AsientoPredefinido', 'predefined-acc-entries', 'fa-solid fa-blender');
             $this->addOrderBy($viewName, ["id"], "code");
             $this->addOrderBy($viewName, ["descripcion"], "description", 1);
             $this->addSearchFields($viewName, ["id", "concepto", "descripcion"]);
