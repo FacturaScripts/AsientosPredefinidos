@@ -55,6 +55,7 @@ final class AsientosPredefinidosTest extends TestCase
             'fecha' => Tools::date(),
             'canal' => 0,
             'var_A' => 0,
+            'var_B' => 0,
             'var_C' => 20,
             'var_L' => 30,
             'var_R' => 40,
@@ -195,7 +196,8 @@ final class AsientosPredefinidosTest extends TestCase
             'fecha' => Tools::date(),
             'canal' => 0,
             'var_A' => 0,
-            'var_B' => 123,
+            'var_B' => 0,
+            'var_I' => 123,
         ]);
 
         // Comprobamos que el asiento que ha creado correctamente
