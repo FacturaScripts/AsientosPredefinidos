@@ -32,27 +32,29 @@ class EditAsientoPredefinido extends EditController
 {
     public function getModelClassName(): string
     {
-        return "AsientoPredefinido";
+        return 'AsientoPredefinido';
     }
 
     public function getPageData(): array
     {
-        $pageData = parent::getPageData();
-        $pageData["menu"] = "accounting";
-        $pageData["title"] = "predefined-acc-entry";
-        $pageData["icon"] = "fa-solid fa-blender";
-        return $pageData;
+        $page = parent::getPageData();
+        $page['menu'] = 'accounting';
+        $page['title'] = 'predefined-acc-entry';
+        $page['icon'] = 'fa-solid fa-blender';
+        return $page;
     }
 
     protected function createViews()
     {
         parent::createViews();
+
         $this->setTabsPosition('bottom');
 
         $this->createViewsInfo();
         $this->createViewsGenerar();
         $this->createViewsLineas();
         $this->createViewsVariables();
+        $this->createViewsAsientos();
     }
 
     protected function createViewsGenerar(string $viewName = 'Generar'): void
@@ -67,14 +69,24 @@ class EditAsientoPredefinido extends EditController
 
     protected function createViewsLineas(string $viewName = 'EditAsientoPredefinidoLinea'): void
     {
-        $this->addEditListView($viewName, 'AsientoPredefinidoLinea', 'lines');
-        $this->views[$viewName]->setInLine(true);
+        $this->addEditListView($viewName, 'AsientoPredefinidoLinea', 'lines')
+            ->setInLine(true);
     }
 
     protected function createViewsVariables(string $viewName = 'EditAsientoPredefinidoVariable'): void
     {
-        $this->addEditListView($viewName, 'AsientoPredefinidoVariable', 'variables', 'fa-solid fa-tools');
-        $this->views[$viewName]->setInLine(true);
+        $this->addEditListView($viewName, 'AsientoPredefinidoVariable', 'variables', 'fa-solid fa-tools')
+            ->setInLine(true);
+    }
+
+    protected function createViewsAsientos(string $viewName = 'ListAsiento'): void
+    {
+        $this->addListView($viewName, 'Asiento', 'generated-acc-entries', 'fa-solid fa-balance-scale')
+            ->addSearchFields(['concepto', 'numero'])
+            ->addOrderBy(['fecha', 'numero'], 'date', 2)
+            ->addOrderBy(['numero'], 'number')
+            ->addOrderBy(['importe'], 'amount')
+            ->setSettings('btnNew', false);
     }
 
     protected function execAfterAction($action)
@@ -92,10 +104,10 @@ class EditAsientoPredefinido extends EditController
         $form = $this->request->request->all();
         if (false === $this->validateFormToken()) {
             return;
-        } elseif (empty($form["idempresa"])) {
+        } elseif (empty($form['idempresa'])) {
             Tools::log()->warning('required-field', ['%field%' => Tools::lang()->trans('company')]);
             return;
-        } elseif (empty($form["fecha"])) {
+        } elseif (empty($form['fecha'])) {
             Tools::log()->warning('required-field', ['%field%' => Tools::lang()->trans('date')]);
             return;
         }
@@ -105,7 +117,7 @@ class EditAsientoPredefinido extends EditController
         if ($asiento->exists()) {
             // Se ha creado el siento, así que sacamos mensaje, esperamos un segundo y saltamos a la dirección del asiento recién creado.
             Tools::log()->notice('generated-accounting-entries', ['%quantity%' => 1]);
-            $this->redirect($asiento->url() . "&action=save-ok", 1);
+            $this->redirect($asiento->url() . '&action=save-ok', 1);
             // ."&action=save-ok" es para que saque un mensaje de que registro creado ok y el parámetro 1
             // es un temporizador en redireccionar, así el usuario ve el mensaje de la línea anterior
             return;
@@ -127,6 +139,11 @@ class EditAsientoPredefinido extends EditController
             case 'EditAsientoPredefinidoVariable':
                 $where = [new DataBaseWhere('idasientopre', $id)];
                 $view->loadData('', $where, ['idasientopre' => 'ASC', 'codigo' => 'ASC']);
+                break;
+
+            case 'ListAsiento':
+                $where = [new DataBaseWhere('idasientopre', $id)];
+                $view->loadData('', $where);
                 break;
 
             default:
