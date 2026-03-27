@@ -19,7 +19,7 @@
 
 namespace FacturaScripts\Plugins\AsientosPredefinidos\Model;
 
-use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
+use FacturaScripts\Core\Where;
 use FacturaScripts\Core\Template\ModelClass;
 use FacturaScripts\Core\Template\ModelTrait;
 use FacturaScripts\Core\Tools;
@@ -57,7 +57,7 @@ class AsientoPredefinido extends ModelClass
     public function getLines(): array
     {
         $line = new AsientoPredefinidoLinea();
-        $where = [new DataBaseWhere("idasientopre", $this->id)];
+        $where = [Where::eq("idasientopre", $this->id)];
         return $line->all($where);
     }
 
@@ -69,7 +69,7 @@ class AsientoPredefinido extends ModelClass
     public function getVariables(): array
     {
         $variable = new AsientoPredefinidoVariable();
-        $where = [new DataBaseWhere("idasientopre", $this->id)];
+        $where = [Where::eq("idasientopre", $this->id)];
         return $variable->all($where);
     }
 
@@ -96,3 +96,5 @@ class AsientoPredefinido extends ModelClass
         return parent::url($type, $list);
     }
 }
+
+
