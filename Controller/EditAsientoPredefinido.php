@@ -132,17 +132,17 @@ class EditAsientoPredefinido extends EditController
 
         switch ($viewName) {
             case 'EditAsientoPredefinidoLinea':
-                $where = [new Where('idasientopre', $id)];
+                $where = [Where::eq('idasientopre', $id)];
                 $view->loadData('', $where, ['orden' => 'ASC', 'idasientopre' => 'ASC']);
                 break;
 
             case 'EditAsientoPredefinidoVariable':
-                $where = [new Where('idasientopre', $id)];
+                $where = [Where::eq('idasientopre', $id)];
                 $view->loadData('', $where, ['idasientopre' => 'ASC', 'codigo' => 'ASC']);
                 break;
 
             case 'ListAsiento':
-                $where = [new Where('idasientopre', $id)];
+                $where = [Where::eq('idasientopre', $id)];
                 $view->loadData('', $where);
                 break;
 
@@ -152,4 +152,5 @@ class EditAsientoPredefinido extends EditController
         }
     }
 }
+
 

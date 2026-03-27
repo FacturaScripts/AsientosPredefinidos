@@ -216,8 +216,8 @@ class AsientoPredefinidoGenerator
         $subcuenta->codejercicio = $codejercicio; // necesario para transformCodsubcuenta()
         $valorFinal = $subcuenta->transformCodsubcuenta($valor);
         $where = [
-            new Where('codejercicio', $codejercicio),
-            new Where('codsubcuenta', $valorFinal) // transforma el punto en ceros
+            Where::eq('codejercicio', $codejercicio),
+            Where::eq('codsubcuenta', $valorFinal) // transforma el punto en ceros
         ];
         if (false === $subcuenta->loadFromCode('', $where)) {
             Tools::log()->warning('subaccount-not-found', ['%subAccountCode%' => $valorFinal]);
@@ -225,4 +225,5 @@ class AsientoPredefinidoGenerator
         return $subcuenta;
     }
 }
+
 
