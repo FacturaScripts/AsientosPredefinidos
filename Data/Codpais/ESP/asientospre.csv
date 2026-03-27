@@ -3,3 +3,7 @@
 "2","Cuota de autónomo","Cuota de autónomo {NOMBREMES}"
 "3","Pago cuota de autónomo","Pago cuota autónomo {NOMBREMES}"
 "4","Pago nómina","Pago nómina {NOMBREMES}"
+"5","Pago modelo 303 - IVA","Pago IVA trimestral {PERIODO}"
+"6","Pago modelo 111 - IRPF","Pago retención IRPF {PERIODO}"
+"7","Pago modelo 115 - Otras retenciones","Pago otras retenciones {PERIODO}"
+"8","Pago modelo 130 - Estimación objetiva","Pago módulos {PERIODO}"
