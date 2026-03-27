@@ -19,7 +19,7 @@
 
 namespace FacturaScripts\Plugins\AsientosPredefinidos\Controller;
 
-use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
+use FacturaScripts\Core\Where;
 use FacturaScripts\Core\Lib\ExtendedController\EditController;
 use FacturaScripts\Core\Tools;
 
@@ -132,17 +132,17 @@ class EditAsientoPredefinido extends EditController
 
         switch ($viewName) {
             case 'EditAsientoPredefinidoLinea':
-                $where = [new DataBaseWhere('idasientopre', $id)];
+                $where = [new Where('idasientopre', $id)];
                 $view->loadData('', $where, ['orden' => 'ASC', 'idasientopre' => 'ASC']);
                 break;
 
             case 'EditAsientoPredefinidoVariable':
-                $where = [new DataBaseWhere('idasientopre', $id)];
+                $where = [new Where('idasientopre', $id)];
                 $view->loadData('', $where, ['idasientopre' => 'ASC', 'codigo' => 'ASC']);
                 break;
 
             case 'ListAsiento':
-                $where = [new DataBaseWhere('idasientopre', $id)];
+                $where = [new Where('idasientopre', $id)];
                 $view->loadData('', $where);
                 break;
 
@@ -152,3 +152,4 @@ class EditAsientoPredefinido extends EditController
         }
     }
 }
+

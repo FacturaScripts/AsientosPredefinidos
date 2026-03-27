@@ -20,7 +20,7 @@
 namespace FacturaScripts\Plugins\AsientosPredefinidos\Lib;
 
 use FacturaScripts\Core\Base\DataBase;
-use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
+use FacturaScripts\Core\Where;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Lib\CodePatterns;
 use FacturaScripts\Dinamic\Model\Asiento;
@@ -216,8 +216,8 @@ class AsientoPredefinidoGenerator
         $subcuenta->codejercicio = $codejercicio; // necesario para transformCodsubcuenta()
         $valorFinal = $subcuenta->transformCodsubcuenta($valor);
         $where = [
-            new DataBaseWhere('codejercicio', $codejercicio),
-            new DataBaseWhere('codsubcuenta', $valorFinal) // transforma el punto en ceros
+            new Where('codejercicio', $codejercicio),
+            new Where('codsubcuenta', $valorFinal) // transforma el punto en ceros
         ];
         if (false === $subcuenta->loadFromCode('', $where)) {
             Tools::log()->warning('subaccount-not-found', ['%subAccountCode%' => $valorFinal]);
@@ -225,3 +225,4 @@ class AsientoPredefinidoGenerator
         return $subcuenta;
     }
 }
+
