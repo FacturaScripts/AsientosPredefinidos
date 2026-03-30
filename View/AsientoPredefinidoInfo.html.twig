@@ -1,117 +1,99 @@
 <div class="card shadow p-3">
-    <h2 class="mb-0">Generar</h2>
+    <h2 class="mb-0">{{ trans('acc-info-1') }}</h2>
     <p>
-        Desde esta pestaña podremos crear un nuevo asiento usando los datos predefinidos. Solamente debemos elegir
-        <b>fecha</b>, <b>empresa</b>, <b>los valores para las variables</b> registradas y pulsar el <b>botón generar</b>.
+        {{ trans('acc-info-2') }}
+        <b>{{ trans('acc-info-3') }}</b>, <b>{{ trans('acc-info-4') }}</b>, <b>{{ trans('acc-info-5') }}</b> {{ trans('acc-info-6') }} <b>{{ trans('acc-info-7') }}</b>.
     </p>
-    <h2 class="mt-4 mb-0">Líneas</h2>
-    <p>La pestaña líneas nos sirve para definir las partidas del nuevo asiento. Para ello deberemos indicar:</p>
+    <h2 class="mt-4 mb-0">{{ trans('acc-info-8') }}</h2>
+    <p>{{ trans('acc-info-9') }}</p>
     <ul>
         <li>
-            <b>Subcuenta:</b> la subcuenta a utilizar, ya sea directamente o con variables. Ejemplos:
+            <b>{{ trans('acc-info-10') }}</b> {{ trans('acc-info-11') }}
             <ul>
                 <li>
-                    <span class="text-success">5700000001</span>: la subcuenta de caja del ejercicio actual.
+                    <span class="text-success">5700000001</span>: {{ trans('acc-info-12') }}
                 </li>
                 <li>
-                    <span class="text-success">570.1</span>: la misma subcuenta de caja, pero abreviamos los ceros con
-                    el punto. El punto rellena de ceros hasta completar la longitud de la subcuenta.
+                    <span class="text-success">570.1</span>: {{ trans('acc-info-13') }}
                 </li>
                 <li>
-                    <span class="text-success">570.A</span>: A es una variable que podemos registrar en la pestaña
-                    variables para luego poder darle valor al generar un nuevo asiento. En este ejemplo, si le damos
-                    valor 2, estaríamos usando la subcuenta 570.2, que se traduce por 5700000002.
+                    <span class="text-success">570.A</span>: {{ trans('acc-info-14') }}
                 </li>
                 <li>
-                    <span class="text-success">A</span>: A es una variable que podemos registrar en la pestaña variables
-                    para luego poder darle valor al generar un nuevo asiento. En este ejemplo, si le damos valor
-                    5720000001, esa sería la sucbuenta elegida para esta línea.
+                    <span class="text-success">A</span>: {{ trans('acc-info-15') }}
                 </li>
                 <li>
-                    <span class="text-danger">570..1</span>: no se permite más de un punto.
+                    <span class="text-danger">570..1</span>: {{ trans('acc-info-16') }}
                 </li>
                 <li>
-                    <span class="text-danger">570.AB</span>: no se permite más de una variable.
+                    <span class="text-danger">570.AB</span>: {{ trans('acc-info-17') }}
                 </li>
                 <li>
-                    <span class="text-danger">570.a</span>: no se permiten variables en <b>minúsculas</b>.
+                    <span class="text-danger">570.a</span>: {{ trans('acc-info-18') }} <b>{{ trans('acc-info-19') }}</b>.
                 </li>
                 <li>
-                    <span class="text-danger">Z</span>: la variable Z está reservada para las columnas debe y haber.
+                    <span class="text-danger">Z</span>: {{ trans('acc-info-20') }}
                 </li>
             </ul>
         </li>
         <li>
-            <b>Descripción</b>: una breve descripción para la línea del asiento.
+            <b>{{ trans('acc-info-21') }}</b>: {{ trans('acc-info-22') }}
         </li>
         <li>
-            <b>Debe</b> y <b>Haber</b>: los importes para esas columnas de la partida. Ejemplos:
+            <b>{{ trans('acc-info-23') }}</b> y <b>{{ trans('acc-info-24') }}</b>: {{ trans('acc-info-25') }}
             <ul>
                 <li>
-                    <span class="text-success">100</span>: 100€ para la columna.
+                    <span class="text-success">100</span>: {{ trans('acc-info-26') }}
                 </li>
                 <li>
-                    <span class="text-success">-100</span>: -100€ para la columna.
+                    <span class="text-success">-100</span>: {{ trans('acc-info-27') }}
                 </li>
                 <li>
-                    <span class="text-success">B</span>: B es una variable que podemos registrar en la pestaña variables
-                    para luego poder darle valor al generar un nuevo asiento. En este ejemplo, si le damos valor
-                    50, ese sería el importe para esa columna.
+                    <span class="text-success">B</span>: {{ trans('acc-info-28') }}
                 </li>
                 <li>
-                    <span class="text-success">-B</span>: mismo caso que el anterior, pero con el valor de B en
-                    negativo.
+                    <span class="text-success">-B</span>: {{ trans('acc-info-29') }}
                 </li>
                 <li>
-                    <span class="text-success">100 + B</span>: B es una variable que podemos registrar y con la que
-                    podemos hacer ciertas operaciones matemáticas como sumar, restar, multiplicar y dividir.
-                    En este ejemplo, si le damos valor 50, el importe para esa columna sería 150.
+                    <span class="text-success">100 + B</span>: {{ trans('acc-info-30') }}
                 </li>
                 <li>
-                    <span class="text-success">B + 100</span>: mismo caso.
+                    <span class="text-success">B + 100</span>: {{ trans('acc-info-31') }}
                 </li>
                 <li>
-                    <span class="text-success">B + C</span>: mismo caso.
+                    <span class="text-success">B + C</span>: {{ trans('acc-info-31') }}
                 </li>
                 <li>
-                    <span class="text-success">B - 100</span>: mismo caso.
+                    <span class="text-success">B - 100</span>: {{ trans('acc-info-31') }}
                 </li>
                 <li>
-                    <span class="text-success">B * 2</span>: el valor que asignemos a la variable B lo multiplicamos
-                    por 2.
+                    <span class="text-success">B * 2</span>: {{ trans('acc-info-32') }}
                 </li>
                 <li>
-                    <span class="text-success">B / 2</span>: el valor que asignemos a la variable B lo dividimos
-                    por 2.
+                    <span class="text-success">B / 2</span>: {{ trans('acc-info-33') }}
                 </li>
                 <li>
-                    <span class="text-success">Z</span>: la variable Z es una variable que no hace falta crearla.
-                    Esta variable es sustituida por <b>el descuadre</b> que tenga el asiento a la hora de crear la
-                    línea en la que se encuentre.
+                    <span class="text-success">Z</span>: {{ trans('acc-info-34') }} <b>{{ trans('acc-info-35') }}</b> {{ trans('acc-info-36') }}
                 </li>
                 <li>
-                    <span class="text-danger">a - b</span>: las variables deben ser en <b>mayúsculas</b>.
+                    <span class="text-danger">a - b</span>: {{ trans('acc-info-37') }} <b>{{ trans('acc-info-38') }}</b>.
                 </li>
                 <li>
-                    <span class="text-danger">B x 2</span>: para multiplicar se debe usar *.
+                    <span class="text-danger">B x 2</span>: {{ trans('acc-info-39') }}
                 </li>
             </ul>
         </li>
     </ul>
-    <h3 class="mt-4 mb-0">Variables</h3>
+    <h3 class="mt-4 mb-0">{{ trans('acc-info-40') }}</h3>
     <p>
-        En la pestaña variables, se deben registrar las variables que queremos utilizar y su descripción para el
-        usuario, para que sea sencillo entender qué hacen.
+        {{ trans('acc-info-41') }}
     </p>
     <ul>
         <li>
-            Por ejemplo si hemos usado la subcuenta <b>430.A</b> en la pestaña lineas, tendríamos que registrar una
-            variable con <b>código</b> A y <b>mensaje</b> "Complete la cuenta del cliente".
+            {{ trans('acc-info-42') }} <b>430.A</b> {{ trans('acc-info-43') }} <b>{{ trans('acc-info-44') }}</b> A y <b>{{ trans('acc-info-45') }}</b> {{ trans('acc-info-46') }}
         </li>
         <li>
-            <b>La variable Z</b> es una variable que no hace falta registrar. Esta variable sólo debe de ser usada en
-            las columnas Debe/Haber. Y cuando se está generando el asiento, esta variable es sustituida por el descuadre
-            que tenga el asiento a la hora de crear la línea en la que se encuentre.
+            <b>{{ trans('acc-info-47') }}</b> {{ trans('acc-info-48') }}
         </li>
     </ul>
 </div>
