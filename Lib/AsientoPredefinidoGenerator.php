@@ -32,7 +32,7 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 /**
  * @author Carlos García Gómez            <carlos@facturascripts.com>
- * @author Daniel Fernández Giménez       <hola@danielfg.es>
+ * @author Daniel Fernández Giménez       <contacto@danielfg.es>
  * @author Jeronimo Pedro Sánchez Manzano <socger@gmail.com>
  */
 class AsientoPredefinidoGenerator
