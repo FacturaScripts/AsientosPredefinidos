@@ -37,5 +37,23 @@ class Init extends InitClass
 
     public function update(): void
     {
+        // Importar/Actualizar tablas desde los CSV incluidos en el plugin
+        // Esto asegura que nuevas plantillas en Data/Codpais/ESP se sincronicen con la BBDD
+        try {
+            $tables = ['asientospre', 'asientospre_lineas', 'asientospre_variables'];
+            $database = new \FacturaScripts\Core\Base\DataBase();
+            foreach ($tables as $table) {
+                $file = __DIR__ . DIRECTORY_SEPARATOR . 'Data' . DIRECTORY_SEPARATOR . 'Codpais' . DIRECTORY_SEPARATOR . 'ESP' . DIRECTORY_SEPARATOR . $table . '.csv';
+                if (file_exists($file)) {
+                    $sql = \FacturaScripts\Core\Lib\Import\CSVImport::importFileSQL($table, $file, true);
+                    if (!empty($sql)) {
+                        $database->query($sql);
+                    }
+                }
+            }
+        } catch (\Throwable $e) {
+            // no interrumpir la actualización por un error de importación; logueamos
+            \FacturaScripts\Core\Tools::log()->warning('asientospredefinidos-import-error', ['message' => $e->getMessage()]);
+        }
     }
 }
