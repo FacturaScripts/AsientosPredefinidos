@@ -54,7 +54,8 @@ class AsientoPredefinidoGenerator
         $asiento->idasientopre = $predefinido->id;
         $asiento->idempresa = (int)$form["idempresa"];
         $asiento->setDate($form["fecha"]);
-        $asiento->concepto = CodePatterns::trans($predefinido->concepto, $asiento);
+        $concepto = empty($form["concepto"]) ? $predefinido->concepto : $form["concepto"];
+        $asiento->concepto = CodePatterns::trans($concepto, $asiento);
         $asiento->canal = $form["canal"] ?? null;
         if (false === $asiento->save()) {
             Tools::log()->warning('no-can-create-accounting-entry');

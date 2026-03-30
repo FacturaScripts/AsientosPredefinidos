@@ -48,7 +48,7 @@ final class AsientosPredefinidosTest extends TestCase
 
         // cargamos el asiento predefinido
         $asientoPredefinido = new AsientoPredefinido();
-        $this->assertTrue($asientoPredefinido->loadFromCode(1));
+        $this->assertTrue($asientoPredefinido->load(1));
 
         // generamos el asiento
         $asiento = $asientoPredefinido->generate([
@@ -109,7 +109,7 @@ final class AsientosPredefinidosTest extends TestCase
 
         // cargamos el asiento predefinido
         $asientoPredefinido = new AsientoPredefinido();
-        $this->assertTrue($asientoPredefinido->loadFromCode(2));
+        $this->assertTrue($asientoPredefinido->load(2));
 
         // generamos el asiento
         $asiento = $asientoPredefinido->generate([
@@ -218,6 +218,40 @@ final class AsientosPredefinidosTest extends TestCase
         $this->assertEquals('Pago nómina ' . $textoMes, $partidas[1]->concepto);
         $this->assertEquals(0, $partidas[1]->debe);
         $this->assertEquals(123, $partidas[1]->haber);
+
+        // borramos el asiento
+        $asiento->delete();
+    }
+
+    public function testAsientoPredefinidoConConceptoPersonalizado(): void
+    {
+        // obtenemos la empresa predefinida
+        $empresa = Empresas::default();
+
+        // cargamos el asiento predefinido de nómina
+        $asientoPredefinido = new AsientoPredefinido();
+        $this->assertTrue($asientoPredefinido->load(1));
+
+        // generamos el asiento pasando un concepto personalizado
+        $conceptoPersonalizado = 'Concepto personalizado de prueba';
+        $asiento = $asientoPredefinido->generate([
+            'idempresa' => $empresa->idempresa,
+            'fecha' => Tools::date(),
+            'canal' => 0,
+            'concepto' => $conceptoPersonalizado,
+            'var_A' => 0,
+            'var_B' => 0,
+            'var_C' => 20,
+            'var_L' => 30,
+            'var_R' => 40,
+            'var_D' => 50,
+        ]);
+
+        // comprobamos que el asiento se ha creado correctamente
+        $this->assertTrue($asiento->exists());
+
+        // comprobamos que el concepto del asiento es el personalizado y no el del predefinido
+        $this->assertEquals($conceptoPersonalizado, $asiento->concepto);
 
         // borramos el asiento
         $asiento->delete();

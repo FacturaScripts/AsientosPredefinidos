@@ -1,9 +1,11 @@
-<form action="{{ fsc.getModel().url() }}&activetab=Generar" method="post">
+{% set model = fsc.getModel() %}
+
+<form action="{{ model.url() }}&activetab=Generar" method="post">
     {{ formToken() }}
     <div class="card shadow mb-5">
         <div class="card-body">
             <div class="row g-2">
-                <div class="col-sm-2">
+                <div class="col-sm-3">
                     {{ trans("company") }}
                     <select name="idempresa" class="form-select mb-3">
                         {% for empresa in fsc.empresa.all({}, {'nombre': 'ASC'}) %}
@@ -15,14 +17,18 @@
                         {% endfor %}
                     </select>
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm-3">
                     {{ trans("date") }}
                     <input type="date" class="form-control mb-3" name="fecha" value="{{ 'now' | date('Y-m-d') }}"
                            required>
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm-3">
                     {{ trans("channel") }}
                     <input type="number" class="form-control mb-3" name="canal" value=""/>
+                </div>
+                <div class="col-sm-3">
+                    {{ trans("concept") }}
+                    <input type="text" class="form-control mb-3" name="concepto" maxlength="255" value="{{ model.concepto }}"/>
                 </div>
                 {% for variable in fsc.views.EditAsientoPredefinidoVariable.cursor %}
                     <div class="col-sm-3">
