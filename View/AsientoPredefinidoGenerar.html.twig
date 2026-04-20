@@ -49,3 +49,63 @@
         </div>
     </div>
 </form>
+
+{# ── BLOQUE DE AYUDA / EJEMPLO ─────────────────────────────────────────────── #}
+{% set ayuda = fsc.ayuda %}
+
+{% if ayuda is not null and ayuda is not empty %}
+<div class="card shadow border-0 mb-4" id="ap-ayuda-block">
+    <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between py-2">
+        <span>
+            <i class="fa-solid fa-circle-info me-2"></i>
+            <strong>{{ trans('help-example') }}</strong>
+            &mdash; {{ model.descripcion }}
+        </span>
+        <button type="button" class="btn btn-sm btn-outline-light" data-bs-toggle="collapse"
+                data-bs-target="#ap-ayuda-body" aria-expanded="true">
+            <i class="fa-solid fa-chevron-up" id="ap-ayuda-chevron"></i>
+        </button>
+    </div>
+    <div class="collapse show" id="ap-ayuda-body">
+        <div class="card-body p-3">
+
+            {% if ayuda.cuando is defined and ayuda.cuando %}
+            <div class="mb-3">
+                <p class="fw-bold mb-1">
+                    <i class="fa-solid fa-calendar-check text-primary me-1"></i>
+                    {{ trans('when-to-use') }}
+                </p>
+                <p class="text-muted mb-0" style="white-space: pre-line;">{{ ayuda.cuando }}</p>
+            </div>
+            {% endif %}
+
+            {% if ayuda.ejemplo is defined and ayuda.ejemplo %}
+            <div class="mb-3">
+                <p class="fw-bold mb-1">
+                    <i class="fa-solid fa-file-invoice-dollar text-success me-1"></i>
+                    {{ trans('real-example') }}
+                </p>
+                <div class="bg-light border rounded p-3" style="white-space: pre-line; font-size: 0.92em;">{{ ayuda.ejemplo }}</div>
+            </div>
+            {% endif %}
+
+            {% if ayuda.nota is defined and ayuda.nota %}
+            <div class="alert alert-warning mb-0 py-2 px-3 d-flex align-items-start gap-2">
+                <i class="fa-solid fa-triangle-exclamation mt-1 flex-shrink-0"></i>
+                <span style="white-space: pre-line; font-size: 0.92em;">{{ ayuda.nota }}</span>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('ap-ayuda-body').addEventListener('hide.bs.collapse', function () {
+        document.getElementById('ap-ayuda-chevron').classList.replace('fa-chevron-up', 'fa-chevron-down');
+    });
+    document.getElementById('ap-ayuda-body').addEventListener('show.bs.collapse', function () {
+        document.getElementById('ap-ayuda-chevron').classList.replace('fa-chevron-down', 'fa-chevron-up');
+    });
+</script>
+{% endif %}

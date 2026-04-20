@@ -41,7 +41,7 @@
     "acc-info-45": "mensaje",
     "acc-info-46": "\"Complete la cuenta del cliente\".",
     "acc-info-47": "La variable Z",
-    "acc-info-48": "es una variable que no hace falta registrar. Esta variable sólo debe de ser usada en las columnas Debe\/Haber. Y cuando se está generando el asiento, esta variable es sustituida por el descuadre que tenga el asiento a la hora de crear la línea en la que se encuentre.",
+    "acc-info-48": "es una variable que no hace falta registrar. Esta variable sólo debe de ser usada en las columnas Debe/Haber. Y cuando se está generando el asiento, esta variable es sustituida por el descuadre que tenga el asiento a la hora de crear la línea en la que se encuentre.",
     "acc-info-5": "los valores para las variables",
     "acc-info-6": "registradas y pulsar el",
     "acc-info-7": "botón generar",
@@ -50,5 +50,8 @@
     "generated-acc-entries": "Asientos generados",
     "predefined-acc-entries": "Assentaments predefinits",
     "predefined-acc-entry": "Assentament predefinit",
-    "required-field": "Camp %field% obligatori"
+    "required-field": "Camp %field% obligatori",
+    "help-example": "Ajuda i exemple",
+    "when-to-use": "Quan utilitzar-lo",
+    "real-example": "Exemple real"
 }

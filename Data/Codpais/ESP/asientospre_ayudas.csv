@@ -1,0 +1,1384 @@
+"id","idasientopre","cuando","ejemplo","nota"
+"1","1","Cuando cierras la nómina de un empleado a fin de mes. Registra el DEVENGO: el gasto total para la empresa (sueldo bruto + cotización empresa SS), la retención IRPF y el neto pendiente de pagar al trabajador.","Empleado con sueldo bruto 1.500 €, IRPF 150 €, SS empresa 450 €, SS trabajador 110 €:
+• D = 1.500 | L (líquido neto) = 1.500 - 150 - 110 = 1.240 | R = 150 | C (coste empresa) = 1.950
+Resultado: gasto empresa 1.950 €, neto a pagar al trabajador 1.240 €.","Este asiento registra el DEVENGO. Después necesitas:
+• Asiento #4: pagar el neto al empleado
+• Asiento #149: pagar la SS a la TGSS (empresa + obrera)
+• Asiento #6 (modelo 111): ingresar las retenciones IRPF a Hacienda
+
+MEI 2025 (Mecanismo de Equidad Intergeneracional):
+El MEI sube al 0,80% sobre la base de cotización en 2025 (era 0,70% en 2024). Está incluido en la cuota empresa y en la cuota del trabajador. Tu software de nóminas debe actualizarlo automáticamente.
+
+CASOS ESPECIALES:
+• Baja médica (IT): usa el asiento #150 para nóminas con trabajadores en baja.
+• ERTE: usa el asiento #151.
+• Horas extra: misma cuenta 640 que el salario ordinario.
+• Complementos en especie: llevan tratamiento diferente en IRPF; consúltalo con tu gestor."
+"2","2","Cada mes, cuando devengues tu cuota de autónomos al RETA aunque aún no se haya cargado en el banco. Este asiento registra el GASTO del mes, no el pago.","Cuota RETA mensual: 320 €
+• A = 0 (cuenta genérica) | B = 320
+Resultado: gasto 320 € en cuenta 642 (SS empresa), deuda con la SS 320 € en cuenta 476.","El pago se registra con el asiento #3 (cargo en banco el día 30 del mes).
+
+SISTEMA DE TRAMOS RETA 2025/2026:
+Desde 2023 las cuotas están vinculadas a los rendimientos netos reales declarados. Hay 15 tramos de cotización. En 2026 se actualizan nuevamente según el calendario progresivo hasta 2031.
+• Si tus ingresos reales son menores a lo previsto: puedes solicitar reducción de cuota.
+• Si son mayores: la TGSS regularizará al año siguiente y tendrás que pagar la diferencia.
+
+MEI 2025 (Mecanismo de Equidad Intergeneracional):
+El MEI sube al 0,80% sobre la base de cotización en 2025 (era 0,70% en 2024). Está incluido en la cuota del RETA.
+
+TARIFA PLANA 80€:
+Se mantiene para nuevas altas (primer año). Posible extensión a 24 meses si no superas el SMI.
+
+CASOS ESPECIALES:
+• Cese temporal de actividad: la cuota sigue devengándose aunque estés de baja.
+• Pluriactividad: si cotizas también como asalariado, puedes solicitar devolución del exceso de cotización a la TGSS."
+"3","3","Cuando la cuota de autónomos se carga en tu cuenta bancaria. La TGSS domicilia el cobro normalmente el día 30 del mes en curso (o último día hábil si el 30 cae en festivo o fin de semana).","Cargo bancario de 320 € de cuota RETA el día 30:
+• A = 0 (terminación banco) | B = 320
+Resultado: cancela la deuda con la SS (476), sale dinero del banco (572).","Usa siempre este asiento DESPUÉS del #2 (devengo).
+
+CASOS FRECUENTES:
+• Si tienes bonificación (tarifa plana), el cargo será por la cuota reducida; ajusta B al importe real.
+• Si la cuota se carga en dos recibos (base + mejoras voluntarias), registra dos asientos separados.
+• Recargo por domiciliación fallida: si el banco devuelve el recibo, la TGSS aplica un recargo del 20%. Registra ese recargo como gasto adicional en cuenta 642."
+"4","4","Cuando transfieres el neto de la nómina al empleado, normalmente los últimos días del mes. Siempre después del asiento #1.","Transferencia de 1.350 € netos a María:
+• A = 001 (terminación empleado) | B = 0 (banco) | I = 1.350
+Resultado: cancela la deuda con el empleado (465) y sale dinero del banco.","El importe I debe coincidir exactamente con el campo 'Líquido a recibir' calculado en el asiento #1. Si pagas en efectivo en lugar de transferencia, usa la cuenta 570 (caja) en lugar de 572 (banco)."
+"5","5","Cada trimestre al presentar el modelo 303 y pagar el IVA resultante.
+
+PLAZOS:
+• 1T: del 1 al 20 de abril
+• 2T: del 1 al 20 de julio
+• 3T: del 1 al 20 de octubre
+• 4T: del 1 al 30 de enero
+
+Antes usa el asiento #26 para regularizar las cuentas 472 y 477 del trimestre.","IVA repercutido del trimestre: 3.000 € | IVA soportado deducible: 1.200 € | A pagar: 1.800 €
+• A = 0 | B = 1.800 | C = 0 (banco)
+Resultado: salda cuentas 477 y 472, paga 1.800 € a Hacienda.","QUIÉN PRESENTA EL 303:
+• Autónomos estimación directa (normal y simplificada): trimestral por facturas reales.
+• Autónomos en módulos con régimen simplificado IVA: trimestral, pero el IVA se calcula por índices/módulos, no por facturas.
+• Comunidad de Bienes: la propia comunidad presenta el 303 (no los socios individualmente).
+• SL / SA: trimestral. Mensual si están en REDEME o facturan > 6M€.
+• Autónomos exentos de IVA (médicos, enseñanza, seguros, arrendamiento de vivienda...): NO presentan el 303.
+• Recargo de equivalencia (minoristas): NO presentan el 303.
+
+RESUMEN ANUAL: modelo 390 en enero (informativo, sin pago adicional).
+
+SI EL RESULTADO ES NEGATIVO: saldo en cuenta 4700 para compensar en trimestres siguientes. Puedes pedir devolución anual con el modelo 390 (o mensual si estás en REDEME)."
+"6","6","Trimestral. Cuando ingresas a Hacienda las retenciones de IRPF practicadas a empleados y profesionales.
+
+PLAZOS:
+• 1T: del 1 al 20 de abril
+• 2T: del 1 al 20 de julio
+• 3T: del 1 al 20 de octubre
+• 4T: del 1 al 20 de enero","Retenciones del trimestre: nóminas 600 € + honorarios profesionales 250 € = 850 €:
+• A = 0 | B = 850 | C = 0 (banco)
+Resultado: salda cuenta 4751, paga 850 € a Hacienda.","QUIÉN PRESENTA EL 111:
+• Autónomos con empleados: retenciones de nóminas.
+• Autónomos y empresas que contratan profesionales con retención (gestores, abogados, consultores persona física en estimación directa): retención sobre honorarios.
+• Comunidad de Bienes con empleados o que contrata profesionales con retención: SÍ.
+• SL / SA: siempre que tengan empleados o contraten profesionales con retención.
+• Autónomos sin empleados y cuyas facturas de proveedores no llevan retención: NO presentan el 111.
+
+RESUMEN ANUAL: modelo 190 en enero (informativo, sin pago).
+PRESENTACIÓN MENSUAL: solo si facturación > 6M€ o están en REDEME."
+"7","7","Trimestral. Cuando ingresas a Hacienda las retenciones de IRPF (19%) practicadas sobre alquileres pagados a propietarios personas físicas.
+
+PLAZOS: mismos que el modelo 111.","Alquiler trimestral: 3 meses × 800 € = 2.400 € base. Retención 19% = 456 €:
+• A = 0 | B = 456 | C = 0 (banco)","QUIÉN PRESENTA EL 115:
+• Autónomos (cualquier régimen), comunidades de bienes, SL y SA que alquilan su local a propietario PERSONA FÍSICA: SÍ.
+• Si el arrendador es SOCIEDAD (SL, SA, inmobiliaria): NO hay retención, no se presenta.
+• Si trabajas desde casa propia o local propio: NO.
+
+RESUMEN ANUAL: modelo 180 en enero (informativo, sin pago)."
+"8","8","Trimestral. Pago fraccionado del IRPF para autónomos en ESTIMACIÓN DIRECTA (normal y simplificada).
+
+IMPORTANTE:
+• ESTIMACIÓN DIRECTA → modelo 130 (este asiento)
+• ESTIMACIÓN OBJETIVA (módulos) → modelo 131
+
+PLAZOS:
+• 1T: del 1 al 20 de abril
+• 2T: del 1 al 20 de julio
+• 3T: del 1 al 20 de octubre
+• 4T: del 1 al 30 de enero","Beneficio acumulado hasta fin del 1T: 12.000 €. Retenciones soportadas: 800 €.
+Cuota = 12.000 × 20% - 800 = 1.600 €:
+• A = 0 | B = 1.600
+Resultado: registra pago fraccionado IRPF (cuenta 473), sale del banco.","¿QUIÉN PRESENTA EL 130?
+• Autónomos en ESTIMACIÓN DIRECTA NORMAL: SÍ.
+• Autónomos en ESTIMACIÓN DIRECTA SIMPLIFICADA: SÍ.
+• Autónomos PROFESIONALES en estimación directa: SÍ, SALVO que en el año anterior el 70% o más de sus ingresos ya estuvieran sujetos a retención (en ese caso pueden quedar exentos de presentar el 130).
+• Autónomos en MÓDULOS (estimación objetiva): NO. Presentan el modelo 131.
+• Comunidad de Bienes: la comunidad no presenta el 130. Cada socio tributa individualmente en función de su régimen personal.
+• SL / SA: NO presentan el 130 (tributan en IS, presentan el 202).
+
+PRESENTACIÓN CON RESULTADO NEGATIVO O CERO: obligatoria igualmente (declaración negativa).
+
+CÁLCULO:
+• Actividades empresariales: 20% del rendimiento neto acumulado desde inicio del año hasta fin del trimestre, menos pagos fraccionados anteriores y retenciones soportadas.
+• Actividades profesionales: 20% del rendimiento neto del trimestre, menos retenciones."
+"9","9","Cuando recibes una factura de un proveedor por mercancías que vas a revender. Es el asiento de compra más habitual en comercios y distribuidoras.","Factura de 'Distribuciones García': 2.000 € base + 420 € IVA (21%) = 2.420 € total
+• A = 001 (terminación proveedor) | B = 2.000 | C = 420
+Resultado: gasto compra 2.000 €, IVA deducible 420 €, deuda con proveedor 2.420 €.","CASOS FRECUENTES:
+• Varios tipos de IVA en la misma factura: registra el total de bases e IVA agrupado.
+• Factura con descuento comercial: introduce la base neta (ya descontada).
+• Compra a plazos: la deuda queda en cuenta 400 hasta que pagues con el asiento #12.
+• IVA no deducible (gasto no vinculado a la actividad): lleva el IVA al mayor coste del gasto, no a cuenta 472."
+"10","10","Cuando emites una factura a un cliente por mercancías.","Factura a 'Almacenes Pérez': 3.500 € base + 735 € IVA (21%) = 4.235 €
+• A = 001 | B = 3.500 | C = 735
+Resultado: ingreso 3.500 €, IVA repercutido 735 €, derecho de cobro 4.235 €.","CASOS FRECUENTES:
+• Cliente empresa de la UE: factura sin IVA (exenta). Usa el asiento #32.
+• Cliente fuera de la UE (exportación): sin IVA. Registra igual pero C = 0.
+• Factura a cliente particular con varios artículos a tipos distintos: agrupa por tipo de IVA.
+• Venta al contado: encadena este asiento con el #11 inmediatamente.
+• Factura rectificativa (abono por devolución): usa el asiento #28."
+"11","11","Cuando recibes el pago de un cliente en tu cuenta bancaria (transferencia, domiciliación...).","Transferencia de 'Almacenes Pérez' de 4.235 €:
+• A = 0 (banco) | B = 4.235
+Resultado: entra dinero en el banco, cancela la deuda del cliente.","FORMAS DE COBRO HABITUALES:
+• Transferencia bancaria: cuenta 572 directamente.
+• Bizum: igual que transferencia, cuenta 572. Ver asiento #166 para más detalle.
+• Tarjeta: el banco ingresa el neto (menos comisión TPV). La comisión va a cuenta 626.
+• Efectivo: usa el asiento #30 (cuenta 570).
+• Cheque: cuenta 5764 hasta que se hace efectivo.
+
+NOVEDAD BIZUM FEBRERO 2026:
+Desde febrero de 2026 los bancos informan mensualmente a la AEAT de todos los cobros Bizum de autónomos y empresas. Asegúrate de tener facturado y declarado cada cobro Bizum de tu actividad.
+
+REMESAS / PAGOS MÚLTIPLES:
+Si recibes una transferencia que cubre varias facturas, haz un solo asiento por el total y relaciona cada factura en las notas de la operación."
+"12","12","Cuando transfieres el dinero al proveedor para pagar su factura.","Transferencia de 2.420 € a 'Distribuciones García':
+• A = 0 (banco) | B = 2.420
+Resultado: sale dinero del banco, cancela la deuda con el proveedor.","Usa siempre este asiento DESPUÉS del #9 (compra) o #86 (materias primas)."
+"13","13","Una vez al año (o mensualmente) para repartir el coste de cada bien material entre los años de su vida útil.","Maquinaria comprada por 12.000 €, vida útil 10 años, amortización anual 1.200 €:
+• A = 001 (terminación activo) | B = 1.200
+Resultado: gasto 1.200 €, aumenta la amortización acumulada.","Usa los asientos #35-#43 para tipos específicos de inmovilizado. Este es el genérico (usa cuenta 2813)."
+"14","14","Una vez al año para amortizar activos intangibles (software, patentes, concesiones...).","Software comprado por 2.400 €, vida útil 3 años, amortización anual 800 €:
+• A = 001 | B = 800
+Resultado: gasto 800 €, aumenta amortización acumulada intangible.","Usa los asientos #45-#48 para tipos específicos de intangible. Este usa la cuenta 2806 (aplicaciones informáticas)."
+"15","15","Cuando compras maquinaria, mobiliario, equipos u otros bienes materiales que van a durar más de un año.","Compra de fresadora: 8.000 € + 1.680 € IVA, pago a 60 días:
+• A = 001 (terminación activo 213) | B = 8.000 | C = 1.680
+Resultado: activo 8.000 €, IVA 1.680 €, deuda con proveedor 9.680 €.","Adapta la cuenta 213 según el tipo: 211=construcciones, 212=instalaciones, 216=mobiliario, 217=equipos informáticos, 218=vehículos."
+"16","16","Cada mes cuando pagas el alquiler del local, oficina, nave industrial o cualquier inmueble donde desarrollas tu actividad.","Alquiler mensual: 800 € + 168 € IVA (21%) = 968 €. Arrendador empresa (sin retención):
+• A = 001 | B = 800 | C = 168
+Resultado: gasto 800 €, IVA 168 €, deuda 968 €.","SEGÚN EL TIPO DE ARRENDADOR:
+• Persona JURÍDICA (SL, SA): con IVA 21%, sin retención. Este asiento tal cual.
+• Persona FÍSICA: con IVA 21% + retención IRPF 19%. Neto a pagar = base × 81% + IVA. Añade una línea en cuenta 4751 por la retención (ingresa trimestralmente con el asiento #7).
+• Local exento de IVA (uso no empresarial): sin IVA, C = 0.
+• Fianza inicial: NO es gasto. Usa el asiento #79."
+"17","17","Cuando recibes la factura de electricidad, agua o gas del local o nave de la empresa.","Factura eléctrica: 320 € base + 67,20 € IVA (21%) = 387,20 €
+• A = 001 | B = 320 | C = 67,20","TIPOS DE IVA EN SUMINISTROS:
+• Electricidad: 21% general. Para PVPC con potencia ≤ 10 kW puede aplicar el 10% → asiento #132.
+• Gas natural calefacción: 21% general (ha habido reducciones temporales, verifica vigencia en AEAT).
+• Agua: 10% → asiento #142.
+• Gasoil de calefacción (gasóleo B): 21% → asiento #136.
+
+AUTÓNOMOS EN VIVIENDA: solo deducible la parte proporcional al espacio de actividad → asiento #129."
+"18","18","Para facturas de reparaciones, mantenimiento o conservación de elementos de tu empresa.","Reparación de maquinaria: 600 € + 126 € IVA (21%):
+• A = 002 (terminación acreedor) | B = 600 | C = 126
+Resultado: gasto 600 €, IVA deducible 126 €, deuda con taller 726 €.","IMPORTANTE: las reparaciones son GASTO (cuenta 622). Las mejoras que aumentan la vida útil del bien son INVERSIÓN y deben activarse como inmovilizado, no como gasto."
+"19","19","Cuando recibes una factura de un gestor, asesor, abogado u otro profesional persona física en estimación directa que aplica retención IRPF (15% general; 7% los primeros 3 años de actividad).","Gestoría: 400 € base + 84 € IVA - 60 € retención (15%) = 424 € netos a pagar
+• A = 003 | B = 400 | R = 60","¿CUÁNDO HAY RETENCIÓN?
+• Profesional persona física estimación directa: SÍ (15% o 7% primeros 3 años).
+• Sociedad (SL, SA): NO → asiento #102.
+• Profesional en módulos: indica en factura que no retiene; NO retención.
+
+LA RETENCIÓN se ingresa a Hacienda trimestralmente con el asiento #6 (modelo 111)."
+"20","20","Cada mes cuando el banco te carga los intereses de un préstamo.","Intereses mensuales de préstamo: 150 €:
+• A = 0 (banco) | B = 150
+Resultado: gasto financiero 150 €, sale dinero del banco.","Los intereses son deducibles en IS/IRPF. El capital amortizado del préstamo NO es gasto (usa el asiento #57 para registrar capital + intereses juntos)."
+"21","21","Cuando te conceden una subvención de una administración pública para financiar gastos corrientes de tu actividad.","Subvención del SEPE para contratación de 3.000 €:
+• A = 0 (H.P. deudora 4708) | B = 3.000
+Resultado: crédito con Hacienda 3.000 €, ingreso del ejercicio 3.000 €.","Este asiento es para subvenciones de EXPLOTACIÓN (gastos corrientes). Para subvenciones de capital (compra de bienes), usa el asiento #81."
+"22","22","Cuando tienes evidencia objetiva de que un cliente no va a pagar: lleva más de 6 meses sin pagar, está en concurso de acreedores, hay reclamación judicial…","Cliente en concurso de acreedores que te debe 2.000 €. Dotas el 100%:
+• A = 001 (deterioro 490) | B = 2.000
+Resultado: gasto deterioro 2.000 € (cuenta 694), fondo corrector 2.000 € (cuenta 490).","DEDUCIBLE EN IS (art. 13 LIS) cuando se cumple ALGUNA de estas condiciones:
+• Más de 6 meses desde el vencimiento.
+• Deudor en concurso de acreedores.
+• Reclamación judicial o arbitral.
+
+NO deducibles: créditos con Administraciones Públicas, con partes vinculadas (grupo/socios > 25%), o con garantía real.
+
+SI COBRAS DESPUÉS: revierte con 490 debe / 794 haber."
+"23","23","Cuando pagas la prima anual de cualquier seguro relacionado con tu actividad: responsabilidad civil, seguro del local, seguro del vehículo de empresa, seguro multirriesgo, seguro de vida del empresario (si cubre riesgo de la empresa)...","Prima anual seguro responsabilidad civil: 650 €:
+• A = 0 | B = 650
+Resultado: gasto anticipado 650 € (cuenta 480), sale dinero del banco.","Los seguros están EXENTOS de IVA (art. 20.Uno.16 LIVA). Nunca añadas IVA.
+La cuenta 480 (gastos anticipados) refleja que el seguro cubre un período futuro. Si el seguro cubre solo el año en curso, puedes llevarlo directamente a la cuenta 625 (primas de seguros) sin pasar por 480.
+El seguro de vida del empresario autónomo NO es deducible salvo que cubra riesgo empresarial."
+"24","24","Anual. Liquidación definitiva del Impuesto de Sociedades.
+
+PLAZO: del 1 al 25 de julio (para ejercicios cerrados el 31/12).
+
+Solo para SL, SA y otras entidades sujetas al IS. Los autónomos y comunidades de bienes NO presentan el modelo 200.","IS del ejercicio: 12.500 €. Pagos fraccionados (modelo 202) ya realizados: 3.600 €. A pagar: 8.900 €:
+• A = 0 (H.P. acreedora IS 4752) | B = 8.900","QUIÉN PRESENTA EL 200:
+• SL y SA: SIEMPRE, aunque no hayan tenido actividad ni beneficios.
+• Sociedad Civil con objeto mercantil: SÍ (desde 2016).
+• Asociaciones, fundaciones, cooperativas: en IS con tipos especiales.
+• Comunidad de Bienes: NO tributa en IS. Cada comunero imputa su parte en su IRPF o IS propio. Presenta el modelo 184 (informativo de atribución de rentas) en enero.
+• Autónomos individuales: NO (tributan en IRPF con modelo 100).
+
+ANTES DEL PAGO:
+Usa el asiento #62 al cierre del ejercicio para registrar el gasto del IS. Descuenta los pagos fraccionados del modelo 202 (asiento #116) para calcular el neto real a pagar."
+"25","25","Cuando la junta de socios acuerda repartir dividendos.","Beneficio del ejercicio: 25.000 €. Se acuerda repartir 10.000 € como dividendos:
+• A = 0 (resultado 129) | B = 10.000
+Resultado: reduce el resultado (129), crea deuda dividendo a pagar (526).","El pago efectivo al socio (cuando se transfiere el dinero) se registra con: 526 debe / 572 haber. Los dividendos a socios personas físicas llevan retención del 19%."
+"26","26","Al final de cada trimestre, ANTES del modelo 303. Salda las cuentas de IVA repercutido (477) e IVA soportado (472) y deja el resultado neto en cuenta 4750 (a pagar) o 4700 (a devolver).
+
+Todos los sujetos pasivos de IVA lo hacen: autónomos (cualquier régimen), comunidades de bienes, SL, SA.","IVA repercutido: 3.000 € | IVA soportado: 1.200 € | Resultado a pagar: 1.800 €:
+• A = 0 | B = 3.000 (total repercutido del trimestre)","CASOS POR RÉGIMEN:
+• ESTIMACIÓN DIRECTA (normal o simplificada): IVA calculado por facturas reales. Usa este asiento normalmente.
+• MÓDULOS con régimen simplificado IVA: el IVA devengado se calcula por índices. La mecánica de regularización es diferente; consulta con tu gestor.
+• RECARGO DE EQUIVALENCIA (minoristas): NO presentan el 303 ni hacen este asiento.
+• REAGYP (agricultura, ganadería, pesca): sin IVA en sus operaciones, tampoco presentan el 303.
+• Autónomos exentos de IVA: NO usan este asiento.
+• PRORRATA: si haces operaciones exentas y sujetas a IVA, solo puedes deducir la proporción de ventas sujetas. El cálculo de la prorrata se cierra anualmente."
+"27","27","Al cierre del ejercicio, cuando destinas parte del beneficio a reservas voluntarias (en lugar de repartirlo como dividendos).","Beneficio del ejercicio: 25.000 €. Se destinan 12.500 € a reservas voluntarias:
+• A = 0 (resultado 129) | B = 12.500
+Resultado: reduce el resultado (129), aumentan las reservas voluntarias (113).","Recuerda que las sociedades están obligadas a dotar PRIMERO la reserva legal (10% del beneficio hasta el 20% del capital). Usa el asiento #65 para eso."
+"28","28","Cuando un cliente devuelve mercancía y emites una nota de abono. Revierte parcialmente la factura de venta original.","Cliente devuelve género por 800 € + 168 € IVA. Emites nota de abono:
+• A = 001 (terminación cliente) | B = 800
+Resultado: reduce el ingreso de ventas (700), reduce IVA repercutido (477), abona al cliente.","La nota de abono debe emitirse con los mismos tipos impositivos que la factura original."
+"29","29","Cuando devuelves mercancía al proveedor y él emite una nota de abono. Revierte parcialmente la factura de compra original.","Devuelves género defectuoso por 500 € + 105 € IVA:
+• A = 001 (terminación proveedor) | B = 500
+Resultado: reduce la compra (600), reduce IVA soportado (472), abona el proveedor.",""
+"30","30","Cuando un cliente te paga en mano, en efectivo.","Cliente paga 242 € en efectivo (200 € + 42 € IVA):
+• A = 0 (caja 570) | B = 242
+Resultado: entra dinero en caja, cancela la deuda del cliente.","LÍMITE LEGAL: los pagos en efectivo entre empresarios están limitados a 1.000 € por operación (Ley 11/2021 antifraude). Por encima de esa cifra, el gasto no es deducible y puede conllevar sanción."
+"31","31","Cuando compras mercancías o materiales a un proveedor de otro país de la Unión Europea. La factura llega sin IVA y debes autorepercutirte el IVA español.","Componentes de proveedor alemán: 5.000 €. Autorepercutes IVA 21% = 1.050 €
+• A = 001 (proveedor UE 4004) | B = 5.000 | C = 1.050
+Resultado: IVA neutro (1.050 € en 472 y en 477), deuda proveedor UE 5.000 €.","OBLIGACIONES FORMALES:
+• Modelo 303: declarar IVA devengado y soportado de la operación.
+• Modelo 349: declarar NIF intracomunitario del proveedor y el importe (mes siguiente al trimestre).
+• Verificar NIF intracomunitario en el censo VIES antes de recibir la factura.
+
+SI EL PROVEEDOR TE COBRA IVA EXTRANJERO: pídele factura rectificativa sin IVA. No puedes deducir IVA de otro país en el modelo 303 español."
+"32","32","Cuando vendes mercancías a una empresa de otro país de la UE. La factura va sin IVA (tipo 0%, exenta).","Venta de mobiliario a empresa francesa: 8.000 €. Factura sin IVA:
+• A = 001 (cliente UE 4304) | B = 8.000
+Resultado: ingreso 8.000 €, derecho de cobro sin IVA.","REQUISITO: debes tener el NIF intracomunitario del cliente (ej. FR12345678) y verificarlo en VIES. Sin este requisito, la venta lleva IVA español del 21%. Declara en modelo 349."
+"33","33","Cuando contratas un servicio a una empresa de otro país de la UE (diseño, programación, consultoría...). Debes autorepercutirte el IVA.","Empresa holandesa de software: 2.000 €. Autorepercutes 21%:
+• A = 001 (acreedor UE 410) | B = 2.000 | C = 420 (2.000 × 21%)
+Resultado: IVA neutro, gasto 2.000 €, deuda con proveedor UE 2.000 €.","Declarar en modelo 303 y modelo 349. La factura del proveedor UE no lleva IVA; eres tú quien lo anota en ambos lados."
+"34","34","Cuando prestas un servicio a una empresa de otro país de la UE. La factura va sin IVA (exenta).","Consultoría a empresa italiana: 3.000 €. Factura sin IVA:
+• A = 002 (cliente UE 4304) | B = 3.000
+Resultado: ingreso 3.000 €, derecho de cobro sin IVA.","Declara en modelo 349. El cliente italiano se autorepercutirá el IVA en su país."
+"35","35","Amortización anual de construcciones (edificios, naves, locales propios). Coeficiente máximo: 3% anual.","Nave industrial: 200.000 €. Vida útil 33 años. Amortización anual 6.000 €:
+• A = 001 | B = 6.000","Terrenos NO se amortizan (no tienen vida útil finita)."
+"36","36","Amortización anual de instalaciones técnicas.","Instalación eléctrica: 15.000 €. 10 años. Amortización anual 1.500 €:
+• A = 001 | B = 1.500",""
+"37","37","Amortización anual de maquinaria. Coeficiente máximo: 12% anual (vida mínima 8,3 años).","Maquinaria CNC: 24.000 €. 10 años. Amortización anual 2.400 €:
+• A = 001 | B = 2.400","Las PYMES pueden amortizar más rápido con el régimen de libertad de amortización."
+"38","38","Amortización anual de utillaje (herramientas, moldes, útiles de producción).","Utillaje: 3.000 €. 6 años. Amortización anual 500 €:
+• A = 001 | B = 500",""
+"39","39","Amortización anual de otras instalaciones (aire acondicionado, alarmas, rótulos...).","Instalación climatización: 8.000 €. 10 años. Amortización anual 800 €:
+• A = 001 | B = 800",""
+"40","40","Amortización anual de mobiliario de oficina o comercial. Coeficiente máximo: 10% anual.","Mobiliario oficina: 5.000 €. 10 años. Amortización anual 500 €:
+• A = 001 | B = 500",""
+"41","41","Amortización anual de equipos informáticos (ordenadores, tablets, impresoras). Coeficiente máximo: 25% anual.","Ordenador: 1.200 €. 4 años. Amortización anual 300 €:
+• A = 001 | B = 300","Los móviles y tablets de empresa también van aquí. Ver asiento #128 para la compra."
+"42","42","Amortización anual de vehículos (furgonetas, camiones, coches de empresa). Coeficiente máximo: 16% anual.","Furgoneta: 20.000 €. 7 años. Amortización anual 2.857 €:
+• A = 001 | B = 2.857","Vehículos de uso mixto (empresa + personal): la amortización deducible es proporcional al uso empresarial. Consulta con tu gestor."
+"43","43","Amortización anual de cualquier inmovilizado material no clasificado en los anteriores.","Otro inmovilizado: 4.000 €. 8 años. Amortización anual 500 €:
+• A = 001 | B = 500",""
+"44","44","Amortización anual de inmuebles alquilados como inversión (no para uso propio de la empresa).","Local de inversión: 120.000 €. 33 años. Amortización anual 3.636 €:
+• A = 001 | B = 3.636","El suelo del inmueble NO se amortiza. Solo el edificio/construcción."
+"45","45","Amortización anual de software y aplicaciones informáticas. Coeficiente máximo: 33% anual.","ERP empresarial: 6.000 €. 3 años. Amortización anual 2.000 €:
+• A = 001 | B = 2.000","Las suscripciones mensuales de software (SaaS) son gasto directo en el mes, no se activan ni amortizan."
+"46","46","Amortización anual de patentes, marcas y propiedad industrial.","Patente: 10.000 €. 10 años. Amortización anual 1.000 €:
+• A = 001 | B = 1.000",""
+"47","47","Amortización anual de concesiones administrativas (licencias, concesiones de explotación...).","Concesión administrativa: 50.000 €. 20 años. Amortización anual 2.500 €:
+• A = 001 | B = 2.500",""
+"48","48","Amortización anual de proyectos de I+D activados como inmovilizado.","Proyecto I+D activado: 30.000 €. 5 años. Amortización anual 6.000 €:
+• A = 001 | B = 6.000","Los gastos de I+D solo se activan si cumplen los criterios del PGC (viabilidad técnica y económica). Si hay dudas, mejor llevarlos a gasto directo."
+"49","49","Cuando existe un litigio en curso o una reclamación que podría derivar en un pago futuro incierto.","Demanda laboral de un ex-empleado que podría costar 5.000 €:
+• A = 0 | B = 5.000
+Resultado: gasto 5.000 €, provisión en balance 5.000 €.","La provisión debe estar justificada y ser probable. No se puede dotar para reducir beneficios artificialmente."
+"50","50","Cuando Hacienda inicia una inspección o hay una liquidación provisional que podrías tener que pagar.","Acta de inspección provisional por 8.000 €:
+• A = 0 | B = 8.000","Si el recurso prospera, reviértela con el asiento #52."
+"51","51","Cuando la empresa planifica formalmente un proceso de reestructuración (ERE, cierre de unidades...).","Provisión para indemnizaciones de ERE: 25.000 €:
+• A = 0 | B = 25.000","Requiere que el plan de reestructuración esté aprobado y anunciado formalmente."
+"52","52","Cuando la causa que motivó la provisión desaparece (el litigio se gana, la inspección se archiva...).","Se resuelve el litigio a tu favor. Revertir provisión de 5.000 €:
+• A = 0 | B = 5.000
+Resultado: ingreso 5.000 € (7952), cancela provisión (142).",""
+"53","53","Cuando un bien previamente deteriorado recupera parte de su valor de mercado.","Maquinaria con deterioro dotado de 2.000 € que recupera valor:
+• A = 001 | B = 2.000
+Resultado: reduce el deterioro acumulado (2910), ingreso por reversión (791).","Requiere tener previamente creada la subcuenta 2910 en el plan de cuentas."
+"54","54","Cuando vendes un bien de la empresa por MÁS de su valor contable (coste histórico menos amortización acumulada).","Vehículo: coste 15.000 €, amortización acumulada 9.000 €, valor neto 6.000 €. Vendes por 7.500 €:
+• A = 001 | B = 15.000 (valor bruto) | C = 9.000 (amort. acumulada) | D = 7.500 (precio venta)
+Beneficio Z = 7.500 - 6.000 = 1.500 €.","La variable B es el VALOR BRUTO (coste histórico original), no el valor neto."
+"55","55","Cuando vendes un bien de la empresa por MENOS de su valor contable.","Ordenador: coste 3.000 €, amortización 2.400 €, valor neto 600 €. Vendes por 300 €:
+• A = 001 | B = 3.000 | C = 2.400 | D = 300
+Pérdida Z = 600 - 300 = 300 €.","La pérdida (cuenta 671) es deducible en IS siempre que sea real y documentada."
+"56","56","Cuando el banco te concede un préstamo y te ingresa el dinero. Puede ser a corto plazo (CP < 1 año → cuenta 5200) o largo plazo (LP > 1 año → cuenta 170).","Préstamo a 5 años de 50.000 €:
+• A = 0 (banco) | B = 50.000
+Resultado: entra dinero en banco, deuda LP (cuenta 170) 50.000 €.","TIPOS DE PRÉSTAMO:
+• LP (> 1 año): cuenta 170. Al cierre de cada ejercicio, reclasifica a CP (5200) la cuota del año siguiente.
+• CP (< 1 año): cuenta 5200 directamente.
+• Hipotecario: el inmueble va en el activo (211) y el préstamo en pasivo (170/5200). Los gastos de formalización se pueden activar o llevar a gasto.
+• Préstamo de socio: usa el asiento #84 (cuenta 551)."
+"57","57","Cada mes cuando el banco te carga la cuota del préstamo. La cuota tiene dos partes: amortización del capital (reduce la deuda, NO es gasto) e intereses (sí son gasto deducible). Consulta el cuadro de amortización del banco para saber el desglose exacto de cada cuota.","Cuota mensual: 800 € capital + 150 € intereses = 950 € total:
+• A = 0 | C = 800 (capital) | D = 150 (intereses)
+Resultado: reduce deuda 800 €, gasto financiero 150 €, sale banco 950 €.","Ejemplo año 1 (cuotas iniciales, más intereses):
+Cuota 950 €: capital 800 € + intereses 150 €.
+
+Ejemplo año 4 (cuotas finales, más capital):
+Cuota 950 €: capital 920 € + intereses 30 €.
+
+La suma de capital (5200) debe igualar el saldo pendiente del préstamo en todo momento. Los intereses (6623) son deducibles en IS/IRPF."
+"58","58","Cuando utilizas dinero de tu póliza de crédito (línea de crédito bancaria).","Dispones de 10.000 € de la póliza:
+• A = 0 (banco) | B = 10.000
+Resultado: entra dinero en banco, deuda con banco por crédito dispuesto 10.000 €.","Solo pagas intereses por lo dispuesto, no por el límite total de la póliza."
+"59","59","Cuando devuelves dinero a la póliza de crédito.","Devuelves 5.000 € a la póliza:
+• A = 0 (póliza 5201) | B = 5.000
+Resultado: cancela parte de la deuda (5201), sale dinero del banco.",""
+"60","60","Cada mes al pagar la cuota del leasing (arrendamiento financiero). La cuota tiene dos partes: recuperación del coste del bien (capital) e intereses financieros.","Cuota leasing furgoneta: 500 € capital + 100 € intereses = 600 €:
+• A = 001 (acreedor leasing CP 524) | C = 500 | D = 100
+Resultado: cancela deuda 500 €, gasto intereses 100 €, sale banco 600 €.","LEASING FINANCIERO vs RENTING:
+• LEASING FINANCIERO: el bien se activa en balance (asiento #61) y se amortiza. Intereses deducibles. Con opción de compra al final.
+• RENTING: NO se activa el bien. Toda la cuota es gasto en cuenta 621 → asiento #144.
+
+VENTAJA FISCAL IS: permite amortización acelerada del bien (hasta el doble del coeficiente máximo para PYMES)."
+"61","61","Al firmar el contrato de leasing, para activar el bien en el balance.","Furgoneta en leasing: valor total 20.000 €. Cuotas CP primer año: 5.500 €. Cuotas LP resto: 14.500 €:
+• A = 001 (vehículo 217) | B = 20.000 | C = 14.500 (LP) | D = 5.500 (CP)
+Resultado: activo 20.000 €, deuda LP 14.500 €, deuda CP 5.500 €.","El valor a activar es el valor razonable del bien o el valor actual de las cuotas, el menor de los dos."
+"62","62","Al cierre del ejercicio para registrar el gasto del IS. SOLO para SL, SA y otras entidades sujetas al IS.
+
+Autónomos y comunidades de bienes NO hacen este asiento.","Beneficio antes de impuestos: 50.000 €. IS al 25% = 12.500 €:
+• A = 0 (H.P. acreedora IS 4752) | B = 12.500
+Resultado: gasto IS 12.500 € (cuenta 6300), deuda con Hacienda.","TIPOS IS 2025 (Ley 7/2024 — aplicables al ejercicio 2025, declaración julio 2026):
+• MICROEMPRESAS (facturación < 1M€ y plantilla media < 10 trabajadores):
+  - Primeros 50.000 € de base imponible: 21%
+  - Resto: 22%
+• PYMES (facturación entre 1M€ y 10M€): 24%
+• Tipo GENERAL (facturación > 10M€): 25%
+• Empresa nueva creación (primeros 2 años con beneficio): 15%
+• Cooperativas fiscalmente protegidas: 20%
+
+COMUNIDAD DE BIENES:
+NO tributa en IS. Cada comunero imputa su parte en su IRPF o IS propio. La CB presenta el modelo 184 en enero (informativo de atribución de rentas).
+
+AJUSTES EXTRACONTABLES:
+El resultado contable ≠ base imponible. Hay diferencias permanentes (sanciones, donativos no deducibles) y temporarias (amortizaciones aceleradas, provisiones). Para asientos de impuesto diferido, ver asientos #157, #158 y #159."
+"63","63","Al cierre del ejercicio, primer paso para distribuir el resultado. Este asiento solo tiene una línea y debe completarse con #64, #65 o #27.","Solo una línea: 129 debe B (importe del resultado).
+Combinar con #65 (reserva legal) + #27 (reservas voluntarias) + #25 (dividendos).","Este asiento por sí solo deja el asiento descuadrado. Es un asiento orientativo; adapta según la distribución acordada."
+"64","64","Cuando el ejercicio anterior tuvo pérdidas y las compensas con el beneficio actual.","Pérdidas de ejercicios anteriores: 3.000 €. Beneficio actual: 10.000 €:
+• A = 0 (pérdidas 121) | B = 3.000
+Resultado: reduce las pérdidas acumuladas, reduce el resultado disponible.","Las pérdidas pueden compensarse hasta 70% de la base imponible positiva del IS."
+"65","65","Las sociedades están obligadas a dotar el 10% del beneficio a reserva legal hasta que alcance el 20% del capital social.","Beneficio: 25.000 €. Reserva legal obligatoria: 10% = 2.500 €:
+• A = 0 (reserva legal 112) | B = 2.500
+Resultado: reduce resultado, aumenta reserva legal.","Una vez que la reserva legal supera el 20% del capital social, ya no es obligatorio seguir dotando."
+"66","66","Al cierre del ejercicio para ajustar el valor contable del inventario al recuento físico real. Obligatorio en empresas comerciales e industriales que llevan existencias.","Existencias iniciales: 8.000 €. Inventario físico final: 10.500 €. AUMENTO 2.500 €:
+• A = 0 (existencias 300) | B = 2.500
+Resultado: aumenta stock 2.500 €, ingreso variación existencias (710) 2.500 €.
+
+Si hubiera DISMINUCIÓN de 1.000 €: 300 al haber y 610 al debe.","MÉTODO DE VALORACIÓN:
+• PMP (Precio Medio Ponderado): el más habitual en España.
+• FIFO: también admitido por el PGC.
+• LIFO: NO permitido por el PGC.
+
+Si parte del stock está obsoleto o deteriorado, dota el asiento #89 ANTES de este.
+
+AUTÓNOMOS EN ESTIMACIÓN DIRECTA SIMPLIFICADA: Hacienda no suele exigirlo si el ajuste es pequeño, pero técnicamente es obligatorio si hay existencias significativas."
+"67","67","Cuando el trabajador solicita un anticipo de nómina antes de que llegue el día de pago habitual.","Anticipas 300 € a María a mitad de mes:
+• A = 001 (empleado 460) | B = 300
+Resultado: crédito con el empleado (460), sale dinero del banco.","Al calcular la nómina del mes, descuenta el anticipo del neto a pagar. El saldo de la cuenta 460 debe quedar en cero al final del mes."
+"68","68","Cuando despides a un trabajador y debes pagarle la indemnización legal.","Indemnización de 4.500 € a un empleado:
+• A = 001 (empleado 465) | B = 4.500
+Resultado: gasto 4.500 € (cuenta 641), deuda con el empleado.","La indemnización es deducible en IS si está dentro de los límites legales (20 días/año, máx. 12 mensualidades). El exceso no es deducible."
+"69","69","Para gastos como formación de empleados, tickets restaurante, seguro médico colectivo, guarderías...","Curso de formación para empleados: 500 € + 105 € IVA:
+• A = 0 (acreedor 410) | B = 500 | C = 105
+Resultado: gasto social 500 €, IVA deducible 105 €, deuda con formadora 605 €.","El seguro médico colectivo para empleados está exento de IVA y tiene límites de deducibilidad en IS (500 € por trabajador/año)."
+"70","70","Para facturas de agencias de transporte, mensajería, correos o portes de mercancías.","Factura de MRW: 85 € + 17,85 € IVA (21%):
+• A = 006 (terminación MRW) | B = 85 | C = 17,85
+Resultado: gasto transporte 85 €, IVA deducible 17,85 €, deuda 102,85 €.",""
+"71","71","Para facturas de agencias de publicidad, diseño gráfico, Google Ads, Meta Ads, imprentas, ferias, patrocinios...","Factura agencia marketing digital: 500 € + 105 € IVA:
+• A = 007 (terminación agencia) | B = 500 | C = 105
+Resultado: gasto publicidad 500 €, IVA deducible 105 €, deuda 605 €.","Las comidas de representación con clientes también van a la cuenta 627."
+"72","72","Para las comisiones de mantenimiento de cuenta, transferencias, TPV, descubiertos o cualquier cargo bancario.","Comisión mantenimiento trimestral: 18 €:
+• A = 0 (banco) | B = 18
+Resultado: gasto bancario 18 €, sale del banco.","Las comisiones bancarias están EXENTAS de IVA. No añadas IVA."
+"73","73","Para cualquier gasto de servicio que no tenga asiento específico: suscripciones de software (Office 365, Adobe, Dropbox, FacturaScripts...), limpieza, seguridad, plataformas de venta online, honorarios de diseñadores web, servicios de hosting...","Suscripción Adobe Creative Cloud mensual: 60 € + 12,60 € IVA:
+• A = 008 (terminación Adobe) | B = 60 | C = 12,60
+Resultado: gasto servicio 60 €, IVA deducible 12,60 €, deuda 72,60 €.","¿En qué cuenta va cada servicio?
+• Software en suscripción mensual (SaaS): cuenta 629.
+• Limpieza del local: cuenta 629 → usa asiento #138.
+• Publicidad / marketing: cuenta 627 → usa asiento #71.
+• Transporte / mensajería: cuenta 624 → usa asiento #70.
+• Reparaciones: cuenta 622 → usa asiento #18.
+• Gestoría / asesoría (SL sin retención): cuenta 623 → usa asiento #141.
+Si tienes dudas, usa 629 que es el cajón de sastre de servicios exteriores."
+"74","74","Cuando pagas tributos locales: IAE, IBI de locales de empresa, tasas municipales de basuras, vados permanentes, licencias de apertura, etc.","IAE anual: 280 €:
+• A = 0 (banco) | B = 280
+Resultado: gasto tributo 280 € (cuenta 631), sale del banco.","IAE - ¿QUIÉN PAGA?
+• Autónomos: EXENTOS SIEMPRE.
+• Comunidades de Bienes: exentas si facturación < 1.000.000 €.
+• SL / SA con facturación < 1.000.000 €: EXENTAS.
+• SL / SA con facturación ≥ 1.000.000 €: SÍ pagan IAE.
+
+IBI:
+Lo paga el propietario del inmueble. Si eres arrendatario, normalmente NO (salvo que el contrato te lo traslade expresamente).
+
+OTROS:
+• Tasa de basuras: depende del municipio. Puede recaer sobre el ocupante aunque sea arrendatario.
+• IVTM (Impuesto Vehículos Tracción Mecánica): pago anual por los vehículos de empresa. Va a cuenta 631."
+"75","75","Cuando llevas al banco un efecto comercial (letra de cambio o pagaré) de un cliente y el banco te adelanta el dinero antes del vencimiento, descontando intereses.","Pagaré de 5.000 €. Banco cobra 75 € de intereses. Te ingresa 4.925 €
+• A = 001 (efecto 4310) | B = 5.000 | C = 75
+Resultado: cobras 4.925 €, gasto intereses 75 €, deuda contingente con banco 5.000 €.","Hasta que el cliente pague al banco al vencimiento, la deuda sigue siendo tuya (reflejada en cuenta 5208).
+• Al vencimiento y cobro: asiento #76
+• Si el cliente no paga (impago): asiento #77 (efecto devuelto + comisión)
+
+ALTERNATIVA FACTORING SIN RECURSO:
+Si cedes la factura sin recurso, el riesgo pasa al factor y no hay deuda contingente."
+"76","76","Cuando vence el plazo del efecto descontado y el banco lo cobra al cliente (cancela la deuda).","Vencimiento del pagaré de 5.000 €:
+• A = 0 (banco) | B = 5.000
+Resultado: cancela la deuda con el banco (5208), entra dinero en banco.",""
+"77","77","Cuando el banco nos devuelve el efecto por impago del cliente.","Pagaré de 5.000 € devuelto impagado. Comisión bancaria: 45 €:
+• A = 001 (efecto impagado 4315) | B = 5.000 | C = 45
+Resultado: activa cuenta de efectos impagados (4315), gasto comisión 45 €, cargo banco 5.045 €.","Después de este asiento, reclama al cliente. Si no paga, dota deterioro con el asiento #22."
+"78","78","Cuando transfieres dinero de una cuenta bancaria tuya a otra también tuya (por ejemplo, para optimizar tesorería).","Transferencia de 5.000 € del banco A al banco B:
+• A = 001 (banco origen) | B = 002 (banco destino)
+Resultado: sale del banco A (572.001), entra en banco B (572.002).",""
+"79","79","Cuando pagas una fianza al alquilar un local, al contratar un suministro, a un proveedor de servicios...","Fianza de 2 meses de alquiler: 1.600 €:
+• A = 001 (fianza 565) | B = 1.600
+Resultado: activo en balance (565), sale dinero del banco.","La fianza NO es un gasto. Es un activo que te devolverán al terminar el contrato. Usa el asiento #80 cuando te la devuelvan."
+"80","80","Cuando te devuelven la fianza al terminar el contrato.","Devolución fianza local: 1.600 €:
+• A = 0 (banco) | B = 1.600
+Resultado: entra dinero en banco, cancela el activo de fianza (565).",""
+"81","81","Cuando recibes una subvención de una administración para comprar un bien de inversión (maquinaria, vehículo, reforma del local...).","Subvención del 30% de una máquina de 10.000 € = 3.000 €:
+• A = 0 (subvención capital 130) | B = 3.000
+Resultado: entra dinero en banco, subvención en patrimonio neto (130).","La subvención de capital NO es ingreso inmediato. Se imputa al resultado gradualmente a medida que amortizas el bien (#82). Consulta con tu gestor el tratamiento fiscal."
+"82","82","Cada año, para imputar la parte proporcional de la subvención de capital al resultado del ejercicio (a medida que amortizas el bien).","Subvención de 3.000 € para máquina amortizada en 10 años. Imputación anual: 300 €:
+• A = 0 | B = 300
+Resultado: reduce la subvención en balance (840), ingreso del ejercicio 300 € (746).","Solo disponible en PGC completo (grupos 8 y 9). En PGC PYMES la imputación va directamente: 130 debe / 746 haber."
+"83","83","Cuando los socios aportan nuevo capital a la sociedad.","Ampliación de capital de 30.000 € desembolsado al contado:
+• A = 0 (capital social 100) | B = 30.000
+Resultado: entra dinero en banco, aumenta capital social.","La ampliación de capital requiere escritura pública e inscripción en el Registro Mercantil. Consulta con el notario."
+"84","84","Cuando un socio presta dinero a la empresa (préstamo de socio, no aportación de capital).","Socio presta 20.000 € a la empresa:
+• A = 001 (cuenta corriente socio 551) | B = 20.000
+Resultado: entra dinero en banco, deuda con el socio (551).","Documenta el préstamo con contrato firmado. Si devenga intereses, declararlos en la renta del socio y retener el 19%."
+"85","85","Cuando la empresa devuelve el dinero prestado por un socio.","Devolución de 20.000 € al socio:
+• A = 001 (cuenta corriente socio 551) | B = 20.000
+Resultado: cancela la deuda con el socio, sale dinero del banco.",""
+"86","86","Cuando recibes una factura de materias primas que usas para fabricar productos (no para revender directamente).","Telas para fabricar ropa: 1.500 € + 315 € IVA:
+• A = 002 (terminación proveedor) | B = 1.500 | C = 315
+Resultado: gasto materia prima 1.500 €, IVA 315 €, deuda proveedor 1.815 €.",""
+"87","87","Al cierre del ejercicio para ajustar el stock de materias primas al inventario físico.","Materias primas inicio: 5.000 €. Materias primas fin: 4.200 €. Disminución: 800 €:
+• A = 0 (310) | B = 800
+Resultado: reduce stock de materias primas, variación de existencias.",""
+"88","88","Al cierre del ejercicio para ajustar el stock de productos terminados (empresas fabricantes).","Productos terminados inicio: 12.000 €. Fin: 15.000 €. Aumento: 3.000 €:
+• A = 0 (350) | B = 3.000
+Resultado: aumenta stock productos terminados, ingreso variación existencias.",""
+"89","89","Cuando parte del stock se ha estropeado, quedado obsoleto o ya no tiene salida al mercado.","Stock de ropa de temporada pasada: 1.200 € que no se venderá:
+• A = 0 (deterioro 390) | B = 1.200
+Resultado: gasto deterioro 1.200 €, fondo de deterioro existencias 1.200 €.","Si finalmente se vende aunque sea con descuento, revierte el deterioro con 390 debe / 7931 haber."
+"90","90","Cuando compras una licencia de software con precio superior a ~300 € y vida útil mayor a un año (ERP, CRM, suite ofimática...).","Licencia ERP empresarial: 2.400 € + 504 € IVA:
+• A = 001 (software 206) | B = 2.400 | C = 504
+Resultado: activo intangible 2.400 €, IVA 504 €, deuda proveedor 2.904 €.","Amortiza con el asiento #45. Coeficiente máximo: 33% anual. Las suscripciones mensuales (SaaS) son gasto directo, no se activan."
+"91","91","Cuando repones combustible en el vehículo de empresa y pagas con efectivo o tarjeta. IVA al 21% (tipo general). Si el IVA está reducido temporalmente al 10%, usa el asiento #131.","Ticket gasolinera: base 54 € + IVA 21% 11,34 € = total 65,34 €
+• A = 0 (caja/banco) | B = 54 | C = 11,34","DEDUCIBILIDAD DEL IVA:
+• Vehículo uso EXCLUSIVO empresarial (camión, furgoneta reparto, taxi…): 100%. C = B × 0.21
+• Vehículo uso MIXTO (turismo, todoterreno…): 50%. C = B × 0.21 × 0.5
+
+DEDUCIBILIDAD DEL GASTO EN IS/IRPF:
+Deducible si el vehículo está afecto a la actividad. En vehículos mixtos, documenta el uso empresarial."
+"92","92","Para tickets de parking de empresa o peajes en autopista.","Parking aeropuerto: 24,20 € total. Base: 20 €. IVA 21%: 4,20 €:
+• A = 0 | B = 20 | C = 4,20",""
+"93","93","Para comidas de trabajo o dietas en desplazamiento. IVA de restauración: 10%.","Comida de trabajo: 38,50 € total. Base: 35 €. IVA 10%: 3,50 €:
+• A = 0 | B = 35 | C = 3,50","Si es una comida de representación con clientes, lleva a cuenta 627 (Publicidad) en lugar de 629. Requiere justificación del motivo de negocio."
+"94","94","Para desplazamientos en taxi, Uber, Cabify o transporte urbano. IVA: 10%.","Taxi al aeropuerto: 22 € total. Base: 20 €. IVA 10%: 2 €:
+• A = 0 | B = 20 | C = 2",""
+"95","95","Para compras de material de oficina pequeño cuando tienes ticket simplificado (sin tu NIF en la factura).","Folios y bolígrafos en papelería: 24,20 € total. Base: 20 €. IVA 21%: 4,20 €:
+• A = 0 | B = 20 | C = 4,20","Si el gasto supera 400 €, pide siempre factura completa con tu NIF para poder deducir el IVA."
+"96","96","Para pequeñas compras en ferretería, tornillos, herramientas pequeñas, consumibles de taller...","Compra ferretería: 18,15 € total. Base: 15 €. IVA 21%: 3,15 €:
+• A = 0 | B = 15 | C = 3,15",""
+"97","97","Para compras en farmacia del botiquín de empresa o material sanitario de primeros auxilios.","Botiquín empresa: 30,80 € total. Base aprox.: 29 €. IVA mixto (4%+10%): 1,80 €:
+• A = 0 | B = 29 | C = 1,80","Los medicamentos tributan al 4% de IVA. Los artículos de parafarmacia (vendas, apósitos...) al 10%. Aproxima si el ticket no desglosa."
+"98","98","Para tickets de hotel o alojamiento en viajes de trabajo. IVA en hostelería: 10%.","Hotel 1 noche viaje trabajo: 121 € total. Base: 110 €. IVA 10%: 11 €:
+• A = 0 | B = 110 | C = 11","Conserva siempre el ticket o factura con la fecha y el motivo del viaje anotado. Si pides factura completa, usa el asiento #73."
+"99","99","Para gastos pagados con tarjeta de empresa cuando tienes factura (no ticket). La cuenta de pago es 572 (banco) en lugar de 570 (caja).","Gasto con tarjeta: 242 € (200 € + 42 € IVA):
+• A = 0 (banco 572) | B = 200 | C = 42",""
+"100","100","Para acumular varios tickets pequeños de caja del día o de la semana en un único asiento. Introduce el total de bases y el total de IVA de todos los tickets juntos.","Varios tickets del día: bases = 85 €, IVA total = 17,85 €:
+• A = 0 (caja) | B = 85 | C = 17,85","Guarda todos los tickets físicos. El límite por ticket simplificado para deducir IVA es 400 € por operación."
+"101","101","Para compras de embalajes, combustible para maquinaria, repuestos y materiales consumibles, cuando tienes FACTURA COMPLETA con tu NIF.","Material embalaje: 800 € + 168 € IVA. Con factura completa:
+• A = 003 (proveedor) | B = 800 | C = 168","Diferencia con ticket: si tienes ticket simplificado (sin tu NIF), usa el asiento #95 o #96. Si tienes factura completa, usa este."
+"102","102","Cuando contratas un profesional que NO aplica retención IRPF: empresas (SL/SA), autónomos en módulos, o primeros años de actividad (7%).","Factura de empresa de consultoría (SL): 1.500 € + 315 € IVA. Sin retención:
+• A = 004 (acreedor) | B = 1.500 | C = 315
+Resultado: gasto 1.500 €, IVA 315 €, deuda 1.815 €.","Si el profesional aplica retención del 7% (primeros años) o 15% (tipo general), usa el asiento #19 en su lugar."
+"103","103","Cuando la aseguradora emite factura y pagas en un plazo posterior (30-60 días). Los seguros NO llevan IVA.","Prima seguro local: 480 €. A pagar en 30 días:
+• A = 005 (aseguradora 410) | B = 480
+Resultado: gasto seguro 480 €, deuda con aseguradora 480 €.","Los seguros están EXENTOS de IVA (art. 20.Uno.16 LIVA). No añadas IVA nunca en facturas de seguros."
+"104","104","Cuando eres autónomo o empresa de servicios y emites facturas por tu trabajo (consultoría, diseño, programación, asesoría...).","Factura de consultoría a empresa española: 2.000 € + 420 € IVA (21%):
+• A = 002 (cliente 430) | B = 2.000 | C = 420
+Resultado: ingreso 2.000 €, IVA repercutido 420 €, derecho de cobro 2.420 €.","Si el cliente te retiene IRPF, usa el asiento #105 cuando cobres."
+"105","105","Cuando cobras una factura y el cliente (empresa) te ha aplicado retención IRPF. Recibes menos dinero, pero la retención es un crédito fiscal.","Factura 2.000 € + 420 € IVA = 2.420 €. Retención 15% = 300 €. Cobras: 2.120 €:
+• A = 0 (banco) | B = 2.420 (total factura) | C = 300 (retención)
+Resultado: cobras 2.120 €, crédito fiscal 300 € (cuenta 473), cancela deuda cliente 2.420 €.","La cuenta 473 acumula todas las retenciones soportadas. Al hacer la declaración anual (IRPF o IS), estas retenciones reducen el impuesto a pagar."
+"106","106","Cuando pagas parte de una compra ANTES de recibir la mercancía o el servicio. El proveedor emite una factura de anticipo con IVA.","Señal del 30% de pedido 5.000 €: pagas 1.500 € + 315 € IVA = 1.815 €:
+• A = 001 (proveedor anticipo 407) | B = 1.500 | C = 315
+Resultado: activo anticipo 1.500 €, IVA 315 €, sale banco 1.815 €.","Cuando llegue la mercancía y la factura final, usa el asiento #108 para liquidar el anticipo."
+"107","107","Cuando un cliente te paga una señal o anticipo antes de que entregues el servicio o producto. Debes emitir una factura de anticipo con IVA.","Cliente paga señal 20% de proyecto 5.000 €: 1.000 € + 210 € IVA = 1.210 €:
+• A = 001 (cliente anticipo 438) | B = 1.000 | C = 210
+Resultado: cobras 1.210 €, IVA repercutido 210 €, anticipo pasivo 1.000 €.","Cuando entregues el trabajo, usa el asiento #109 para liquidar el anticipo."
+"108","108","Cuando recibes la mercancía y la factura final, habiendo pagado un anticipo previamente (#106). Este asiento liquida el anticipo.","Pedido total: 5.000 € + 1.050 € IVA. Anticipo previo: 1.500 €. Resto a pagar: 3.500 € + 735 € IVA = 4.235 €:
+• A = 001 (proveedor) | B = 5.000 | C = 1.050 | D = 1.500 (anticipo)
+Resultado: cancela anticipo 1.500 €, registra compra total 5.000 €, deuda restante 4.235 €.",""
+"109","109","Cuando emites la factura final al cliente, habiendo cobrado un anticipo previamente (#107).","Proyecto total: 5.000 € + 1.050 € IVA. Anticipo cobrado: 1.000 €. Resto a cobrar: 4.000 € + 840 € IVA = 4.840 €:
+• A = 001 (cliente) | B = 5.000 | C = 1.050 | D = 1.000 (anticipo)
+Resultado: cancela anticipo 1.000 €, registra venta total 5.000 €, derecho de cobro restante 4.840 €.",""
+"110","110","Cuando el proveedor ofrece un descuento por pagar antes del vencimiento y ese descuento ya viene incluido en la propia factura.","Factura 2.000 € con descuento pronto pago 2% (40 €). Base neta: 1.960 €. IVA sobre neto: 411,60 €:
+• A = 001 | B = 2.000 | C = 40 | D = 411,60
+Resultado: compra neta 1.960 €, descuento 40 €, IVA 411,60 €, deuda 2.371,60 €.",""
+"111","111","Cuando ofreces a tu cliente un descuento por pagar antes del plazo, incluido en la propia factura.","Venta 3.000 € con descuento 2% (60 €). Base neta: 2.940 €. IVA 617,40 €:
+• A = 001 | B = 3.000 | C = 60 | D = 617,40",""
+"112","112","Cuando el proveedor abona un descuento por haber alcanzado el volumen de compras pactado. Recibes una nota de abono.","Rappel 3% sobre 10.000 € de compras del trimestre = 300 €:
+• A = 001 (proveedor) | B = 300
+Resultado: reduce la deuda con el proveedor (400), menor gasto (6090).",""
+"113","113","Cuando concedes a un cliente un descuento por volumen alcanzado. Emites nota de abono.","Rappel 2% sobre 15.000 € de ventas = 300 €:
+• A = 001 (cliente) | B = 300
+Resultado: reduce el derecho de cobro del cliente (430), menor ingreso (7090).",""
+"114","114","Cuando un profesional (gestor, notario) te cobra gastos que pagó en tu nombre (tasas registrales, correos...). Son suplidos: dinero que recuperas.","Gestor te factura: honorarios 300 € + 63 € IVA + 45 € suplidos. Total: 408 €:
+• A = 0 (suplido 555) | B = 45
+Resultado: registra el suplido en tránsito (555), sin IVA sobre los suplidos.","Los suplidos NO llevan IVA ni son gasto tuyo. Regístralos por separado de los honorarios (#19 o #102)."
+"115","115","Cuando tú has pagado gastos en nombre de tu cliente (tasas, correos...) y se los repercutes en la factura.","Facturas tu servicio (300 €) más suplidos que pagaste (45 €):
+• A = 0 (suplido 555) | B = 45
+Resultado: recuperas el suplido (555), sin IVA sobre esos 45 €.",""
+"116","116","Pagos fraccionados del IS para SL/SA. Se presentan 3 veces al año.
+
+PLAZOS:
+• Abril (del 1 al 20): 1er fraccionado
+• Octubre (del 1 al 20): 2º fraccionado
+• Diciembre (del 1 al 20): 3er fraccionado","Pago fraccionado de abril: 1.800 €:
+• A = 0 (cuenta 473) | B = 1.800
+Resultado: crédito fiscal 1.800 € (cuenta 473), sale del banco.","QUIÉN PRESENTA EL 202:
+• SL / SA con beneficios en el ejercicio anterior: SÍ.
+• SL / SA con facturación > 6M€: SÍ obligatoriamente, aunque hayan tenido pérdidas.
+• SL / SA de nueva creación sin beneficios previos: generalmente sin cuota a ingresar el primer año.
+• Comunidad de Bienes: NO (no tributa en IS).
+• Autónomos individuales: NO (presentan el 130 o 131).
+
+Este importe (cuenta 473) se descuenta del IS definitivo del modelo 200 en julio. No es un impuesto doble."
+"117","117","Cuando Hacienda te cobra intereses por pagar tarde o por una regularización de inspección.","Intereses de demora de una inspección: 320 €:
+• A = 0 | B = 320
+Resultado: gasto financiero 320 €, sale del banco.","Los intereses de demora a Hacienda NO son deducibles en el IS (art. 15 LIS)."
+"118","118","Cuando recibes una sanción de Hacienda, la DGT u otro organismo.","Sanción de Hacienda por presentación tardía: 600 €:
+• A = 0 | B = 600
+Resultado: gasto 600 € (cuenta 659), sale del banco.","Las sanciones NUNCA son deducibles fiscalmente en el IS, independientemente de su importe o causa."
+"119","119","Cuando un cliente lleva más de 6 meses sin pagar y hay dudas razonables de cobro. Reclasificas el saldo de la cuenta 430 (Clientes) a la 436 (Clientes de dudoso cobro) para control interno y para poder dotar el deterioro fiscalmente.","Cliente moroso que te debe 1.500 € desde hace 8 meses:
+• A = 001 (cliente dudoso 436) | B = 1.500
+Resultado: traslado de saldo de 430 a 436 (clientes de dudoso cobro).","Proceso completo de impago:
+1. Cliente no paga a los 90 días → envía carta de reclamación.
+2. A los 6 meses → reclasifica con este asiento #119 (430 → 436).
+3. Dota el deterioro con asiento #22 (694 / 490).
+4. Si finalmente cobras → revierte asiento #22 y #119.
+5. Si es incobrable definitivo → baja total con asiento #120.
+
+El deterioro es deducible en IS a partir de los 6 meses del vencimiento (art. 13 LIS). En IRPF autónomos, a partir de 6 meses también."
+"120","120","Cuando confirmas que el cliente no va a pagar definitivamente (empresa liquidada, deuda prescrita, concurso cerrado...).","Baja de deuda 1.500 €. El cliente pagó 200 € como pago parcial. Pérdida: 1.300 €:
+• A = 001 (cliente dudoso 436) | B = 1.500 | C = 200 (cobrado parcial)
+Resultado: cobras 200 €, pérdida definitiva 1.300 € (cuenta 650), cancela saldo 436.","Deducible en IS si han pasado más de 6 meses desde el vencimiento, hay proceso judicial o el deudor está en concurso (art. 13 LIS)."
+"121","121","Cuando tu banco paga al proveedor en tu nombre a través de confirming. La deuda con el proveedor pasa a ser una deuda con el banco.","El banco paga 5.800 € a tu proveedor mediante confirming:
+• A = 001 (proveedor 400) | B = 5.800
+Resultado: cancela deuda con proveedor, nueva deuda con banco (5209).","Cuando venza el plazo y el banco te cargue el importe, registra: 5209 debe / 572 haber."
+"122","122","Al cierre del mes o ejercicio, cuando sabes que recibirás una factura pero aún no ha llegado (gas, luz, teléfono de diciembre que llega en enero).","Factura estimada luz diciembre: 400 € + 84 € IVA:
+• A = 0 (proveedor pendiente 4009) | B = 400 | C = 84
+Resultado: gasto devengado 400 €, IVA estimado 84 €, acreedor pendiente 484 €.","Cuando llegue la factura real, revierte este asiento y registra la factura definitiva. El IVA estimado es provisional."
+"123","123","Cuando reembolsas a un empleado gastos de desplazamiento por motivos de trabajo: kilometraje, dietas de manutención o alojamiento.","Reembolso: 250 km × 0,26 €/km = 65 € + dieta 26,67 € = 91,67 €:
+• A = 001 (empleado 465) | B = 91,67
+Resultado: gasto 91,67 €, deuda con el empleado.","LÍMITES AEAT 2025/2026: Kilometraje: 0,26 €/km. Dieta España sin pernoctar: 26,67 €/día. Con pernoctar: 53,34 €/día. Extranjero: 48,08 €/91,35 €. Los excesos tributan como renta del trabajo."
+"124","124","Cuando vendes un inmovilizado intangible (software, patente, marca) por más de su valor contable.","Software: coste 6.000 €, amortización 4.000 €, valor neto 2.000 €. Vendes por 2.800 €. Beneficio: 800 €:
+• A = 001 | B = 6.000 (bruto) | C = 4.000 (amort.) | D = 2.800 (venta)
+Resultado: beneficio 800 € (cuenta 770).",""
+"125","125","Cuando compras un vehículo para la empresa. Salvo uso exclusivo empresarial, solo puedes deducir el 50% del IVA.","Furgoneta: 20.000 € + 4.200 € IVA. IVA deducible al 50% = 2.100 €:
+• A = 001 (vehículo 218) | B = 20.000 | C = 2.100 (IVA 50%)
+Resultado: activo 20.000 €, IVA deducible 2.100 €, deuda proveedor 22.100 €.","El IVA no deducible (2.100 €) o bien se añade al coste del vehículo (mayor activo) o se lleva a gasto no deducible. Consulta con tu gestor."
+"126","126","Cuando el banco te abona intereses de cuentas de ahorro, depósitos o cualquier producto financiero.","Intereses depósito: 500 € brutos. Retención 19%: 95 €. Cobras 405 €:
+• A = 0 (banco) | B = 405 (neto cobrado)
+Resultado: ingreso financiero 405 €, entra banco.","Si quieres registrar bruto y retención por separado: 572 debe 405, 473 debe 95, 769 haber 500."
+"127","127","Cuando recibes una donación dineraria de un particular, fundación u organismo.","Donación de fundación: 5.000 €:
+• A = 0 (donación capital 131) | B = 5.000
+Resultado: entra banco 5.000 €, reserva por donación en patrimonio neto.","El tratamiento fiscal de las donaciones varía según el donante y el uso. Consulta con tu asesor fiscal."
+"128","128","Cuando compras un teléfono móvil, tablet u otro dispositivo para la empresa cuyo precio supera ~300 €. Se activa como inmovilizado (cuenta 217) y se amortiza.","iPhone para comercial: 899 € + 188,79 € IVA:
+• A = 0 (proveedor inmovilizado 523) | B = 899 | C = 188,79
+Resultado: activo inmovilizado 899 €, IVA 188,79 €, deuda proveedor 1.087,79 €.","Amortiza cada año con el asiento #41 (equipos informáticos). Vida útil habitual: 4 años (25% anual). Si el precio es menor de 300 €, llévalo a gasto directo con el asiento #73."
+"129","129","Si eres autónomo y trabajas desde casa. Solo puedes deducir la parte proporcional de la factura de energía correspondiente al espacio dedicado a la actividad (m² del despacho ÷ m² totales de la vivienda).","Factura luz: 200 € + 42 € IVA. Despacho ocupa el 20% de la vivienda. Deducible: 40 € + 8,40 € IVA:
+• A = 001 (Iberdrola) | B = 40 (200 × 20%) | C = 8,40 (42 × 20%)
+Resultado: gasto deducible 40 €, IVA deducible 8,40 €.","Criterio AEAT para autónomos en estimación directa:
+Deducción = % m² del despacho × 30% del importe de la factura.
+
+Ejemplo: vivienda 100 m², despacho 20 m² (20%). Factura luz 200 €.
+Deducción = 20% × 30% = 6% → 200 × 6% = 12 € deducibles.
+
+Nota: el porcentaje del 30% lo fija Hacienda como criterio orientativo. Puedes intentar deducir más si acreditas el uso exclusivo del espacio, pero puede ser objeto de discusión en una inspección."
+"130","130","Cuando recibes la factura del operador de telecomunicaciones (Movistar, Vodafone, Orange...) con varios conceptos en el mismo recibo.","Factura Movistar: Fijo 15 € + Móvil 25 € + Fibra 40 € = 80 € base + 16,80 € IVA (21%) = 96,80 €:
+• A = 001 (Movistar) | B = 15 | C = 25 | D = 40 | E = 16,80
+Resultado: gastos por concepto 629 (fijo/móvil/fibra), IVA 16,80 €, deuda Movistar 96,80 €.","Autónomo con móvil de uso mixto: introduce en C solo el 50% de la cuota de móvil (12,50 € en el ejemplo)."
+"131","131","Cuando el tipo de IVA del carburante está reducido al 10% por medidas gubernamentales temporales. Úsalo en lugar del asiento #91 mientras esté vigente.","Ticket gasolinera con IVA 10%: 59,40 € total. Base: 54 €. IVA 10%: 5,40 €:
+• A = 0 (caja/banco) | B = 54 | C = 5,40
+Resultado: gasto combustible 54 €, IVA deducible 5,40 €.","VIGENCIA TEMPORAL: Verifica en la web de la AEAT si esta reducción sigue en vigor en la fecha de la operación. Cuando el IVA vuelva al 21%, usa el asiento #91."
+"132","132","Cuando recibes la factura de la luz (electricidad) y el tipo de IVA aplicado es el 10% reducido. Esto ocurre en suministros PVPC (Precio Voluntario para el Pequeño Consumidor) con potencia contratada igual o inferior a 10 kW.","Factura Endesa PVPC: 200 € base + 20 € IVA (10%) = 220 €
+• A = 001 (terminación Endesa) | B = 200 | C = 20
+Resultado: gasto suministro 200 €, IVA deducible 20 €, deuda 220 €.","¿CUÁNDO APLICA EL 10% EN ELECTRICIDAD?
+• Contratos PVPC con potencia ≤ 10 kW para uso doméstico o pequeños negocios.
+• Algunos contratos de mercado libre también pueden negociar este tipo según el uso.
+
+Si tienes potencia contratada > 10 kW o contrato de mercado libre estándar, el IVA es el 21% → usa el asiento #17.
+
+Ha habido reducciones temporales del IVA eléctrico (incluso al 5%) en los últimos años. Comprueba siempre el tipo en la factura y usa el IVA real que aparezca."
+"133","133","Cuando tu empresa o tú como autónomo sois propietarios de un local, nave o inmueble y lo alquiláis a un tercero. Registra el ingreso mensual por arrendamiento.","Alquilas tu local a un comerciante: 1.200 € base + 252 € IVA (21%) = 1.452 €
+• A = 001 (terminación inquilino 430) | B = 1.200 | C = 252
+Resultado: ingreso alquiler 1.200 € (cuenta 752), IVA repercutido 252 €, derecho de cobro 1.452 €.","¿CUÁNDO LLEVA IVA EL ALQUILER?
+• Alquiler a EMPRESA o PROFESIONAL para su actividad: SÍ lleva IVA 21%.
+• Alquiler de VIVIENDA a particular para uso residencial: NO lleva IVA (exento).
+• Alquiler a PARTICULAR para uso distinto del residencial (garaje, trastero…): SÍ lleva IVA.
+
+¿CUÁNDO HAY RETENCIÓN IRPF?
+• Si el arrendatario es empresa o profesional, él te practicará retención del 19% sobre la base. El neto que cobras = base × 81% + IVA. Registra esa retención como crédito en cuenta 473.
+
+Este ingreso debe declararse en el modelo 303 (IVA) y en el IS o IRPF del ejercicio."
+"134","134","Cuando alquilas un inmueble a una empresa o profesional que te practica la retención de IRPF del 19% al pagarte. Recibes menos dinero del que facturas.","Alquiler facturado: 1.200 € base + 252 € IVA. Retención 19% = 228 €. Cobras: 1.452 - 228 = 1.224 €
+• A = 001 (inquilino 430) | B = 1.200 | C = 252 | R = 228
+Resultado: cobras 1.224 €, crédito retención 228 € (cuenta 473), cancela derecho de cobro.","La retención del 19% la practica el arrendatario (quien paga el alquiler) y la ingresa a Hacienda trimestralmente en el modelo 115.
+
+TÚ, COMO ARRENDADOR, debes declarar el importe bruto en tu IRPF o IS, y la retención te la descuentan del impuesto final a pagar.
+
+CUENTA 473: acumula todas las retenciones que te practican durante el año. Al hacer la declaración anual, este saldo reduce el impuesto resultante."
+"135","135","Cuando cierras la nómina de un empleado al que le habías dado un anticipo de nómina previamente (asiento #67). El anticipo se descuenta del neto a pagar.","Empleado con bruto 1.500 €, IRPF 150 €, SS trabajador 110 €. Anticipo previo de 300 €.
+Neto sin anticipo = 1.240 €. Neto a transferir = 1.240 - 300 = 940 €
+• D = 1.500 | L (líquido neto tras descontar anticipo) = 940 | R = 150 | C (coste empresa) = 1.950
+Resultado: se cancela el anticipo (cuenta 460) y se paga solo el neto restante.","El anticipo (registrado con el asiento #67 en cuenta 460) se descuenta automáticamente al calcular el neto a pagar.
+
+IMPORTANTE: el anticipo en cuenta 460 debe quedar con saldo CERO al final del mes una vez aplicada la nómina. Si no cuadra, revisa que el importe del anticipo en la variable L sea exactamente la diferencia entre el neto teórico y lo que le transferiste antes."
+"136","136","Cuando usas gasoil de calefacción (gasóleo B o C) para calentar el local, nave o instalaciones de la empresa. Es distinto al gasoil de automoción (asiento #91).","Factura de gasóleo C para calefacción: 800 € base + 168 € IVA (21%) = 968 €
+• A = 001 (terminación proveedor) | B = 800 | C = 168
+Resultado: gasto suministro 800 €, IVA deducible 168 €, deuda con proveedor 968 €.","DIFERENCIA ENTRE TIPOS DE GASOIL:
+• Gasóleo B (uso agrícola, calefacción): IVA 21%. Precio más bajo por bonificación en impuesto especial.
+• Gasóleo C (calefacción): IVA 21%.
+• Gasoil de automoción (vehículo de empresa): asiento #91.
+
+DEDUCIBILIDAD: el gasto es 100% deducible si se usa exclusivamente para la actividad empresarial (calefacción del local). No es deducible si el local es también vivienda habitual (salvo proporción, como en el asiento #129)."
+"137","137","Cuando compras productos con IVA superreducido del 4%: pan, leche, huevos, frutas, verduras, hortalizas, cereales, medicamentos de uso humano, libros, periódicos, revistas, material escolar.","Compra de pan y lácteos para una panadería-cafetería: 500 € base + 20 € IVA (4%) = 520 €
+• A = 001 (terminación proveedor) | B = 500 | C = 20
+Resultado: gasto compra 500 €, IVA deducible 20 €, deuda con proveedor 520 €.","PRODUCTOS AL 4% DE IVA (lista orientativa):
+• Alimentación básica: pan común, harinas panificables, leche, quesos, huevos, frutas, verduras, hortalizas, cereales, aceites de oliva, pasta.
+• Medicamentos de uso humano y productos farmacéuticos.
+• Libros, periódicos y revistas (en papel; los digitales también desde 2025).
+• Material escolar.
+• Prótesis e implantes para personas con discapacidad.
+
+NOTA: la clasificación de productos entre tipos de IVA puede cambiar con modificaciones legislativas. Consulta la tarifa vigente en la web de la AEAT ante cualquier duda."
+"138","138","Cuando contratas una empresa de limpieza para el local, oficina o instalaciones de la empresa. También aplica para servicios de desinfección, control de plagas o mantenimiento de zonas comunes.","Factura empresa de limpieza: 300 € base + 63 € IVA (21%) = 363 €
+• A = 001 (terminación empresa limpieza) | B = 300 | C = 63
+Resultado: gasto servicios exteriores 300 € (cuenta 629), IVA deducible 63 €, deuda 363 €.","¿AUTÓNOMO CON EMPLEADO DE LIMPIEZA (persona física)?
+Si contratas directamente a una persona física (no empresa), debes practicarle retención IRPF del 15% (o 7% primeros años). Usa el asiento #19 en ese caso.
+
+INVERSIÓN DEL SUJETO PASIVO EN LIMPIEZA:
+Si la empresa de limpieza es autónomo o empresa y la factura supera ciertos umbrales en el sector de servicios intensivos en mano de obra, puede aplicar la inversión del sujeto pasivo. Consulta con tu gestor si es tu caso."
+"139","139","Cuando el local o nave de la empresa pertenece a una comunidad de propietarios y pagas la cuota mensual o derramas extraordinarias.","Cuota comunidad mensual: 120 €. Las cuotas de comunidad NO llevan IVA.
+• A = 001 (terminación comunidad 410) | B = 120
+Resultado: gasto 120 € (cuenta 629), deuda con la comunidad 120 €.","LAS CUOTAS DE COMUNIDAD NO LLEVAN IVA porque la comunidad de propietarios no es sujeto pasivo del IVA.
+
+DERRAMAS EXTRAORDINARIAS:
+Si la derrama es para una mejora del edificio (ascensor, fachada, cubierta…) que aumenta el valor del inmueble y tiene vida útil propia, puede considerarse inversión (activo). Consúltalo con tu gestor. Si es para reparación o mantenimiento, es gasto.
+
+Si el local es en ALQUILER y la comunidad la paga el arrendador, no hagas este asiento; el gasto ya está incluido en el alquiler."
+"140","140","Cuando asistes a cursos, talleres, congresos o cualquier formación relacionada directamente con tu actividad empresarial o profesional.","Curso de fiscal para autónomo: 450 € + 94,50 € IVA (21%) = 544,50 €
+• A = 001 (terminación formadora) | B = 450 | C = 94,50
+Resultado: gasto formación 450 € (cuenta 629), IVA deducible 94,50 €, deuda 544,50 €.","DEDUCIBILIDAD:
+• Formación DIRECTAMENTE relacionada con la actividad: 100% deducible tanto en IS como en IRPF.
+• Formación general (idiomas, ofimática básica): deducible si se justifica su utilidad para el negocio.
+• Másteres y formación universitaria: deducibles si guardan relación directa con la actividad, aunque Hacienda puede discutirlo en inspección. Conserva documentación.
+
+SI EL AUTÓNOMO TIENE EMPLEADOS:
+La formación de los empleados va a la cuenta 649 (otros gastos sociales), no a 629."
+"141","141","Cuando recibes la factura mensual de tu gestoría o asesoría y el emisor es una sociedad (SL, SA) o un profesional que NO aplica retención IRPF (en módulos o primeros años al 7%).","Factura mensual de la gestoría (SL): 150 € base + 31,50 € IVA (21%) = 181,50 €
+• A = 001 (terminación gestoría) | B = 150 | C = 31,50
+Resultado: gasto servicios profesionales 150 € (cuenta 623), IVA deducible 31,50 €, deuda 181,50 €.","DIFERENCIA CON EL ASIENTO #19:
+• Gestoría constituida como SOCIEDAD (SL, SA): sin retención → este asiento #141.
+• Gestoría como AUTÓNOMO persona física en estimación directa: con retención 15% → asiento #19.
+• Autónomo en MÓDULOS: sin retención (lo indica en la factura) → este asiento #141.
+• Autónomo primeros 3 años de actividad: puede aplicar retención reducida del 7% → asiento #19 con R = B × 0.07.
+
+Siempre comprueba si la factura incluye o no retención IRPF."
+"142","142","Cuando recibes la factura del suministro de agua del local o nave de la empresa. El agua tiene IVA reducido al 10%.","Factura de agua: 80 € base + 8 € IVA (10%) = 88 €
+• A = 001 (terminación empresa agua) | B = 80 | C = 8
+Resultado: gasto suministro 80 € (cuenta 628), IVA deducible 8 €, deuda 88 €.","TIPOS DE IVA EN AGUA:
+• Suministro de agua para consumo doméstico o empresarial: 10% (tipo reducido).
+• Canon de saneamiento / tasa de alcantarillado: normalmente NO lleva IVA (es una tasa municipal).
+• Agua mineral embotellada para consumo (compra de garrafas para empleados): 10%.
+
+AUTÓNOMOS EN VIVIENDA: si trabajas desde casa, solo deduces la parte proporcional al espacio de actividad → asiento #129."
+"143","143","Cuando compras un ordenador, portátil, servidor u otro equipo informático de precio superior a ~300 € y vida útil mayor a un año. Se activa como inmovilizado en cuenta 217 y se amortiza cada año.","Portátil para la empresa: 1.200 € + 252 € IVA (21%) = 1.452 €
+• A = 001 (terminación equipo 217) | B = 1.200 | C = 252
+Resultado: activo inmovilizado 1.200 € (cuenta 217), IVA deducible 252 €, deuda 1.452 €.","ACTIVAR vs GASTO DIRECTO:
+• Precio > ~300 € y vida útil > 1 año: ACTIVA como inmovilizado (este asiento). Luego amortiza con el asiento #41.
+• Precio < ~300 € o vida útil corta: gasto directo con el asiento #73 (cuenta 629).
+
+AMORTIZACIÓN (asiento #41):
+Coeficiente máximo IS: 25% anual (vida mínima 4 años). Una vez registrada la compra aquí, recuerda hacer el asiento #41 cada ejercicio hasta que el equipo esté totalmente amortizado.
+
+EQIPOS PARA USO MIXTO (empresa + personal): el IVA solo es deducible en la proporción de uso empresarial. Si es para uso exclusivo empresarial, IVA 100% deducible."
+"144","144","Cuando pagas la cuota mensual de un contrato de renting de vehículo. En el renting, la empresa de renting conserva la propiedad; tú pagas por el uso. Toda la cuota es gasto, sin activar ningún bien.","Cuota mensual renting de vehículo: 400 € base + 84 € IVA (21%) = 484 €
+• A = 001 (terminación empresa renting 410) | B = 400 | C = 84
+Resultado: gasto arrendamiento 400 € (cuenta 621), IVA 84 €, deuda 484 €.","RENTING vs LEASING FINANCIERO:
+• RENTING: NO se activa el bien. Toda la cuota va a gasto (cuenta 621). Sin opción de compra al final (o residual muy alto). Más sencillo contablemente → este asiento.
+• LEASING FINANCIERO: se ACTIVA el bien en balance y se amortiza. Tiene opción de compra al final → asiento #60 y #61.
+
+DEDUCIBILIDAD DEL IVA EN RENTING:
+• Vehículo uso exclusivo empresarial: IVA 100% deducible.
+• Vehículo uso mixto (turismo): IVA deducible al 50%. Introduce C = B × 0.21 × 0.50.
+
+DEDUCIBILIDAD DEL GASTO EN IS:
+La cuota de renting es gasto deducible en su totalidad, sin límite de amortización. Esta es una de sus ventajas fiscales frente al leasing."
+"145","145","Cuando una administración pública (Ministerio, Comunidad Autónoma, Ayuntamiento, SEPE, CDTI…) te transfiere directamente el importe de una subvención concedida a tu cuenta bancaria.","Subvención del SEPE para contratación indefinida de 3.000 €:
+• A = 0 (H.P. deudora 4708) | B = 3.000
+Resultado: entra dinero en banco (572), cancela el crédito con Hacienda (4708) por la subvención pendiente de cobro.","TIPOS DE SUBVENCIÓN Y SU CONTABILIZACIÓN:
+• Subvención de EXPLOTACIÓN (para cubrir gastos corrientes: nóminas, alquileres, suministros): ingreso del ejercicio, cuenta 740. Asiento #21.
+• Subvención de CAPITAL (para comprar inmovilizado: maquinaria, vehículo, reforma…): patrimonio neto, cuenta 130. Se imputa gradualmente al resultado a medida que se amortiza el bien. Asiento #81.
+• ESTE ASIENTO #145: registra el cobro efectivo de la subvención en el banco, independientemente del tipo.
+
+TRIBUTACIÓN:
+Las subvenciones son ingreso sujeto a IS o IRPF en el ejercicio en que se imputan. Consulta con tu gestor si la subvención puede fraccionarse fiscalmente."
+"146","146","Trimestral. Pago fraccionado del IRPF para autónomos en ESTIMACIÓN OBJETIVA (módulos).
+
+PLAZOS:
+• 1T: del 1 al 20 de abril
+• 2T: del 1 al 20 de julio
+• 3T: del 1 al 20 de octubre
+• 4T: del 1 al 30 de enero
+
+IMPORTANTE: El modelo 131 es para MÓDULOS (estimación objetiva). Para estimación directa es el modelo 130 (asiento #8).","Cuota trimestral módulos 1T: 450 €
+• A = 0 | B = 450
+Resultado: pago fraccionado IRPF 450 € (cuenta 473), sale del banco.","¿QUIÉN PRESENTA EL 131?
+• Autónomos en ESTIMACIÓN OBJETIVA (módulos): SÍ.
+• Autónomos en estimación directa (normal o simplificada): NO. Presentan el 130.
+• SL/SA: NO (presentan el 202).
+• Comunidades de Bienes en módulos: la CB no presenta; los socios sí, cada uno el 131 en su proporción.
+
+CÁLCULO:
+Actividades empresariales (general, con asalariados): 4% del rendimiento resultante de aplicar los módulos.
+Actividades empresariales (sin asalariados): 3%.
+Actividades agrícolas, ganaderas y forestales: 2% del volumen de ingresos.
+
+RESULTADO NEGATIVO O CERO: presenta igualmente declaración negativa.
+
+FIN DE MÓDULOS: el régimen de módulos está prorrogado para 2026 pero el Gobierno estudia eliminarlo en próximos ejercicios. Consulta con tu gestor si te conviene pasarte a estimación directa."
+"147","147","Trimestral. Cuando la empresa retiene e ingresa a Hacienda el 19% sobre dividendos pagados a socios o intereses pagados por préstamos de socios.
+
+PLAZOS: mismos que el modelo 111 (del 1 al 20 de abril, julio, octubre y del 1 al 20 de enero).","Reparto de dividendos: 10.000 €. Retención 19% = 1.900 €.
+• A = 0 | B = 1.900
+Resultado: ingresa 1.900 € a Hacienda (modelo 123), cancela cuenta 4751.","¿QUIÉN PRESENTA EL 123?
+• SL/SA que reparten dividendos a socios: SÍ, retención 19% sobre el bruto.
+• Empresas que pagan intereses por préstamos de socios (cuenta corriente socio 551): SÍ, retención 19%.
+• Entidades que pagan intereses de bonos u obligaciones: SÍ.
+• Autónomos individuales que cobran dividendos: NO presentan el 123 (lo presenta la sociedad que reparte).
+
+RESUMEN ANUAL: modelo 193 en enero (informativo, sin pago).
+
+EL SOCIO: recibe el dividendo neto (81%) y declara el bruto en su IRPF/IS, con la retención como crédito fiscal."
+"148","148","Anual. Al hacer la declaración de la renta (modelo 100) el autónomo regulariza el IRPF del año. Descuenta los pagos fraccionados del 130/131 y las retenciones soportadas del impuesto total.
+
+PLAZO: del 2 de abril al 30 de junio del año siguiente.","IRPF anual a pagar: 8.000 €. Pagos fraccionados 130 realizados: 3.200 €. Retenciones soportadas (clientes): 600 €. A ingresar: 4.200 €.
+• B = 3.200 (pagos 130) | C = 4.200 (diferencia a pagar)
+Resultado: cancela cuenta 4730 (pagos fraccionados), paga 4.200 € a Hacienda.","SOLO PARA AUTÓNOMOS PERSONAS FÍSICAS (estimación directa o módulos).
+SL/SA no presentan el modelo 100, presentan el 200 (asiento #24).
+
+SI SALE A DEVOLVER:
+El signo de C es negativo: Hacienda te ingresa la diferencia. Anota la devolución esperada en cuenta 4700 (H.P. deudora por devoluciones).
+
+FRACCIONAMIENTO DEL PAGO:
+Si el resultado es a pagar, puedes fraccionar en dos plazos: 60% al presentar y 40% en noviembre (modelo 102). No genera intereses.
+
+RETENCIONES DE CLIENTES:
+Las retenciones que te han practicado tus clientes (cuenta 473) también se descuentan de la cuota final."
+"149","149","Mensual. Pago a la TGSS de las cuotas de Seguridad Social: la parte de la empresa más la parte del trabajador retenida en nómina.
+
+FECHA DE CARGO: el último día del mes siguiente al devengo (ej. la SS de enero se paga el último día hábil de febrero).
+
+USAR SIEMPRE DESPUÉS del asiento #1 (devengo nómina), que ya crea la deuda en cuenta 476.","SS empresa enero: 450 €. SS trabajador retenida: 110 €. Total a pagar TGSS: 560 €.
+• A = 0 | B = 560
+Resultado: cancela la deuda con la SS (476), sale dinero del banco (572).","¿QUÉ INCLUYE LA CUENTA 476?
+La deuda con la TGSS acumulada del asiento #1:
+• Cuota empresa (contingencias comunes + AT/EP + desempleo + FOGASA + formación + MEI)
+• Cuota trabajador retenida en nómina (contingencias comunes + desempleo)
+
+EL MEI EN 2025:
+El Mecanismo de Equidad Intergeneracional sube al 0,80% sobre la base de cotización en 2025 (era 0,70% en 2024). Afecta tanto a la cuota empresa como a la del trabajador.
+
+SI HAY VARIOS TRABAJADORES:
+Usa un solo asiento con el total del recibo de liquidación de cotizaciones (RLC) que genera el Sistema RED.
+
+AUTÓNOMOS CON EMPLEADOS:
+También aplica este asiento para pagar la SS de sus empleados, que es independiente de su propia cuota al RETA (asientos #2 y #3)."
+"150","150","Cuando un empleado está de baja médica (IT) y la empresa le paga el salario completo actuando como pagadora delegada de la SS.
+
+DESDE EL DÍA 4 DE BAJA: la SS asume el pago (15% desde el día 4 al 20; 60% desde el día 21). La empresa adelanta el dinero al trabajador y luego lo recupera de la TGSS.","Empleado 20 días de baja. Salario bruto mes: 1.500 €. Días trabajados: 10 (bruto 500 €). Prestación SS a cargo TGSS: 700 €. IRPF: 150 €. SS empresa (solo días trabajados): 150 €.
+• B=500 | C=150 | D=700 | E=neto | F=150 | G=...
+Resultado: la empresa recupera D de la TGSS mediante la liquidación de cuotas.","DÍAS 1-3 DE BAJA:
+A cargo exclusivo de la empresa. No hay prestación de la SS.
+
+DÍAS 4-20:
+Prestación del 60% de la base reguladora, a cargo de la TGSS. La empresa lo adelanta y lo compensa en el pago de cuotas.
+
+DESDE EL DÍA 21:
+Prestación del 75% de la base reguladora, a cargo de la TGSS.
+
+CUENTA 471 (SS DEUDORA):
+Registra el importe que la TGSS debe reintegrarte. Se cancela al liquidar las cotizaciones mensuales, compensando lo que te deben con lo que tú les pagas.
+
+CONVENIO COLECTIVO:
+Muchos convenios obligan a complementar hasta el 100% del salario. La parte que complementa la empresa es gasto (cuenta 640), no recuperable de la SS."
+"151","151","Durante un ERTE de suspensión, el trabajador NO trabaja durante el periodo suspendido. El SEPE le paga directamente la prestación por desempleo. La empresa solo registra los días efectivamente trabajados (si los hay) y las cotizaciones exoneradas.","Empleado con ERTE total (mes completo suspendido):
+• La empresa NO paga nada al empleado ese mes.
+• El SEPE paga directamente la prestación (el 70% de la base reguladora los primeros 6 meses).
+• La empresa puede tener exoneración parcial o total de cuotas SS según el tipo de ERTE.","LO QUE HACE LA EMPRESA EN UN ERTE TOTAL:
+• No registra nómina del periodo suspendido (el SEPE paga directamente).
+• Puede disfrutar de EXONERACIÓN de cuotas SS: en ERTE por fuerza mayor, la empresa queda exonerada del pago de cuotas (la SS las considera igualmente cotizadas para el trabajador).
+• Debe comunicar mensualmente al SEPE los datos de los trabajadores en ERTE (formulario específico).
+
+ERTE PARCIAL (reducción de jornada):
+La empresa paga el salario de las horas trabajadas y el SEPE paga la prestación por las horas suspendidas. Usa este asiento solo por las horas trabajadas.
+
+FIN DEL ERTE:
+Cuando el trabajador se reincorpora, vuelves al asiento normal #1."
+"152","152","Cuando compras mercancías a un proveedor de fuera de la Unión Europea (China, USA, Reino Unido post-Brexit, etc.). La aduana liquida el IVA español al entrar la mercancía en territorio español.","Compra de electrónica a proveedor chino: mercancía 3.000 € + arancel 300 € + flete 200 € = base 3.500 €. IVA aduana 21% = 735 €.
+• A = 0 | B = 3.500 | C = 735
+Resultado: compra 3.500 €, IVA deducible 735 €, deuda proveedor 3.500 €, deuda aduana 735 €.","DIFERENCIAS CON ADQUISICIÓN INTRACOMUNITARIA (asiento #31):
+• UE: autorepercusión (tú mismo calculas el IVA, no hay pago real a la aduana).
+• No-UE (importación): la aduana liquida el IVA y debes pagarlo antes de retirar la mercancía.
+
+BASE IMPONIBLE EN IMPORTACIÓN:
+No es solo el precio de factura. Incluye: precio mercancía + seguro + flete hasta la frontera UE + aranceles (DUA). Todo ello forma la base sobre la que se aplica el IVA.
+
+PAGO DEL IVA A LA ADUANA:
+Puedes aplazarlo si tienes autorización de la AEAT (diferimiento del IVA a la importación). En ese caso se declara directamente en el modelo 303 sin pago previo a la aduana.
+
+MODELO 303: declara el IVA de importación como IVA devengado y también como IVA deducible (si el bien está afecto a la actividad), resultando neutro si tienes plena deducción."
+"153","153","Cuando destinas al uso personal (tuyo o de tu familia) un bien que la empresa adquirió deduciéndose el IVA. La Ley del IVA obliga a repercutir el IVA sobre el valor del bien como si fuera una venta.","Ordenador de empresa (valor neto contable 800 €) que el autónomo se lleva a casa para uso personal. IVA 21% = 168 €.
+• A = 0 | B = 168 | C = 800
+Resultado: IVA repercutido 168 € (como si lo vendieras), gasto 800 €.","¿CUÁNDO SE PRODUCE AUTOCONSUMO?
+• Un bien adquirido con IVA deducido se destina a uso privado.
+• Se regala a un empleado o tercero (salvo atenciones a clientes con límite).
+• Se incorpora al activo fijo desde el circulante.
+• La empresa cesa la actividad y queda con existencias o bienes de inversión.
+
+VALOR DEL AUTOCONSUMO:
+El IVA se calcula sobre el valor de mercado del bien (o coste si no hay precio de mercado).
+
+EXCEPCIÓN — MUESTRAS Y REGALOS:
+Las muestras y objetos publicitarios de escaso valor (hasta 200 € por destinatario y año) NO constituyen autoconsumo.
+
+AUTÓNOMOS:
+Si al darte de baja tienes existencias o inmovilizado con IVA deducido, debes hacer el autoconsumo al cesar la actividad."
+"154","154","Al cierre del ejercicio, cuando la prorrata definitiva de IVA difiere de la prorrata provisional aplicada durante el año. Obliga a ajustar el IVA soportado deducido.
+
+FECHA: en la última declaración del año (4T, modelo 303 de enero).","Prorrata provisional usada el año: 70%. Prorrata definitiva calculada: 75%.
+IVA soportado del año: 10.000 €. Diferencia: (75%-70%) × 10.000 € = 500 € adicionales deducibles.
+• B = 500 (ajuste positivo)
+Resultado: deduces 500 € más de IVA, aumenta cuenta 472.","¿QUIÉN APLICA LA PRORRATA?
+Empresas y autónomos que realizan simultáneamente:
+• Operaciones CON derecho a deducción de IVA (ventas sujetas y no exentas)
+• Operaciones SIN derecho a deducción (ventas exentas: seguros, servicios médicos, arrendamientos de vivienda, operaciones financieras...)
+
+CÁLCULO DE LA PRORRATA:
+Prorrata = (Ventas con derecho a deducción / Total ventas) × 100
+Se redondea al entero superior.
+
+SI LA DIFERENCIA ES NEGATIVA:
+La prorrata definitiva es menor que la provisional → has deducido de más → debes devolver el exceso. El signo de B es negativo (reduce cuenta 472).
+
+SECTORES DIFERENCIADOS:
+Si realizas actividades con porcentajes de prorrata muy distintos, puedes solicitar a la AEAT aplicar la prorrata especial (deducción por sectores diferenciados)."
+"155","155","Cuando estás acogido al Régimen Especial de Criterio de Caja (RECC) y emites una factura. El IVA NO se devenga hasta el cobro efectivo (o hasta el 31 de diciembre del año siguiente si no cobras antes).
+
+EL RECC es voluntario. Para acogerse se comunica en el modelo 036 en diciembre del año anterior.","Factura emitida en criterio de caja: base 1.000 € + IVA 21% 210 € = total 1.210 €.
+• A = 001 | B = 1.000 | C = 210 | Z = 1.210
+Resultado: derecho de cobro 1.210 € (cuenta 4305), IVA pendiente en cuenta 4777 (no va al 477 aún).","DIFERENCIA CON EL RÉGIMEN GENERAL:
+• Régimen general: el IVA se devenga al emitir la factura (cuenta 477).
+• RECC: el IVA se devenga al cobrar (cuenta 4777 → 477 al cobro).
+
+¿QUIÉN PUEDE ACOGERSE?
+Autónomos y empresas con volumen de operaciones ≤ 2.000.000 € en el año anterior.
+
+AL COBRAR LA FACTURA:
+Trasladas el IVA de la cuenta 4777 (pendiente) a la 477 (devengado). A partir de ese momento se incluye en el modelo 303.
+
+FECHA LÍMITE:
+Si no cobras antes del 31 de diciembre del año siguiente, el IVA se devenga igualmente en esa fecha.
+
+EFECTO EN EL PROVEEDOR:
+Tu cliente, si no está en RECC, tampoco puede deducirse tu IVA hasta que te pague."
+"156","156","Cuando cobras una factura emitida en criterio de caja. En ese momento el IVA se devenga y pasa de la cuenta 4777 (pendiente) a la 477 (devengado), incluyéndose en el modelo 303 del trimestre en que se cobra.","Cobro de factura RECC: 1.210 € (base 1.000 € + IVA 210 €).
+• A = 001 | B = 1.210 | C = 210
+Resultado: entra dinero en banco, se devenga el IVA (477), se cancela el cliente RECC.","COBRO PARCIAL:
+Si solo cobras parte de la factura, el IVA devengado es proporcional.
+Ej: cobras 605 € (50% de 1.210 €) → IVA devengado = 105 € (50% de 210 €).
+
+COBRO EN VARIAS VECES:
+Haz un asiento por cada cobro parcial, prorrateando el IVA en cada uno.
+
+FECHA LÍMITE (31 diciembre año siguiente):
+Si el 31/12 del año siguiente no has cobrado, usa este mismo asiento con fecha 31/12 para devengar el IVA obligatoriamente."
+"157","157","Al cierre del ejercicio, cuando existe una diferencia temporaria DEDUCIBLE: el gasto es contable este año pero no fiscalmente deducible hasta un año futuro (ej: provisión por litigio, deterioro de créditos no vencidos 6 meses).","Provisión por litigio dotada contablemente: 4.000 €. No deducible en IS este año. Tipo IS 25%.
+Activo diferido = 4.000 × 25% = 1.000 €.
+• A = 0 | B = 1.000
+Resultado: activo DTA 1.000 € (cuenta 4740), ingreso impuesto diferido 1.000 € (6301).","¿CUÁNDO SE GENERA UN ACTIVO POR IMPUESTO DIFERIDO?
+• Provisiones contabilizadas pero no deducibles fiscalmente hasta cumplirse condiciones (6 meses vencimiento, concurso...).
+• Deterioros de activos no deducibles aún.
+• Gastos activados fiscalmente en ejercicios futuros.
+• Bases imponibles negativas (BINs) pendientes de compensar → cuenta 4745.
+
+REVERSIÓN:
+Cuando el gasto se vuelve deducible fiscalmente, revierte el DTA:
+4740 haber / 6301 debe (gasto impuesto diferido).
+
+LÍMITE DE ACTIVACIÓN:
+Solo se activa si es probable que haya suficientes ganancias futuras para compensarlo. Si no es probable, no se activa."
+"158","158","Al cierre del ejercicio con pérdidas, cuando la base imponible del IS es negativa. Se activa el crédito fiscal por la BIN si es probable que se pueda compensar con beneficios futuros.","Pérdida fiscal del ejercicio: 10.000 €. Tipo IS 25%. Crédito fiscal = 2.500 €.
+• A = 0 | B = 2.500
+Resultado: activo fiscal 2.500 € (cuenta 4745), ingreso diferido 2.500 € (6301).","COMPENSACIÓN DE BINs EN IS:
+• Las BINs se pueden compensar con beneficios futuros sin límite temporal.
+• Límite de compensación anual:
+  - General: 70% de la base imponible positiva previa.
+  - Empresas con facturación > 20M€: límites menores (50% o 25%).
+  - Siempre se puede compensar hasta 1.000.000 €.
+
+AL COMPENSAR EN AÑO FUTURO:
+Cuando usas la BIN para reducir el IS de un ejercicio con beneficios:
+6301 debe / 4745 haber (revierte el crédito fiscal).
+
+SI NO ES PROBABLE LA COMPENSACIÓN:
+No actives la cuenta 4745. Cuando haya perspectivas de beneficios futuros, puedes activarla entonces."
+"159","159","Cuando existe una diferencia temporaria IMPONIBLE: un ingreso ya tributado fiscalmente pero aún no reconocido contablemente, o un gasto deducido fiscalmente antes de ser contabilizado (ej: amortización acelerada en IS).","Amortización acelerada IS: contable 2.000 €, fiscal 4.000 €. Diferencia 2.000 €. Tipo 25%.
+Pasivo diferido = 2.000 × 25% = 500 €.
+• A = 0 | B = 500
+Resultado: gasto impuesto diferido 500 € (6301), pasivo 500 € (479).","¿CUÁNDO SE GENERA UN PASIVO POR IMPUESTO DIFERIDO?
+• Amortización acelerada fiscalmente permitida (deduces más en IS de lo que amortizan los libros).
+• Libertad de amortización para ciertos elementos.
+• Ingresos contabilizados antes de tributar.
+
+REVERSIÓN:
+Cuando la diferencia temporal se elimina (el libro alcanza al fiscal):
+479 debe / 6301 haber (ingreso impuesto diferido).
+
+RELACIÓN CON LOS TIPOS IS 2025:
+Con los nuevos tipos para microempresas y PYMES (21-24%), el valor de los activos y pasivos diferidos existentes se recalcula al nuevo tipo efectivo."
+"160","160","Cuando pagas la prima del seguro de salud privado del autónomo, su cónyuge e hijos menores de 25 años que convivan en el hogar. Es un gasto deducible específico en IRPF estimación directa.","Prima mensual seguro médico: 80 € (autónomo) + 70 € (cónyuge) = 150 €.
+• A = 001 | B = 150
+Resultado: gasto seguro 150 € (cuenta 625), deuda con aseguradora 150 €.","LÍMITE DE DEDUCCIÓN EN IRPF:
+• 500 € por persona asegurada (autónomo, cónyuge, hijos menores de 25 años).
+• Si el asegurado tiene discapacidad: límite de 1.500 €.
+• Ejemplo: autónomo + cónyuge + 2 hijos = 4 × 500 € = 2.000 € máximo deducible.
+
+IMPORTANTE:
+• Solo deducible en ESTIMACIÓN DIRECTA (normal y simplificada).
+• En módulos: NO es gasto deducible.
+• IVA: los seguros de salud están EXENTOS de IVA. No hay IVA a deducir.
+• Distinto del seguro de empresa genérico (accidentes, responsabilidad civil, etc.) que va al asiento #103.
+
+SI SUPERAS EL LÍMITE:
+La prima que supere los 500 € por persona no es deducible fiscalmente aunque sí se contabiliza como gasto."
+"161","161","Cuando incurres en gastos por comidas o cenas de trabajo con clientes o proveedores, regalos empresariales, invitaciones a eventos, etc. relacionados con la actividad.","Comida de trabajo con cliente en restaurante: 120 € base + 12 € IVA (10%) = 132 €.
+• A = 0 | B = 120 | C = 12 | Z = 132
+Resultado: gasto representación 120 € (cuenta 627), IVA 12 €, sale del banco.","DEDUCIBILIDAD EN IS:
+Deducibles hasta el 1% del importe neto de la cifra de negocios del ejercicio. Por encima de ese límite, no son deducibles.
+
+DEDUCIBILIDAD EN IRPF (estimación directa):
+Deducibles si están relacionados con la actividad, debidamente justificados y con criterio de proporcionalidad. Hacienda suele exigir ticket + nombre del cliente/proveedor + motivo de la reunión.
+
+IVA EN RESTAURACIÓN:
+• Comidas: IVA 10%. Solo deducible en la proporción afecta a la actividad.
+• Hacienda presume que las comidas son de uso mixto → IVA deducible 50% si hay indicios de uso profesional.
+
+REGALOS A CLIENTES:
+• Deducibles hasta 200 € por destinatario y año sin constituir autoconsumo.
+• Por encima de 200 €: autoconsumo (asiento #153).
+• El IVA de los regalos NO es deducible aunque la empresa lo pague.
+
+FACTURA OBLIGATORIA:
+Para deducir el gasto, necesitas factura completa (no vale solo ticket)."
+"162","162","Cuando usas tu vehículo personal para desplazamientos de trabajo y cargas el gasto a la empresa o a tu actividad. El IRPF fija un baremo de 0,26 €/km para 2025.","350 km de desplazamiento a cliente en enero. Baremo IRPF: 0,26 €/km.
+Gasto = 350 × 0,26 = 91 €.
+• A = 0 | B = 91
+Resultado: gasto desplazamiento 91 € (cuenta 623), sale del banco.","BAREMO IRPF 2025:
+0,26 €/km para vehículos de gasolina, diésel, híbrido y eléctrico.
+Es un módulo de exención de IRPF, no el coste real del combustible.
+
+DOCUMENTACIÓN OBLIGATORIA:
+Debes registrar: fecha, origen, destino, motivo del viaje y km recorridos. Sin este registro detallado, Hacienda puede denegar la deducción en inspección.
+
+IS (SOCIEDADES):
+En IS no existe el baremo fijo de 0,26 €/km. El gasto deducible debe acreditarse con el coste real (combustible, seguro proporcional, amortización, etc.). En la práctica muchas empresas aplican también el baremo del IRPF como referencia razonable.
+
+EMPLEADOS:
+Las dietas por kilometraje pagadas a empleados también van en cuenta 623. El trabajador no tributa en IRPF por el importe exento (0,26 €/km), si se superara ese baremo el exceso sería rendimiento del trabajo.
+
+DIFERENCIA CON #123 (dietas):
+El asiento #123 cubre dietas de manutención y alojamiento. El kilometraje es una categoría distinta."
+"163","163","Cuando pagas la cuota de colegiación a un colegio profesional (médicos, abogados, arquitectos, ingenieros, economistas, gestores, etc.) o la cuota a una asociación empresarial o gremio.","Cuota anual Colegio de Gestores Administrativos: 360 €.
+• A = 001 | B = 360
+Resultado: gasto 360 € (cuenta 629), deuda con el colegio 360 €.","DEDUCIBILIDAD EN IRPF:
+Las cuotas de colegios profesionales son deducibles como gasto de la actividad en estimación directa, con un límite de 500 € anuales en rendimientos del trabajo (pero sin límite explícito en rendimientos de actividades económicas si la colegiación es obligatoria para ejercer).
+
+DEDUCIBILIDAD EN IS:
+Gasto deducible sin límite si está relacionado con la actividad de la sociedad.
+
+ASSOCIACIONES EMPRESARIALES (ATA, CEOE, etc.):
+Las cuotas a asociaciones empresariales también son deducibles. Van igualmente a cuenta 629.
+
+IVA:
+Las cuotas de colegios profesionales están exentas de IVA (son entidades sin ánimo de lucro). No hay IVA a deducir."
+"164","164","Cuando la empresa realiza operaciones con personas o entidades vinculadas (socios > 25%, administradores, cónyuge o familiares hasta 3er grado) a un precio que NO es el de mercado. La AEAT exige que estas operaciones tributen al valor de mercado.","Socio presta servicios a la SL por 500 €/mes cuando el precio de mercado sería 800 €/mes. Diferencia: 300 €.
+• B = 500 | C = 300 | Z = 800
+Resultado: gasto real a valor mercado 800 €, crédito con socio 800 €.","¿QUÉ SON PERSONAS VINCULADAS?
+• Socios con participación ≥ 25%.
+• Administradores y consejeros.
+• Cónyuge o familiares hasta 3er grado de los anteriores.
+• Sociedades del mismo grupo.
+• Entidades participadas ≥ 25% por los mismos socios.
+
+OBLIGACIÓN DE DOCUMENTACIÓN:
+Operaciones vinculadas > 250.000 €/año con la misma persona: documentación específica de precios de transferencia.
+Modelo 232: declaración informativa de operaciones vinculadas. Plazo: mes siguiente a los 10 meses del cierre (octubre para ejercicios cerrados en diciembre).
+
+CASO MÁS FRECUENTE:
+Socio-administrador que factura a su propia SL honorarios por debajo de mercado para optimizar fiscalidad. La AEAT puede ajustar el precio en ambas partes.
+
+SANCIÓN POR INCUMPLIMIENTO:
+Multa del 15% sobre el ajuste practicado por la AEAT, con mínimo de 3.000 €."
+"165","165","Cuando la junta de socios acuerda reducir el capital social de la sociedad devolviendo aportaciones a los socios. Requiere escritura pública e inscripción en el Registro Mercantil.","Reducción de capital de 10.000 € (2 socios al 50%, 5.000 € cada uno):
+• A = 0 | B = 10.000
+Resultado: reduce capital social (cuenta 100), sale dinero del banco a los socios.","PROCEDIMIENTO LEGAL:
+1. Acuerdo en Junta General (mayoría reforzada según estatutos).
+2. Publicación en BORME (si hay acreedores que puedan oponerse).
+3. Escritura pública ante notario.
+4. Inscripción en Registro Mercantil.
+5. La reducción no surte efectos hasta la inscripción.
+
+TRIBUTACIÓN PARA EL SOCIO:
+La devolución de aportaciones reduce el valor de adquisición de las participaciones. El socio no tributa en el momento de la devolución (sí tributará cuando venda las participaciones, por la menor ganancia o mayor pérdida patrimonial).
+Si la devolución supera el valor de adquisición de las participaciones, el exceso tributa como rendimiento de capital mobiliario (con retención del 19%).
+
+MODELO 123:
+Si parte de la devolución se considera dividendo (supera el valor de adquisición), la sociedad debe practicar retención del 19% e ingresarla con el modelo 123."
+"166","166","Cuando cobras de un cliente mediante Bizum por tu actividad empresarial o profesional. El asiento contable es idéntico a cualquier cobro bancario, pero desde febrero de 2026 tiene especial relevancia fiscal.","Cobro de cliente por Bizum: 350 €.
+• A = 001 | B = 350
+Resultado: entra dinero en banco (572), cancela deuda del cliente (430).","NOVEDAD FEBRERO 2026 — CONTROL AEAT:
+Desde febrero de 2026, los bancos y plataformas de pago deben informar mensualmente a la Agencia Tributaria de todos los cobros recibidos vía Bizum por autónomos y empresas, sin importe mínimo.
+
+Esto afecta a cualquier cobro Bizum vinculado a una actividad económica. Los pagos entre particulares quedan excluidos.
+
+¿QUÉ IMPLICA PARA TI?
+• Todos los cobros Bizum de tu actividad deben estar facturados y declarados.
+• La AEAT cruzará estos datos con tus declaraciones de IVA e IRPF/IS.
+• Si hay cobros Bizum no declarados, la AEAT puede iniciar una comprobación.
+
+RECOMENDACIÓN:
+• Usa una cuenta bancaria separada para cobros de la actividad.
+• Registra cada cobro Bizum con su factura o ticket correspondiente.
+• Si recibes pagos de particulares sin factura (peluquería, fontanería, clases particulares...), asegúrate de declararlos en el modelo 303 y en el IRPF/IS."
+"167","167","Cuando un cliente te paga en criptomonedas (Bitcoin, Ethereum, USDT, etc.) el importe de una factura. Cada cobro en crypto es un hecho imponible.","Factura emitida por 1.000 €. Cliente paga en Bitcoin. En el momento del pago, el Bitcoin recibido vale 1.050 €.
+• B = 1.050 (valor crypto recibido) | C = 1.000 (factura) | D = 50 (ganancia)
+Resultado: activo crypto 1.050 €, cancela cliente 1.000 €, ingreso financiero 50 €.","TRATAMIENTO FISCAL DE LAS CRIPTOMONEDAS:
+• Cada operación (recibir, vender, pagar con crypto) es un hecho imponible.
+• El valor en euros se determina al tipo de cambio del momento de la operación.
+
+EN IS (SOCIEDADES):
+Las criptomonedas son activos financieros (cuenta 540 si < 1 año, 250 si > 1 año). Las variaciones de valor se registran según la normativa de instrumentos financieros.
+
+EN IRPF (AUTÓNOMOS):
+Si recibes crypto como pago de tu actividad, tributa como rendimiento de la actividad por el valor en euros en ese momento.
+Cuando luego vendes o gastas las criptos, tributa la ganancia/pérdida patrimonial en la base del ahorro (19-28%).
+
+MODELO 721:
+Si tienes criptomonedas custodiadas en exchanges EXTRANJEROS superiores a 50.000 €, debes declararlo en el modelo 721 (equivalente al 720 para crypto).
+
+OBLIGACIÓN DE REGISTRO:
+Lleva un registro detallado de cada operación: fecha, tipo de operación, moneda, cantidad, valor en euros y contraparte."
+"168","168","Cuando facturas sin IVA porque estás acogido al régimen de franquicia de IVA (pequeños contribuyentes con facturación por debajo del umbral legal). También aplica a operaciones exentas de IVA por su naturaleza (médicos, enseñanza, seguros...).","Factura de servicios de consultoría sin IVA (actividad exenta): 800 €.
+• A = 001 | B = 800
+Resultado: derecho de cobro 800 €, ingreso 800 €.","RÉGIMEN DE FRANQUICIA DE IVA (PENDIENTE EN ESPAÑA):
+La Directiva UE 2020/285 prevé un régimen de franquicia que permite a autónomos con facturación inferior a un umbral (85.000 € aproximadamente) no repercutir IVA ni presentar declaraciones periódicas. En 2026, España aún no ha implantado este régimen. Consulta con tu gestor si ha entrado en vigor.
+
+OPERACIONES EXENTAS DE IVA (ya vigentes):
+• Servicios médicos y sanitarios.
+• Enseñanza reglada y formación profesional.
+• Servicios financieros y de seguros.
+• Arrendamiento de vivienda habitual.
+• Operaciones inmobiliarias en segunda transmisión.
+
+SI ESTÁS EXENTO:
+• No repercutes IVA en tus facturas.
+• No puedes deducirte el IVA soportado en tus compras.
+• No presentas el modelo 303.
+• Tus compras incluyen el IVA como mayor coste (va al gasto o al activo)."
+"169","169","Cuando recibes una factura de proveedor con pago fraccionado en tres plazos (30-60-90 días o cualquier escalonado). El gasto e IVA se registran íntegros al recibir la factura. Los pagos parciales se registran con el asiento #170 en cada vencimiento.","Factura proveedor: base 3.000 € + IVA 630 € = total 3.630 €. Tres plazos iguales de 1.210 €:
+• B = 3.000 | C = 630 | D = 1.210 | E = 1.210 | F = 1.210
+(D+E+F = 3.630 = B+C ✓)
+
+Resultado: gasto 3.000 €, IVA deducible 630 €, deuda proveedor en tres vencimientos.","IVA: se deduce íntegramente al recibir la factura, aunque pagues en plazos.
+
+CONTROL DE VENCIMIENTOS:
+Usa subcuentas distintas para cada plazo (400.001, 400.002, 400.003) y anota la fecha de vencimiento en las notas del asiento. Así el balance muestra cuánto vence en cada fecha.
+
+PARA SERVICIOS:
+Cambia la cuenta 600 por la cuenta de gasto correspondiente (621 alquiler, 623 servicios, 625 seguros, etc.).
+
+SI EL PROVEEDOR EMITE LETRAS O PAGARÉS:
+Registra primero la factura con este asiento y luego acepta los efectos:
+DEBE 400.A / HABER 4010.A por cada vencimiento.
+Puedes descontarlos en el banco (asiento #75)."
+"170","170","Cuando llega la fecha de cada uno de los vencimientos de una factura registrada con el asiento #169. Se repite una vez por cada plazo.","Pago del 1er vencimiento: 1.210 €.
+• A = 001 | B = 1.210
+Resultado: cancela la deuda del primer plazo (400), sale dinero del banco (572).
+
+Repetir para el 2º (E) y 3er vencimiento (F) en sus fechas respectivas.","USA LA MISMA SUBCUENTA que en el asiento #169 para ese vencimiento concreto.
+
+SI PAGAS ANTES DE PLAZO CON DESCUENTO:
+DEBE 400.A (importe original) / HABER 572 (importe pagado) / HABER 7650 (descuento por pronto pago).
+
+SI NO PUEDES PAGAR Y RENEGOCÍAS:
+Haz un nuevo asiento trasladando la deuda al nuevo vencimiento acordado:
+DEBE 400.A (vencimiento antiguo) / HABER 400.B (nuevo vencimiento)."
+"171","171","Cuando emites una factura a un cliente con cobro fraccionado en tres plazos. El ingreso e IVA se registran íntegros al emitir la factura. Los cobros parciales se registran con el asiento #172 en cada vencimiento.","Factura cliente: base 5.000 € + IVA 1.050 € = total 6.050 €. Tres plazos:
+• 30 días: 2.000 € | 60 días: 2.000 € | 90 días: 2.050 €
+• B = 5.000 | C = 1.050 | D = 2.000 | E = 2.000 | F = 2.050
+(D+E+F = 6.050 = B+C ✓)
+
+Resultado: ingreso 5.000 €, IVA repercutido 1.050 €, derecho de cobro en tres vencimientos.","IVA: se devenga y declara íntegro en el modelo 303 del trimestre en que emites la factura, aunque cobres en plazos.
+
+EXCEPCIÓN — CRITERIO DE CAJA (RECC):
+Si estás en RECC, el IVA se devenga al cobrar cada plazo. Usa los asientos #155 y #156.
+
+CONTROL DE COBROS:
+Usa subcuentas distintas (430.001, 430.002, 430.003) y anota la fecha de vencimiento en las notas del asiento.
+
+SI EL CLIENTE FIRMA PAGARÉS:
+Registra primero la venta con este asiento y luego los efectos:
+DEBE 4310.A / HABER 430.A por cada vencimiento.
+Puedes descontarlos en el banco (asiento #75).
+
+PARA SERVICIOS:
+Cambia cuenta 700 por 705."
+"172","172","Cuando llega la fecha de cada uno de los vencimientos de una factura registrada con el asiento #171. Se repite una vez por cada plazo que se cobra.","Cobro del 1er vencimiento: 2.000 €.
+• A = 001 | B = 2.000
+Resultado: entra dinero en banco (572), cancela el derecho de cobro del primer plazo (430).
+
+Repetir para el 2º (E) y 3er vencimiento (F) en sus fechas respectivas.","USA LA MISMA SUBCUENTA que en el asiento #171 para ese vencimiento concreto.
+
+SI EL CLIENTE NO PAGA AL VENCIMIENTO:
+Reclasifica a clientes de dudoso cobro:
+DEBE 436.A / HABER 430.A (asiento #119).
+Si definitivamente no cobra, baja como fallido (asiento #120).
+
+SI EL CLIENTE TIENE EFECTOS (pagarés):
+• Si paga: asiento #76 (cobro efecto al vencimiento).
+• Si no paga: asiento #77 (efecto impagado).
+
+SI CONCEDES DESCUENTO POR PRONTO PAGO:
+DEBE 572 (cobrado) / DEBE 6650 (descuento concedido) / HABER 430 (importe original)."
+"173","173","Cuando Hacienda concede el aplazamiento o fraccionamiento de una deuda tributaria (IRPF, IVA, IS, retenciones...). En ese momento la deuda deja de estar vencida y pasa a estar aplazada, con un calendario de pagos y unos intereses de demora.","IS a pagar de julio: 8.000 €. Hacienda concede aplazamiento en 4 plazos.
+• A = 0 | B = 8.000
+Resultado: cancela la deuda vencida (4750) y la registra como aplazada (4758).","CÓMO SOLICITAR EL APLAZAMIENTO:
+• Presentar la autoliquidación en plazo (303, 130, 200...) aunque no puedas pagar.
+• Solicitar el aplazamiento/fraccionamiento en la sede electrónica de la AEAT antes o simultáneamente.
+• Si la deuda es < 50.000 €: concesión automática sin garantías.
+• Si la deuda es ≥ 50.000 €: requiere aval bancario, seguro de caución u otras garantías.
+
+INTERÉS DE DEMORA 2025: 7,25% anual (tipo de interés legal del dinero + 25%).
+Los intereses se calculan desde el día siguiente al vencimiento original hasta cada fecha de pago.
+
+CUENTA 4758:
+H.P. deudora por aplazamiento — recoge la deuda aplazada pendiente de pago. Se va cancelando a medida que pagas cada plazo.
+
+DEUDAS NO APLAZABLES:
+Las retenciones (111, 115) y los pagos fraccionados del IS (202) NO son aplazables desde 2017 salvo circunstancias excepcionales."
+"174","174","Al vencer cada plazo del aplazamiento, Hacienda cobra además de la cuota de principal los intereses de demora devengados desde el día siguiente al vencimiento original hasta la fecha del pago. Este asiento registra el gasto financiero.","Plazo 1 del aplazamiento: capital 2.000 €. Días transcurridos: 90. Interés 7,25%.
+Intereses = 2.000 × 7,25% × (90/365) = 35,75 €.
+• A = 0 | B = 35,75
+Resultado: gasto intereses demora 35,75 € (cuenta 669), aumenta deuda con Hacienda.","CÁLCULO DE LOS INTERESES:
+Intereses = Principal pendiente × tipo demora × (días / 365)
+Tipo de demora 2025: 7,25% anual.
+Hacienda te envía una carta con el importe exacto de cada plazo (capital + intereses).
+
+NO DEDUCIBLES EN IS:
+Los intereses de demora tributarios son deducibles en IS como gasto financiero (cuenta 669). La DGT confirmó en 2016 que sí son deducibles, a diferencia de las sanciones (cuenta 659) que NO lo son.
+
+HACERLO EN EL MOMENTO DEL PAGO:
+Puedes devengar los intereses en el momento de cada pago (más práctico) en lugar de periódicamente, especialmente si el aplazamiento es corto."
+"175","175","Cuando pagas cada uno de los plazos del aplazamiento concedido por Hacienda. Cada pago incluye una parte de capital (la deuda original prorrateada) más los intereses de demora devengados hasta esa fecha.","Plazo 1: capital 2.000 € + intereses demora 35,75 € = total 2.035,75 €.
+• A = 0 | B = 2.000 | C = 35,75 | Z = 2.035,75
+Resultado: cancela deuda aplazada 2.000 € (4758), gasto intereses 35,75 € (669), sale del banco 2.035,75 €.","CARTA DE PAGO DE LA AEAT:
+Hacienda te envía (o puedes descargar de la sede electrónica) la carta de pago de cada plazo con el importe exacto desglosado en capital e intereses. Usa esos importes como B y C.
+
+SI PAGAS CON DOMICILIACIÓN:
+La AEAT carga automáticamente cada plazo en la cuenta que indicaste en la solicitud. El asiento se hace en la fecha del cargo bancario.
+
+SI INCUMPLES UN PLAZO:
+El aplazamiento queda sin efecto y la deuda total (más intereses adicionales y posibles recargos) vence de inmediato. La AEAT inicia el procedimiento de apremio.
+
+FRACCIONAMIENTO EN MUCHOS PLAZOS:
+Repite este asiento una vez por cada plazo. Los importes de C (intereses) serán distintos en cada plazo porque el capital pendiente va disminuyendo."
+"176","176","Cuando presentas y pagas una autoliquidación (303, 130, 111...) fuera del plazo voluntario pero sin que Hacienda te haya requerido previamente. La AEAT aplica un recargo reducido que sustituye a las sanciones e intereses.","IVA 1T no presentado en plazo. Cuota: 1.500 €. Presentas con 2 meses de retraso (recargo 10%).
+Recargo = 1.500 × 10% = 150 €.
+• A = 0 | B = 150
+Resultado: gasto recargo 150 € (cuenta 669), sale del banco.","ESCALA DE RECARGOS (sin requerimiento previo):
+• Hasta 1 mes de retraso:    5% sobre la cuota (sin intereses ni sanción)
+• De 1 a 2 meses:           10% sobre la cuota
+• De 2 a 3 meses:           15% sobre la cuota
+• Más de 3 meses:           20% + intereses de demora desde el día 91
+
+DESDE LA REFORMA 2021 (Ley 11/2021):
+El recargo se calcula al 1% por cada mes completo de retraso hasta el 12º mes (1%, 2%, 3%... 12%). A partir del mes 13: 15% + intereses de demora. Comprueba qué tabla está vigente en el momento de presentar.
+
+¿ES DEDUCIBLE?
+El recargo por presentación extemporánea es deducible en IS como gasto financiero (cuenta 669), a diferencia de las sanciones (659) que no lo son. Este criterio ha sido ratificado por el Tribunal Supremo.
+
+DIFERENCIA CON SANCIÓN:
+El recargo se aplica cuando tú presentas voluntariamente fuera de plazo. Si es Hacienda quien te detecta primero (requerimiento previo), se aplica sanción (asiento #118), que no es deducible."
+"177","177","Cuando Hacienda inicia el procedimiento ejecutivo de cobro porque no pagaste en periodo voluntario. Se añade un recargo de apremio sobre la deuda original más los intereses de demora ya devengados.","Deuda de IS no pagada: 5.000 €. Hacienda inicia apremio. Recargo ordinario 20% = 1.000 €.
+• A = 0 | B = 1.000
+Resultado: gasto recargo apremio 1.000 € (cuenta 659, NO deducible), sale del banco.","TIPOS DE RECARGO DE APREMIO:
+• Recargo ejecutivo (5%): si pagas antes de que te notifiquen la providencia de apremio.
+• Recargo de apremio reducido (10%): si pagas en el plazo dado en la providencia de apremio.
+• Recargo de apremio ordinario (20%): si no pagas en ese plazo. Se añaden además intereses de demora.
+
+¿ES DEDUCIBLE EN IS?
+NO. El recargo de apremio tiene naturaleza sancionadora y NO es deducible en IS (cuenta 659).
+Diferencia clave:
+• Recargo extemporáneo (#176): deducible (cuenta 669)
+• Recargo de apremio (#177): NO deducible (cuenta 659)
+• Sanción tributaria (#118): NO deducible (cuenta 659)
+
+CÓMO EVITARLO:
+Solicitar aplazamiento (#173) antes de que venza el plazo voluntario. Una vez iniciado el apremio, el recargo es inevitable."
+"178","178","Cuando pagas la tasa municipal por el vado permanente (entrada y salida de vehículos al garaje, nave o local). Se paga anualmente al Ayuntamiento y lleva la señal de vado en la acera.","Tasa anual vado permanente: 180 €.
+• A = 0 | B = 180
+Resultado: gasto tributo 180 € (cuenta 631), sale del banco.","NATURALEZA JURÍDICA:
+Es una TASA municipal (no un impuesto), que se paga por la utilización privativa o el aprovechamiento especial del dominio público local (la acera reservada frente a tu garaje o nave).
+
+DEDUCIBILIDAD:
+• IS: deducible como gasto (cuenta 631 — Otros tributos).
+• IRPF estimación directa: deducible si el garaje o nave está afecto a la actividad.
+• En módulos: no es gasto deducible (el rendimiento ya está calculado por módulos).
+
+SIN IVA: las tasas municipales están fuera del ámbito del IVA. No hay IVA a deducir.
+
+PAGO:
+Normalmente se paga en el primer trimestre del año mediante recibo domiciliado o en la tesorería municipal. Algunos Ayuntamientos lo giran en otros meses.
+
+PLACA Y SEÑALIZACIÓN:
+La placa de vado la suministra el Ayuntamiento al pagar la tasa. Su coste puede ir incluido en la primera liquidación o facturarse aparte (gasto menor, cuenta 629)."
+"179","179","Cuando pagas la tasa municipal de recogida de basuras o residuos sólidos urbanos del local, nave u oficina donde desarrollas la actividad. La periodicidad varía según el Ayuntamiento (anual, semestral o trimestral).","Tasa anual recogida basuras local comercial: 240 €.
+• A = 0 | B = 240
+Resultado: gasto tasa residuos 240 € (cuenta 631), sale del banco.","¿QUIÉN PAGA LA TASA DE RESIDUOS?
+Depende del municipio y del contrato de arrendamiento:
+• Si eres PROPIETARIO del local: la pagas tú siempre.
+• Si eres ARRENDATARIO: depende del contrato. Si el contrato dice que los gastos de comunidad y tasas van a cargo del arrendatario, la pagas tú. Si no dice nada, suele pagarla el propietario.
+• Revisa tu contrato de alquiler antes de contabilizarla.
+
+SIN IVA: es una tasa pública, sin IVA.
+
+DEDUCIBILIDAD:
+• IS e IRPF estimación directa: deducible (cuenta 631).
+• Si el local es tu vivienda habitual como autónomo: solo deducible en la proporción del espacio afecto a la actividad.
+
+CANON DE SANEAMIENTO O ALCANTARILLADO:
+Algunos municipios cobran también un canon de saneamiento (tratamiento de aguas residuales). Mismo tratamiento: cuenta 631, sin IVA."
+"180","180","Cuando pagas el IBI (Impuesto sobre Bienes Inmuebles) del local, nave, oficina u otro inmueble de uso empresarial que es propiedad de la empresa o del autónomo.","IBI anual nave industrial: 850 €.
+• A = 0 | B = 850
+Resultado: gasto tributo 850 € (cuenta 631), sale del banco.","¿QUIÉN PAGA EL IBI?
+El IBI lo paga el PROPIETARIO del inmueble, no el arrendatario.
+• Si eres propietario del local y lo usas tú: este asiento.
+• Si eres arrendatario (alquilas el local): NO pagas el IBI. Lo paga el propietario. Algunos contratos repercuten el IBI al inquilino, en cuyo caso sí lo contabilizas aquí como gasto.
+• Si eres propietario y lo alquilas a un tercero: pagas el IBI y es gasto deducible contra los ingresos del alquiler (asiento #133).
+
+DEDUCIBILIDAD:
+• IS: deducible como gasto (cuenta 631).
+• IRPF estimación directa: deducible si el inmueble está afecto a la actividad.
+• Autónomos en vivienda: solo la parte proporcional al espacio de actividad.
+
+SIN IVA: el IBI es un impuesto, no una tasa. No lleva IVA.
+
+PAGO:
+Normalmente en el tercer trimestre del año (agosto-octubre según municipio), mediante recibo domiciliado o en periodo voluntario de cobranza."
+"181","181","Cuando pagas el impuesto de circulación (IVTM) de los vehículos propiedad de la empresa: furgonetas, camiones, turismos, motocicletas, etc. Se paga anualmente al Ayuntamiento del municipio donde está matriculado el vehículo.","IVTM furgoneta de reparto (potencia 16 CV): 112 €.
+• A = 0 | B = 112
+Resultado: gasto tributo 112 € (cuenta 631), sale del banco.","CUOTAS IVTM (orientativas según potencia para turismos):
+• Hasta 7,99 CV: 25 €
+• De 8 a 11,99 CV: 68 €
+• De 12 a 15,99 CV: 144 €
+• De 16 a 19,99 CV: 179 €
+• Más de 20 CV: 224 €
+Los Ayuntamientos pueden aplicar coeficientes correctores (hasta ×2). Comprueba la cuota en tu municipio.
+
+DEDUCIBILIDAD:
+• IS: deducible siempre que el vehículo esté en el patrimonio empresarial.
+• IRPF: deducible si el vehículo está afecto a la actividad. Para vehículos mixtos (turismo), Hacienda puede cuestionar la deducción total.
+
+SIN IVA: es un impuesto municipal sin IVA.
+
+BAJA DEL VEHÍCULO:
+Si vendes o das de baja el vehículo durante el año, el IVTM se prorratea por trimestres. Solicita la devolución proporcional al Ayuntamiento.
+
+EXENCIONES:
+• Vehículos de organismos públicos.
+• Ambulancias y vehículos de uso sanitario.
+• Vehículos para personas con discapacidad.
+• Vehículos eléctricos: muchos Ayuntamientos aplican bonificaciones del 75-100%."
+"182","182","Cuando pagas la tasa municipal por ocupar la vía pública con terrazas (veladores, mesas y sillas), contenedores de obra, andamios, grúas, vallas publicitarias, cajeros automáticos en fachada o cualquier otro aprovechamiento del dominio público local.","Tasa terraza bar: 8 mesas × 4 sillas × tarifa 4 €/unidad/mes × 6 meses temporada = 768 €.
+• A = 0 | B = 768
+Resultado: gasto tasa 768 € (cuenta 631), sale del banco.","TIPOS DE TASAS POR OCUPACIÓN DE VÍA PÚBLICA:
+• Terrazas y veladores: por mesa, silla o m² de ocupación. Suele pagarse por temporada (primavera-verano) o anualmente.
+• Contenedores y vallas de obra: por m² de ocupación y día. Se liquida al solicitar la licencia de obra.
+• Andamios: igual que contenedores.
+• Cajeros automáticos en fachada: cuota anual por unidad.
+• Quioscos y puestos en mercados: cuota periódica por m² o puesto.
+• Publicidad en vía pública (vallas, pantallas): cuota según m² y municipio.
+
+SIN IVA: tasa pública, sin IVA.
+
+DEDUCIBILIDAD:
+• IS e IRPF estimación directa: deducible (cuenta 631) si la ocupación está relacionada con la actividad.
+
+LICENCIA PREVIA:
+Muchas ocupaciones requieren licencia municipal antes de instalar. La tasa va ligada a la concesión de la licencia y se paga aunque no la apruebes."
+"183","183","Cuando pagas la tasa por la obtención de la licencia municipal de apertura, actividad o ambiental para iniciar o ampliar una actividad empresarial en un local. Es un pago único al abrir el negocio o cambiar de actividad.","Tasa licencia apertura local comercial 80 m²: 650 €.
+• A = 0 | B = 650
+Resultado: gasto tasa apertura 650 € (cuenta 631), sale del banco.","¿TASA O GASTO ACTIVABLE?
+Depende del importe y de si la licencia tiene vida útil propia:
+• Si es un pago puntual de escasa cuantía: gasto directo (cuenta 631).
+• Si la licencia tiene un plazo definido (ej. licencia ambiental por 8 años): puede activarse como gasto diferido (cuenta 480) y amortizarse durante su vigencia.
+• Criterio general: si el importe es relevante, actívalo.
+
+TIPOS DE LICENCIAS MUNICIPALES:
+• Licencia de apertura (actividad inocua): trámite sencillo, tasa menor.
+• Licencia ambiental (actividades con impacto): tramitación más compleja, tasa mayor.
+• Comunicación previa: en muchos municipios sustituye a la licencia para actividades de bajo riesgo. La tasa es simbólica.
+
+SIN IVA: es una tasa, no sujeta a IVA.
+
+ATENCIÓN:
+Algunos Ayuntamientos llaman a esta tasa con nombres distintos: 'tasa por expedición de documentos', 'tasa por servicios urbanísticos', 'tasa por intervención administrativa'. El tratamiento contable es el mismo."
+"184","184","Cuando el Ayuntamiento realiza obras que benefician especialmente a determinados propietarios (renovación de aceras, instalación de alcantarillado, alumbrado público, asfaltado) y repercute parte del coste a los beneficiarios.","Contribución especial renovación acera frente a tu local: 1.200 €.
+• A = 0 | B = 1.200
+Resultado: gasto tributo 1.200 € (cuenta 631), sale del banco.","NATURALEZA:
+Las contribuciones especiales son un tributo municipal distinto de los impuestos y las tasas. Se exigen cuando una obra o servicio municipal produce un beneficio especial para determinados sujetos (propietarios de inmuebles en la zona).
+
+¿GASTO O INVERSIÓN?
+• Si la obra mejora un inmueble de tu propiedad (ej. acera que aumenta el valor del local): puede considerarse mayor valor del inmueble (cuenta 211) en lugar de gasto.
+• Si es un gasto de mantenimiento o la mejora es del dominio público (no del inmueble): gasto directo (cuenta 631).
+• Criterio práctico: si el importe es pequeño, gasto. Si es significativo y mejora claramente tu activo, consúltalo con tu gestor.
+
+FRACCIONAMIENTO:
+Los Ayuntamientos suelen permitir fraccionar el pago en varios plazos. Usa el asiento #169/#170 para controlar los vencimientos.
+
+SIN IVA: es un tributo público, sin IVA."
+"185","185","Cuando pagas la tasa específica por la recogida selectiva de residuos comerciales o industriales: cartón, vidrio, papel, residuos de obra, aceites usados, residuos electrónicos. Algunos municipios la cobran separada de la tasa general de basuras.","Tasa anual recogida cartón y papel empresa: 180 €.
+• A = 0 | B = 180
+Resultado: gasto tasa 180 € (cuenta 631), sale del banco.","DIFERENCIA CON LA TASA GENERAL DE BASURAS (#179):
+• Tasa general (#179): recogida de residuos ordinarios (bolsas de basura doméstica o asimilable).
+• Esta tasa (#185): recogida específica de residuos comerciales selectivos (cartón, vidrio, papel, voluminosos).
+Algunos municipios las unifican en una sola tasa; otros las separan. Revisa tu recibo municipal.
+
+GESTORES PRIVADOS:
+Si contratas un gestor privado (empresa de reciclaje) para la recogida de residuos en lugar del servicio municipal, la factura lleva IVA y va a cuenta 623 (servicios exteriores), no a la 631.
+
+SISTEMAS INTEGRADOS DE GESTIÓN (SIG):
+Si tu empresa pone en el mercado envases, pilas, neumáticos o aparatos eléctricos, puede estar obligada a estar adherida a un SIG (como Ecoembes, Ecopilas, Ambilamp). Las cuotas al SIG van a cuenta 623, con IVA."

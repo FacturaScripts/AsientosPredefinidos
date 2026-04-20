@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of AsientoPredefinido plugin for FacturaScripts
- * Copyright (C) 2021-2023 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2021-2025 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -22,6 +22,7 @@ namespace FacturaScripts\Plugins\AsientosPredefinidos\Controller;
 use FacturaScripts\Core\Where;
 use FacturaScripts\Core\Lib\ExtendedController\EditController;
 use FacturaScripts\Core\Tools;
+use FacturaScripts\Plugins\AsientosPredefinidos\Model\AsientoPredefinidoAyuda;
 
 /**
  * @author Carlos García Gómez            <carlos@facturascripts.com>
@@ -30,6 +31,14 @@ use FacturaScripts\Core\Tools;
  */
 class EditAsientoPredefinido extends EditController
 {
+    /**
+     * Ayuda del asiento predefinido actual.
+     * Disponible en la vista Twig como {{ fsc.ayuda }}.
+     *
+     * @var AsientoPredefinidoAyuda|null
+     */
+    public $ayuda = null;
+
     public function getModelClassName(): string
     {
         return 'AsientoPredefinido';
@@ -112,14 +121,10 @@ class EditAsientoPredefinido extends EditController
             return;
         }
 
-        // Llamamos al método generate() del modelo AsientoPredefinido y le pasamos el form
         $asiento = $this->getModel()->generate($form);
         if ($asiento->exists()) {
-            // Se ha creado el siento, así que sacamos mensaje, esperamos un segundo y saltamos a la dirección del asiento recién creado.
             Tools::log()->notice('generated-accounting-entries', ['%quantity%' => 1]);
             $this->redirect($asiento->url() . '&action=save-ok', 1);
-            // ."&action=save-ok" es para que saque un mensaje de que registro creado ok y el parámetro 1
-            // es un temporizador en redireccionar, así el usuario ve el mensaje de la línea anterior
             return;
         }
 
@@ -148,9 +153,14 @@ class EditAsientoPredefinido extends EditController
 
             default:
                 parent::loadData($viewName, $view);
+
+                // Cargamos la ayuda aquí, después de que el modelo principal
+                // haya cargado su id. Esto cubre tanto la vista Generar
+                // como cualquier otra vista HTML del controlador.
+                if ($id && $this->ayuda === null) {
+                    $this->ayuda = AsientoPredefinidoAyuda::getByAsiento((int)$id);
+                }
                 break;
         }
     }
 }
-
-

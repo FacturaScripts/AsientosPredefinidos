@@ -23,7 +23,6 @@ namespace FacturaScripts\Plugins\AsientosPredefinidos;
 use FacturaScripts\Core\Template\InitClass;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Core\Base\DataBase;
-use FacturaScripts\Core\Lib\Import\CSVImport;
 use Throwable;
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -32,7 +31,6 @@ class Init extends InitClass
 {
     public function init(): void
     {
-        // se ejecuta cada vez que carga FacturaScripts (si este plugin está activado).
         $this->loadExtension(new Extension\Controller\ListAsiento());
     }
 
@@ -40,29 +38,110 @@ class Init extends InitClass
 
     public function update(): void
     {
-        // Importar/Actualizar tablas desde los CSV incluidos en el plugin
-        // Esto asegura que nuevas plantillas en Data/Codpais/ESP se sincronicen con la BBDD
+        $db = new DataBase();
+
+        // 1. Crear tabla asientospre_ayudas si no existe (MySQL/MariaDB)
         try {
-            $tables = ['asientospre', 'asientospre_lineas', 'asientospre_variables'];
-            $database = new DataBase();
-            foreach ($tables as $table) {
-                $file = __DIR__ . DIRECTORY_SEPARATOR . 'Data' . DIRECTORY_SEPARATOR . 'Codpais' . DIRECTORY_SEPARATOR . 'ESP' . DIRECTORY_SEPARATOR . $table . '.csv';
-                if (!file_exists($file)) {
-                    continue;
-                }
-
-                $sql = CSVImport::importFileSQL($table, $file, true);
-                if (empty($sql)) {
-                    continue;
-                }
-
-                if (!$database->exec($sql)) {
-                    Tools::log()->error('asientospredefinidos-import-error: ' . $table);
-                }
-            }
+            $db->exec(
+                "CREATE TABLE IF NOT EXISTS `asientospre_ayudas` (
+                    `id` INT NOT NULL AUTO_INCREMENT,
+                    `idasientopre` INT NOT NULL,
+                    `cuando` TEXT,
+                    `ejemplo` TEXT,
+                    `nota` TEXT,
+                    PRIMARY KEY (`id`),
+                    UNIQUE KEY `uniq_asientospre_ayudas_idasientopre` (`idasientopre`),
+                    CONSTRAINT `ca_asientospre_ayudas_asientospre`
+                        FOREIGN KEY (`idasientopre`)
+                        REFERENCES `asientospre` (`id`)
+                        ON DELETE CASCADE ON UPDATE CASCADE
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;"
+            );
         } catch (Throwable $e) {
-            // no interrumpir la actualización por un error de importación; logueamos
-            Tools::log()->warning('asientospredefinidos-import-error', ['message' => $e->getMessage()]);
+            Tools::log()->warning('asientospredefinidos-create-ayudas: ' . $e->getMessage());
         }
+
+        // 2. Importar cada CSV con REPLACE INTO (actualiza siempre, no solo si no existe)
+        $tables = [
+            'asientospre'          => ['id', 'descripcion', 'concepto'],
+            'asientospre_lineas'   => ['codsubcuenta', 'concepto', 'codcontrapartida', 'debe', 'haber', 'id', 'idasientopre', 'orden'],
+            'asientospre_variables'=> ['codigo', 'mensaje', 'id', 'idasientopre'],
+            'asientospre_ayudas'   => ['id', 'idasientopre', 'cuando', 'ejemplo', 'nota'],
+        ];
+
+        foreach ($tables as $table => $columns) {
+            if (!$db->tableExists($table)) {
+                continue;
+            }
+
+            $file = __DIR__ . DIRECTORY_SEPARATOR . 'Data' . DIRECTORY_SEPARATOR
+                . 'Codpais' . DIRECTORY_SEPARATOR . 'ESP' . DIRECTORY_SEPARATOR
+                . $table . '.csv';
+
+            if (!file_exists($file)) {
+                continue;
+            }
+
+            if (!$this->importCsvReplace($db, $table, $columns, $file)) {
+                Tools::log()->error('asientospredefinidos-import-error: ' . $table);
+            }
+        }
+    }
+
+    /**
+     * Importa un CSV usando REPLACE INTO para que siempre actualice,
+     * independientemente de si los registros ya existen.
+     */
+    private function importCsvReplace(DataBase $db, string $table, array $columns, string $file): bool
+    {
+        $handle = fopen($file, 'r');
+        if ($handle === false) {
+            return false;
+        }
+
+        // Leer y descartar la cabecera
+        fgetcsv($handle);
+
+        $colList = '`' . implode('`, `', $columns) . '`';
+        $ok = true;
+        $batch = [];
+        $batchSize = 50;
+
+        while (($row = fgetcsv($handle)) !== false) {
+            if (count($row) < count($columns)) {
+                continue;
+            }
+
+            // Reordenar los valores según el orden de columnas del CSV original
+            // El CSV tiene las columnas en el mismo orden que $columns
+            $values = [];
+            foreach ($row as $i => $val) {
+                if ($i >= count($columns)) {
+                    break;
+                }
+                $values[] = $db->var2str($val);
+            }
+
+            $batch[] = '(' . implode(', ', $values) . ')';
+
+            if (count($batch) >= $batchSize) {
+                $sql = "REPLACE INTO `{$table}` ({$colList}) VALUES " . implode(', ', $batch) . ';';
+                if (!$db->exec($sql)) {
+                    $ok = false;
+                }
+                $batch = [];
+            }
+        }
+
+        // Insertar el resto del lote
+        if (!empty($batch)) {
+            $sql = "REPLACE INTO `{$table}` ({$colList}) VALUES " . implode(', ', $batch) . ';';
+            if (!$db->exec($sql)) {
+                $ok = false;
+            }
+        }
+
+        fclose($handle);
+        return $ok;
     }
 }
