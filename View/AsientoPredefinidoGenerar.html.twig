@@ -5,33 +5,38 @@
     <div class="card shadow mb-5">
         <div class="card-body">
             <div class="row g-2">
-                <div class="col-sm-3">
-                    {{ trans("company") }}
-                    <select name="idempresa" class="form-select mb-3">
-                        {% for empresa in fsc.empresa.all({}, {'nombre': 'ASC'}) %}
-                            {% if empresa.idempresa == settings('default', 'idempresa') %}
-                                <option value="{{ empresa.idempresa }}" selected>{{ empresa.nombre }}</option>
-                            {% else %}
-                                <option value="{{ empresa.idempresa }}">{{ empresa.nombre }}</option>
-                            {% endif %}
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="col-sm-3">
+                {% set empresas = fsc.empresa.all({}, {'nombre': 'ASC'}) %}
+                {% if empresas | length == 1 %}
+                    <input type="hidden" name="idempresa" value="{{ empresas[0].idempresa }}">
+                {% else %}
+                    <div class="col-12 col-md-6 col-xl-4 col-xxl-3">
+                        {{ trans("company") }}
+                        <select name="idempresa" class="form-select mb-3">
+                            {% for empresa in empresas %}
+                                {% if empresa.idempresa == settings('default', 'idempresa') %}
+                                    <option value="{{ empresa.idempresa }}" selected>{{ empresa.nombre }}</option>
+                                {% else %}
+                                    <option value="{{ empresa.idempresa }}">{{ empresa.nombre }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                {% endif %}
+                <div class="col-12 col-md-6 col-xl-4 col-xxl-3">
                     {{ trans("date") }}
                     <input type="date" class="form-control mb-3" name="fecha" value="{{ 'now' | date('Y-m-d') }}"
                            required>
                 </div>
-                <div class="col-sm-3">
-                    {{ trans("channel") }}
-                    <input type="number" class="form-control mb-3" name="canal" value=""/>
-                </div>
-                <div class="col-sm-3">
+                <div class="col-12 col-md-6 col-xl-4 col-xxl-3">
                     {{ trans("concept") }}
                     <input type="text" class="form-control mb-3" name="concepto" maxlength="255" value="{{ model.concepto }}"/>
                 </div>
+                <div class="col-12 col-md-6 col-xl-4 col-xxl-3">
+                    {{ trans("channel") }}
+                    <input type="number" class="form-control mb-3" name="canal" value="" placeholder="{{ trans('optional') }}"/>
+                </div>
                 {% for variable in fsc.views.EditAsientoPredefinidoVariable.cursor %}
-                    <div class="col-sm-3">
+                    <div class="col-12 col-md-6 col-xl-4 col-xxl-3">
                         {{ variable.mensaje }}
                         <div class="input-group mb-3">
                             <span class="input-group-text">{{ variable.codigo }}</span>
@@ -44,7 +49,7 @@
         </div>
         <div class="card-footer text-end p-2">
             <button type="submit" class="btn btn-success" name="action" value="gen-accounting">
-                {{ trans("generate") }}
+                <i class="fa-solid fa-arrow-right fa-beat me-1"></i> {{ trans("generate") }}
             </button>
         </div>
     </div>

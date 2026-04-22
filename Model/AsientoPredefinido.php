@@ -44,6 +44,9 @@ class AsientoPredefinido extends ModelClass
     /** @var int */
     public $id;
 
+    /** @var string */
+    public $textoayuda;
+
     public function generate(array $form): Asiento
     {
         return AsientoPredefinidoGenerator::generate($this, $form);
@@ -87,6 +90,7 @@ class AsientoPredefinido extends ModelClass
     {
         $this->concepto = Tools::noHtml($this->concepto);
         $this->descripcion = Tools::noHtml($this->descripcion);
+        $this->textoayuda = Tools::noHtml($this->textoayuda);
 
         return parent::test();
     }

@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of AsientoPredefinido plugin for FacturaScripts
- * Copyright (C) 2021-2023 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2021-2026 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -19,9 +19,9 @@
 
 namespace FacturaScripts\Plugins\AsientosPredefinidos\Controller;
 
-use FacturaScripts\Core\Where;
 use FacturaScripts\Core\Lib\ExtendedController\EditController;
 use FacturaScripts\Core\Tools;
+use FacturaScripts\Core\Where;
 
 /**
  * @author Carlos García Gómez            <carlos@facturascripts.com>
@@ -44,17 +44,16 @@ class EditAsientoPredefinido extends EditController
         return $page;
     }
 
-    protected function createViews()
+    protected function createViews(): void
     {
         parent::createViews();
 
         $this->setTabsPosition('bottom');
 
-        $this->createViewsInfo();
         $this->createViewsGenerar();
+        $this->createViewsAsientos();
         $this->createViewsLineas();
         $this->createViewsVariables();
-        $this->createViewsAsientos();
     }
 
     protected function createViewsGenerar(string $viewName = 'Generar'): void
@@ -62,14 +61,9 @@ class EditAsientoPredefinido extends EditController
         $this->addHtmlView($viewName, 'AsientoPredefinidoGenerar', 'AsientoPredefinido', 'generate', 'fa-solid fa-wand-magic-sparkles');
     }
 
-    protected function createViewsInfo(string $viewName = 'Info'): void
-    {
-        $this->addHtmlView($viewName, 'AsientoPredefinidoInfo', 'AsientoPredefinido', 'help', 'fa-solid fa-info-circle');
-    }
-
     protected function createViewsLineas(string $viewName = 'EditAsientoPredefinidoLinea'): void
     {
-        $this->addEditListView($viewName, 'AsientoPredefinidoLinea', 'lines')
+        $this->addEditListView($viewName, 'AsientoPredefinidoLinea', 'lines', 'fa-solid fa-edit')
             ->setInLine(true);
     }
 
@@ -81,7 +75,7 @@ class EditAsientoPredefinido extends EditController
 
     protected function createViewsAsientos(string $viewName = 'ListAsiento'): void
     {
-        $this->addListView($viewName, 'Asiento', 'generated-acc-entries', 'fa-solid fa-balance-scale')
+        $this->addListView($viewName, 'Asiento', 'generated-acc-entries', 'fa-solid fa-file-lines')
             ->addSearchFields(['concepto', 'numero'])
             ->addOrderBy(['fecha', 'numero'], 'date', 2)
             ->addOrderBy(['numero'], 'number')
@@ -152,5 +146,3 @@ class EditAsientoPredefinido extends EditController
         }
     }
 }
-
-

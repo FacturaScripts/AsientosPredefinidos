@@ -1,9 +1,22 @@
-"id","descripcion","concepto"
-"1","Asiento de una nómina","Nómina {NOMBREMES}"
-"2","Cuota de autónomo","Cuota de autónomo {NOMBREMES}"
-"3","Pago cuota de autónomo","Pago cuota autónomo {NOMBREMES}"
-"4","Pago nómina","Pago nómina {NOMBREMES}"
-"5","Pago modelo 303 - IVA","Pago IVA trimestral {PERIODO}"
-"6","Pago modelo 111 - IRPF","Pago retención IRPF {PERIODO}"
-"7","Pago modelo 115 - Otras retenciones","Pago otras retenciones {PERIODO}"
-"8","Pago modelo 130 - Estimación objetiva","Pago módulos {PERIODO}"
+"id","descripcion","concepto","textoayuda"
+"1","Asiento de una nómina","Nómina {NOMBREMES}","Rellena los datos tomándolos directamente del recibo de la nómina:
+
+• A = Terminación de la subcuenta 465 del empleado (p. ej. 0001 para usar 465.0001).
+• B = Terminación común del resto de subcuentas (4751, 640, 642, 476).
+• D = Total devengado (sueldo bruto: salario base + complementos + pagas prorrateadas…). Aparece en la nómina como ""Total devengado"".
+• R = Retención de IRPF aplicada al trabajador.
+• L = Líquido a percibir por el trabajador (lo que realmente cobra).
+• S = Seguridad Social a cargo de la EMPRESA. Se obtiene sumando la columna ""Empresa"" del apartado de cotización de la nómina (contingencias comunes, desempleo, FOGASA, formación, AT/EP, MEI…). NO incluyas aquí la parte del trabajador.
+
+La Seguridad Social a cargo del trabajador se calcula de forma automática (variable Z) para que el asiento quede cuadrado en la cuenta 476."
+"2","Cuota de autónomo","Cuota de autónomo {NOMBREMES}",
+"3","Pago cuota de autónomo","Pago cuota autónomo {NOMBREMES}",
+"4","Pago nómina","Pago nómina {NOMBREMES}","Rellena los datos del pago del neto de la nómina:
+
+• A = Terminación de la subcuenta 465 del empleado (misma que usaste al generar la nómina).
+• B = Terminación de la subcuenta 572 del banco desde el que pagas.
+• I = Importe transferido al trabajador (debe coincidir con el líquido L del asiento de nómina)."
+"5","Pago modelo 303 - IVA","Pago IVA trimestral {PERIODO}",
+"6","Pago modelo 111 - IRPF","Pago retención IRPF {PERIODO}",
+"7","Pago modelo 115 - Otras retenciones","Pago otras retenciones {PERIODO}",
+"8","Pago modelo 130 - Estimación objetiva","Pago módulos {PERIODO}",

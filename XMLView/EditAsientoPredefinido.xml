@@ -8,6 +8,9 @@
             <column name="concepto" title="Concepto para el asiento" order="100">
                 <widget type="text" fieldname="concepto" maxlength="255" required="true"/>
             </column>
+            <column name="help-text" title="help-text" order="110" numcolumns="12">
+                <widget type="textarea" fieldname="textoayuda" rows="8"/>
+            </column>
         </group>
     </columns>
 </view>
