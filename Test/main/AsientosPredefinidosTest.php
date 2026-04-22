@@ -429,6 +429,147 @@ final class AsientosPredefinidosTest extends TestCase
         $asiento->delete();
     }
 
+    public function testAsientoPredefinidoPagoSeguridadSocial(): void
+    {
+        $empresa = Empresas::default();
+
+        $asientoPredefinido = new AsientoPredefinido();
+        $this->assertTrue($asientoPredefinido->loadFromCode(9));
+
+        $asiento = $asientoPredefinido->generate([
+            'idempresa' => $empresa->idempresa,
+            'fecha' => Tools::date(),
+            'canal' => 0,
+            'var_A' => 0,
+            'var_B' => 800,
+            'var_C' => 0,
+        ]);
+
+        $this->assertTrue($asiento->exists());
+        $this->assertEquals(800, $asiento->importe);
+
+        $textoMes = Tools::lang()->trans(strtolower(date('F', strtotime($asiento->fecha))));
+        $this->assertEquals('Pago SS ' . $textoMes, $asiento->concepto);
+
+        $partidas = $asiento->getLines();
+        $this->assertCount(2, $partidas);
+
+        $totalDebe = 0.0;
+        $totalHaber = 0.0;
+        foreach ($partidas as $partida) {
+            $totalDebe += (float)$partida->debe;
+            $totalHaber += (float)$partida->haber;
+        }
+        $this->assertEquals($totalDebe, $totalHaber);
+
+        $this->assertEquals('4760000000', $partidas[0]->codsubcuenta);
+        $this->assertEquals(800, $partidas[0]->debe);
+        $this->assertEquals(0, $partidas[0]->haber);
+
+        $this->assertEquals('5720000000', $partidas[1]->codsubcuenta);
+        $this->assertEquals(0, $partidas[1]->debe);
+        $this->assertEquals(800, $partidas[1]->haber);
+
+        $asiento->delete();
+    }
+
+    public function testAsientoPredefinidoRegularizacionIva(): void
+    {
+        $empresa = Empresas::default();
+
+        $asientoPredefinido = new AsientoPredefinido();
+        $this->assertTrue($asientoPredefinido->loadFromCode(10));
+
+        // R = 1000 repercutido, S = 300 soportado → Z = 700 a ingresar
+        $asiento = $asientoPredefinido->generate([
+            'idempresa' => $empresa->idempresa,
+            'fecha' => Tools::date(),
+            'canal' => 0,
+            'var_A' => 0,
+            'var_R' => 1000,
+            'var_S' => 300,
+        ]);
+
+        $this->assertTrue($asiento->exists());
+        $this->assertEquals(1000, $asiento->importe);
+
+        $partidas = $asiento->getLines();
+        $this->assertCount(3, $partidas);
+
+        $totalDebe = 0.0;
+        $totalHaber = 0.0;
+        foreach ($partidas as $partida) {
+            $totalDebe += (float)$partida->debe;
+            $totalHaber += (float)$partida->haber;
+        }
+        $this->assertEquals($totalDebe, $totalHaber);
+
+        $this->assertEquals('4770000000', $partidas[0]->codsubcuenta);
+        $this->assertEquals(1000, $partidas[0]->debe);
+        $this->assertEquals(0, $partidas[0]->haber);
+
+        $this->assertEquals('4720000000', $partidas[1]->codsubcuenta);
+        $this->assertEquals(0, $partidas[1]->debe);
+        $this->assertEquals(300, $partidas[1]->haber);
+
+        $this->assertEquals('4750000000', $partidas[2]->codsubcuenta);
+        $this->assertEquals(0, $partidas[2]->debe);
+        $this->assertEquals(700, $partidas[2]->haber);
+
+        $asiento->delete();
+    }
+
+    public function testAsientoPredefinidoAlquilerConRetencion(): void
+    {
+        $empresa = Empresas::default();
+
+        $asientoPredefinido = new AsientoPredefinido();
+        $this->assertTrue($asientoPredefinido->loadFromCode(11));
+
+        // B=500, I=105 (21%), R=95 (19%) → Z = 500+105-95 = 510
+        $asiento = $asientoPredefinido->generate([
+            'idempresa' => $empresa->idempresa,
+            'fecha' => Tools::date(),
+            'canal' => 0,
+            'var_A' => 0,
+            'var_B' => 500,
+            'var_I' => 105,
+            'var_R' => 95,
+        ]);
+
+        $this->assertTrue($asiento->exists());
+        $this->assertEquals(605, $asiento->importe);
+
+        $partidas = $asiento->getLines();
+        $this->assertCount(4, $partidas);
+
+        $totalDebe = 0.0;
+        $totalHaber = 0.0;
+        foreach ($partidas as $partida) {
+            $totalDebe += (float)$partida->debe;
+            $totalHaber += (float)$partida->haber;
+        }
+        $this->assertEquals($totalDebe, $totalHaber);
+
+        $this->assertEquals('6210000000', $partidas[0]->codsubcuenta);
+        $this->assertEquals(500, $partidas[0]->debe);
+        $this->assertEquals(0, $partidas[0]->haber);
+
+        $this->assertEquals('4720000000', $partidas[1]->codsubcuenta);
+        $this->assertEquals(105, $partidas[1]->debe);
+        $this->assertEquals(0, $partidas[1]->haber);
+
+        $this->assertEquals('4751000000', $partidas[2]->codsubcuenta);
+        $this->assertEquals(0, $partidas[2]->debe);
+        $this->assertEquals(95, $partidas[2]->haber);
+
+        $this->assertEquals('4100000000', $partidas[3]->codsubcuenta);
+        $this->assertEquals(0, $partidas[3]->debe);
+        $this->assertEquals(510, $partidas[3]->haber);
+
+        $asiento->delete();
+    }
+
     public function testAsientoPredefinidoConConceptoPersonalizado(): void
     {
         // obtenemos la empresa predefinida

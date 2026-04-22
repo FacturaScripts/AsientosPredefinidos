@@ -42,3 +42,23 @@ La Seguridad Social a cargo del trabajador se calcula de forma automática (vari
 • A = Terminación de la subcuenta 473 (0 = predeterminada).
 • B = Importe a pagar en Hacienda.
 • C = Terminación de la subcuenta 572 del banco desde el que pagas."
+"9","Pago Seguridad Social","Pago SS {NOMBREMES}","Registra el pago mensual a la Seguridad Social (suma de la aportación del trabajador y de la empresa, tal y como aparece en el TC1):
+
+• A = Terminación de la subcuenta 476 (0 = predeterminada).
+• B = Importe total a pagar (cuota trabajador + cuota empresa).
+• C = Terminación de la subcuenta 572 del banco desde el que pagas."
+"10","Regularización IVA trimestral","Regularización IVA {PERIODO}","Cierra las cuentas de IVA del trimestre y deja el saldo pendiente en la 4750. Úsalo ANTES de registrar el pago del modelo 303:
+
+• A = Terminación común de las subcuentas 477, 472 y 4750 (0 = predeterminada).
+• R = Saldo del IVA repercutido acumulado en el trimestre (cuenta 477).
+• S = Saldo del IVA soportado acumulado en el trimestre (cuenta 472).
+
+La diferencia (R − S) se lleva automáticamente a la 4750 como IVA a ingresar (variable Z). Si el trimestre sale a devolver (S > R), usa otro asiento, porque este deja el saldo acreedor en la 4750."
+"11","Factura alquiler con retención","Alquiler {NOMBREMES}","Registra una factura de alquiler recibida con retención de IRPF (modelo 115). La 410 queda pendiente de pago al arrendador:
+
+• A = Terminación común de las subcuentas 621, 472, 4751 y 410 (0 = predeterminada).
+• B = Base del alquiler (importe sin IVA ni retención).
+• I = Cuota de IVA soportado.
+• R = Retención de IRPF practicada al arrendador.
+
+El importe a pagar al arrendador (B + I − R) se calcula automáticamente en la 410 (variable Z)."
