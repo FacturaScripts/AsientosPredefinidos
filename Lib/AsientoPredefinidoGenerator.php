@@ -67,10 +67,14 @@ class AsientoPredefinidoGenerator
 
         $saldoDebe = 0.0;
         $saldoHaber = 0.0;
-        foreach ($lines as $line) {
+        $lineCount = count($lines);
+        foreach ($lines as $index => $line) {
             // Creamos la partida
             $newLine = $asiento->getNewLine();
             $newLine->concepto = CodePatterns::trans($line->concepto, $asiento);
+            // Partida::getLines() devuelve por orden DESC. Invertimos aquí para
+            // conservar en el asiento final el orden visual definido en la plantilla.
+            $newLine->orden = $lineCount - $index;
             $newLine->debe = static::cantidadReplace($line->debe, $variables, $form, $saldoDebe, $saldoHaber);
             $newLine->haber = static::cantidadReplace($line->haber, $variables, $form, $saldoDebe, $saldoHaber);
 
@@ -226,5 +230,4 @@ class AsientoPredefinidoGenerator
         return $subcuenta;
     }
 }
-
 

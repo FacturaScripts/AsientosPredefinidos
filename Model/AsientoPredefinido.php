@@ -61,7 +61,7 @@ class AsientoPredefinido extends ModelClass
     {
         $line = new AsientoPredefinidoLinea();
         $where = [Where::eq("idasientopre", $this->id)];
-        return $line->all($where);
+        return $line->all($where, ['orden' => 'ASC', 'id' => 'ASC'], 0, 0);
     }
 
     /**
@@ -100,5 +100,4 @@ class AsientoPredefinido extends ModelClass
         return parent::url($type, $list);
     }
 }
-
 

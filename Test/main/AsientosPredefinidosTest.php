@@ -57,10 +57,10 @@ final class AsientosPredefinidosTest extends TestCase
             'canal' => 0,
             'var_A' => 0,
             'var_B' => 0,
-            'var_C' => 20,
-            'var_L' => 30,
-            'var_R' => 40,
-            'var_D' => 50,
+            'var_S' => 500,
+            'var_L' => 1200,
+            'var_R' => 200,
+            'var_D' => 1500,
         ]);
 
         // Comprobamos que el asiento que ha creado correctamente
@@ -68,35 +68,35 @@ final class AsientosPredefinidosTest extends TestCase
 
         $textoMes = Tools::lang()->trans(strtolower(date('F', strtotime($asiento->fecha))));
         $this->assertEquals('Nómina ' . $textoMes, $asiento->concepto);
-        $this->assertEquals(20, $asiento->importe);
+        $this->assertEquals(2000, $asiento->importe);
 
         // Comprobamos que las partidas se hayan generado correctamente.
         $partidas = $asiento->getLines();
 
-        $this->assertEquals('4650000000', $partidas[0]->codsubcuenta);
-        $this->assertEquals('Pendiente de pago', $partidas[0]->concepto);
-        $this->assertEquals(0, $partidas[0]->debe);
-        $this->assertEquals(30, $partidas[0]->haber);
+        $this->assertEquals('6400000000', $partidas[0]->codsubcuenta);
+        $this->assertEquals('Sueldo', $partidas[0]->concepto);
+        $this->assertEquals(1500, $partidas[0]->debe);
+        $this->assertEquals(0, $partidas[0]->haber);
 
-        $this->assertEquals('4751000000', $partidas[1]->codsubcuenta);
-        $this->assertEquals('Retenciones', $partidas[1]->concepto);
-        $this->assertEquals(0, $partidas[1]->debe);
-        $this->assertEquals(40, $partidas[1]->haber);
+        $this->assertEquals('6420000000', $partidas[1]->codsubcuenta);
+        $this->assertEquals('Seguridad Social Empresa', $partidas[1]->concepto);
+        $this->assertEquals(500, $partidas[1]->debe);
+        $this->assertEquals(0, $partidas[1]->haber);
 
-        $this->assertEquals('4760000000', $partidas[2]->codsubcuenta);
-        $this->assertEquals('Seguridad Social Acreedora', $partidas[2]->concepto);
+        $this->assertEquals('4751000000', $partidas[2]->codsubcuenta);
+        $this->assertEquals('Retenciones', $partidas[2]->concepto);
         $this->assertEquals(0, $partidas[2]->debe);
-        $this->assertEquals(-50, $partidas[2]->haber);
+        $this->assertEquals(200, $partidas[2]->haber);
 
-        $this->assertEquals('6400000000', $partidas[3]->codsubcuenta);
-        $this->assertEquals('Sueldo', $partidas[3]->concepto);
-        $this->assertEquals(50, $partidas[3]->debe);
-        $this->assertEquals(0, $partidas[3]->haber);
+        $this->assertEquals('4650000000', $partidas[3]->codsubcuenta);
+        $this->assertEquals('Pendiente de pago', $partidas[3]->concepto);
+        $this->assertEquals(0, $partidas[3]->debe);
+        $this->assertEquals(1200, $partidas[3]->haber);
 
-        $this->assertEquals('6420000000', $partidas[4]->codsubcuenta);
-        $this->assertEquals('Seguridad Social Empresa', $partidas[4]->concepto);
-        $this->assertEquals(-30, $partidas[4]->debe);
-        $this->assertEquals(0, $partidas[4]->haber);
+        $this->assertEquals('4760000000', $partidas[4]->codsubcuenta);
+        $this->assertEquals('Seguridad Social Acreedora', $partidas[4]->concepto);
+        $this->assertEquals(0, $partidas[4]->debe);
+        $this->assertEquals(600, $partidas[4]->haber);
 
         // borramos el asiento
         $asiento->delete();
@@ -109,7 +109,7 @@ final class AsientosPredefinidosTest extends TestCase
 
         // cargamos el asiento predefinido
         $asientoPredefinido = new AsientoPredefinido();
-        $this->assertTrue($asientoPredefinido->load(2));
+        $this->assertTrue($asientoPredefinido->load(3));
 
         // generamos el asiento
         $asiento = $asientoPredefinido->generate([
@@ -128,15 +128,15 @@ final class AsientosPredefinidosTest extends TestCase
         // Comprobamos que las partidas se hayan generado correctamente.
         $partidas = $asiento->getLines();
 
-        $this->assertEquals('4760000000', $partidas[0]->codsubcuenta);
+        $this->assertEquals('6420000000', $partidas[0]->codsubcuenta);
         $this->assertEquals('Cuota autónomo ' . $textoMes, $partidas[0]->concepto);
-        $this->assertEquals(0, $partidas[0]->debe);
-        $this->assertEquals(123, $partidas[0]->haber);
+        $this->assertEquals(123, $partidas[0]->debe);
+        $this->assertEquals(0, $partidas[0]->haber);
 
-        $this->assertEquals('6420000000', $partidas[1]->codsubcuenta);
+        $this->assertEquals('4760000000', $partidas[1]->codsubcuenta);
         $this->assertEquals('Cuota autónomo ' . $textoMes, $partidas[1]->concepto);
-        $this->assertEquals(123, $partidas[1]->debe);
-        $this->assertEquals(0, $partidas[1]->haber);
+        $this->assertEquals(0, $partidas[1]->debe);
+        $this->assertEquals(123, $partidas[1]->haber);
 
         // borramos el asiento
         $asiento->delete();
@@ -149,7 +149,7 @@ final class AsientosPredefinidosTest extends TestCase
 
         // cargamos el asiento predefinido
         $asientoPredefinido = new AsientoPredefinido();
-        $this->assertTrue($asientoPredefinido->loadFromCode(3));
+        $this->assertTrue($asientoPredefinido->loadFromCode(4));
 
         // generamos el asiento
         $asiento = $asientoPredefinido->generate([
@@ -189,7 +189,7 @@ final class AsientosPredefinidosTest extends TestCase
 
         // cargamos el asiento predefinido
         $asientoPredefinido = new AsientoPredefinido();
-        $this->assertTrue($asientoPredefinido->loadFromCode(4));
+        $this->assertTrue($asientoPredefinido->loadFromCode(2));
 
         // generamos el asiento
         $asiento = $asientoPredefinido->generate([
@@ -223,6 +223,48 @@ final class AsientosPredefinidosTest extends TestCase
         $asiento->delete();
     }
 
+    public function testAsientoPredefinidoPagoModelo303(): void
+    {
+        // obtenemos la empresa predefinida
+        $empresa = Empresas::default();
+
+        // cargamos el asiento predefinido
+        $asientoPredefinido = new AsientoPredefinido();
+        $this->assertTrue($asientoPredefinido->loadFromCode(5));
+
+        // generamos el asiento
+        $asiento = $asientoPredefinido->generate([
+            'idempresa' => $empresa->idempresa,
+            'fecha' => Tools::date(),
+            'canal' => 0,
+            'var_A' => 0,
+            'var_B' => 123,
+            'var_C' => 0,
+        ]);
+
+        // Comprobamos que el asiento que ha creado correctamente
+        $this->assertTrue($asiento->exists());
+        $this->assertEquals(123, $asiento->importe);
+
+        // Comprobamos que las partidas se hayan generado correctamente.
+        $partidas = $asiento->getLines();
+
+        $this->assertCount(2, $partidas);
+
+        $this->assertEquals('4750000000', $partidas[0]->codsubcuenta);
+        $this->assertEquals('Pago IVA modelo 303', $partidas[0]->concepto);
+        $this->assertEquals(123, $partidas[0]->debe);
+        $this->assertEquals(0, $partidas[0]->haber);
+
+        $this->assertEquals('5720000000', $partidas[1]->codsubcuenta);
+        $this->assertEquals('Pago IVA modelo 303', $partidas[1]->concepto);
+        $this->assertEquals(0, $partidas[1]->debe);
+        $this->assertEquals(123, $partidas[1]->haber);
+
+        // borramos el asiento
+        $asiento->delete();
+    }
+
     public function testAsientoPredefinidoConConceptoPersonalizado(): void
     {
         // obtenemos la empresa predefinida
@@ -241,10 +283,10 @@ final class AsientosPredefinidosTest extends TestCase
             'concepto' => $conceptoPersonalizado,
             'var_A' => 0,
             'var_B' => 0,
-            'var_C' => 20,
-            'var_L' => 30,
-            'var_R' => 40,
-            'var_D' => 50,
+            'var_S' => 500,
+            'var_L' => 1200,
+            'var_R' => 200,
+            'var_D' => 1500,
         ]);
 
         // comprobamos que el asiento se ha creado correctamente
