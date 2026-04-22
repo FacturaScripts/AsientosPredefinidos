@@ -14,13 +14,31 @@ La Seguridad Social a cargo del trabajador se calcula de forma automática (vari
 • A = Terminación de la subcuenta 465 del empleado (misma que usaste al generar la nómina).
 • B = Terminación de la subcuenta 572 del banco desde el que pagas.
 • I = Importe transferido al trabajador (debe coincidir con el líquido L del asiento de nómina)."
-"3","Cuota de autónomo","Cuota de autónomo {NOMBREMES}",
-"4","Pago cuota de autónomo","Pago cuota autónomo {NOMBREMES}",
+"3","Cuota de autónomo","Cuota de autónomo {NOMBREMES}","Registra la cuota mensual de autónomos como gasto pendiente de pago:
+
+• A = Terminación de las subcuentas 642 y 476 (0 = predeterminada).
+• B = Importe de la cuota de autónomo del mes."
+"4","Pago cuota de autónomo","Pago cuota autónomo {NOMBREMES}","Registra el pago de la cuota de autónomos ya devengada:
+
+• A = Terminación de las subcuentas 476 y 572 (0 = predeterminada).
+• B = Importe pagado (debe coincidir con el de la cuota devengada)."
 "5","Pago modelo 303 - IVA","Pago IVA trimestral {PERIODO}","Rellena los datos del pago presentado en el modelo 303:
 
 • A = Terminación de la subcuenta 4750 del IVA acreedor (0 = predeterminada).
 • B = Importe a pagar en Hacienda.
 • C = Terminación de la subcuenta 572 del banco desde el que pagas."
-"6","Pago modelo 111 - IRPF","Pago retención IRPF {PERIODO}",
-"7","Pago modelo 115 - Otras retenciones","Pago otras retenciones {PERIODO}",
-"8","Pago modelo 130 - Estimación objetiva","Pago módulos {PERIODO}",
+"6","Pago modelo 111 - IRPF","Pago retención IRPF {PERIODO}","Rellena los datos del pago presentado en el modelo 111 (retenciones IRPF del trabajo):
+
+• A = Terminación de la subcuenta 4751 de IRPF del trabajo (0 = predeterminada). Si usas subcuentas separadas para 111 y 115, indica aquí la del 111.
+• B = Importe a pagar en Hacienda.
+• C = Terminación de la subcuenta 572 del banco desde el que pagas."
+"7","Pago modelo 115 - Otras retenciones","Pago otras retenciones {PERIODO}","Rellena los datos del pago presentado en el modelo 115 (retenciones por arrendamientos):
+
+• A = Terminación de la subcuenta 4751 de retenciones del 115 (0 = predeterminada). Si compartes la 4751 con el modelo 111, usa subcuentas distintas para separarlas.
+• B = Importe a pagar en Hacienda.
+• C = Terminación de la subcuenta 572 del banco desde el que pagas."
+"8","Pago modelo 130 - Estimación directa","Pago fraccionado IRPF {PERIODO}","Rellena los datos del pago fraccionado de IRPF en estimación directa (modelo 130):
+
+• A = Terminación de la subcuenta 473 (0 = predeterminada).
+• B = Importe a pagar en Hacienda.
+• C = Terminación de la subcuenta 572 del banco desde el que pagas."

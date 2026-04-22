@@ -324,6 +324,111 @@ final class AsientosPredefinidosTest extends TestCase
         $asiento->delete();
     }
 
+    public function testAsientoPredefinidoPagoModelo111(): void
+    {
+        $empresa = Empresas::default();
+
+        $asientoPredefinido = new AsientoPredefinido();
+        $this->assertTrue($asientoPredefinido->loadFromCode(6));
+
+        $asiento = $asientoPredefinido->generate([
+            'idempresa' => $empresa->idempresa,
+            'fecha' => Tools::date(),
+            'canal' => 0,
+            'var_A' => 0,
+            'var_B' => 250,
+            'var_C' => 0,
+        ]);
+
+        $this->assertTrue($asiento->exists());
+        $this->assertEquals(250, $asiento->importe);
+
+        $partidas = $asiento->getLines();
+        $this->assertCount(2, $partidas);
+
+        $this->assertEquals('4751000000', $partidas[0]->codsubcuenta);
+        $this->assertEquals('Pago retención IRPF modelo 111', $partidas[0]->concepto);
+        $this->assertEquals(250, $partidas[0]->debe);
+        $this->assertEquals(0, $partidas[0]->haber);
+
+        $this->assertEquals('5720000000', $partidas[1]->codsubcuenta);
+        $this->assertEquals('Pago retención IRPF modelo 111', $partidas[1]->concepto);
+        $this->assertEquals(0, $partidas[1]->debe);
+        $this->assertEquals(250, $partidas[1]->haber);
+
+        $asiento->delete();
+    }
+
+    public function testAsientoPredefinidoPagoModelo115(): void
+    {
+        $empresa = Empresas::default();
+
+        $asientoPredefinido = new AsientoPredefinido();
+        $this->assertTrue($asientoPredefinido->loadFromCode(7));
+
+        $asiento = $asientoPredefinido->generate([
+            'idempresa' => $empresa->idempresa,
+            'fecha' => Tools::date(),
+            'canal' => 0,
+            'var_A' => 0,
+            'var_B' => 80,
+            'var_C' => 0,
+        ]);
+
+        $this->assertTrue($asiento->exists());
+        $this->assertEquals(80, $asiento->importe);
+
+        $partidas = $asiento->getLines();
+        $this->assertCount(2, $partidas);
+
+        $this->assertEquals('4751000000', $partidas[0]->codsubcuenta);
+        $this->assertEquals('Pago otras retenciones modelo 115', $partidas[0]->concepto);
+        $this->assertEquals(80, $partidas[0]->debe);
+        $this->assertEquals(0, $partidas[0]->haber);
+
+        $this->assertEquals('5720000000', $partidas[1]->codsubcuenta);
+        $this->assertEquals('Pago otras retenciones modelo 115', $partidas[1]->concepto);
+        $this->assertEquals(0, $partidas[1]->debe);
+        $this->assertEquals(80, $partidas[1]->haber);
+
+        $asiento->delete();
+    }
+
+    public function testAsientoPredefinidoPagoModelo130(): void
+    {
+        $empresa = Empresas::default();
+
+        $asientoPredefinido = new AsientoPredefinido();
+        $this->assertTrue($asientoPredefinido->loadFromCode(8));
+
+        $asiento = $asientoPredefinido->generate([
+            'idempresa' => $empresa->idempresa,
+            'fecha' => Tools::date(),
+            'canal' => 0,
+            'var_A' => 0,
+            'var_B' => 450,
+            'var_C' => 0,
+        ]);
+
+        $this->assertTrue($asiento->exists());
+        $this->assertEquals(450, $asiento->importe);
+
+        $partidas = $asiento->getLines();
+        $this->assertCount(2, $partidas);
+
+        $this->assertEquals('4730000000', $partidas[0]->codsubcuenta);
+        $this->assertEquals('Pago fraccionado IRPF modelo 130', $partidas[0]->concepto);
+        $this->assertEquals(450, $partidas[0]->debe);
+        $this->assertEquals(0, $partidas[0]->haber);
+
+        $this->assertEquals('5720000000', $partidas[1]->codsubcuenta);
+        $this->assertEquals('Pago fraccionado IRPF modelo 130', $partidas[1]->concepto);
+        $this->assertEquals(0, $partidas[1]->debe);
+        $this->assertEquals(450, $partidas[1]->haber);
+
+        $asiento->delete();
+    }
+
     public function testAsientoPredefinidoConConceptoPersonalizado(): void
     {
         // obtenemos la empresa predefinida
