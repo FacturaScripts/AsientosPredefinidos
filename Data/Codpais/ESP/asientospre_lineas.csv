@@ -1,7 +1,7 @@
 "codsubcuenta","concepto","codcontrapartida","debe","haber","id","idasientopre","orden"
 "640.B","Sueldo",,"D",,"4","1","0"
 "642.B","Seguridad Social Empresa",,"S",,"5","1","5"
-"4751.B","Retenciones","465.A",,"R","3","1","10"
+"4751.B","Retenciones",,,"R","3","1","10"
 "465.A","Pendiente de pago",,,"L","2","1","15"
 "476.B","Seguridad Social Acreedora",,,"Z","6","1","20"
 "465.A","Pago nómina {NOMBREMES}",,"I",,"16","2","0"

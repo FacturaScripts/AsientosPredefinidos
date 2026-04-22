@@ -72,6 +72,16 @@ final class AsientosPredefinidosTest extends TestCase
 
         // Comprobamos que las partidas se hayan generado correctamente.
         $partidas = $asiento->getLines();
+        $this->assertCount(5, $partidas);
+
+        $totalDebe = 0.0;
+        $totalHaber = 0.0;
+        foreach ($partidas as $partida) {
+            $totalDebe += (float)$partida->debe;
+            $totalHaber += (float)$partida->haber;
+        }
+        $this->assertEquals($totalDebe, $totalHaber);
+        $this->assertEquals($asiento->importe, $totalDebe);
 
         $this->assertEquals('6400000000', $partidas[0]->codsubcuenta);
         $this->assertEquals('Sueldo', $partidas[0]->concepto);
@@ -99,6 +109,55 @@ final class AsientosPredefinidosTest extends TestCase
         $this->assertEquals(600, $partidas[4]->haber);
 
         // borramos el asiento
+        $asiento->delete();
+    }
+
+    public function testAsientoPredefinidoNominaSinRetencion(): void
+    {
+        // obtenemos la empresa predefinida
+        $empresa = Empresas::default();
+
+        // cargamos el asiento predefinido
+        $asientoPredefinido = new AsientoPredefinido();
+        $this->assertTrue($asientoPredefinido->load(1));
+
+        // generamos el asiento: sin retención y con SS trabajador nula (L = D)
+        $asiento = $asientoPredefinido->generate([
+            'idempresa' => $empresa->idempresa,
+            'fecha' => Tools::date(),
+            'canal' => 0,
+            'var_A' => 0,
+            'var_B' => 0,
+            'var_S' => 300,
+            'var_L' => 1000,
+            'var_R' => 0,
+            'var_D' => 1000,
+        ]);
+
+        $this->assertTrue($asiento->exists());
+        $this->assertEquals(1300, $asiento->importe);
+
+        $partidas = $asiento->getLines();
+        $this->assertCount(5, $partidas);
+
+        $totalDebe = 0.0;
+        $totalHaber = 0.0;
+        foreach ($partidas as $partida) {
+            $totalDebe += (float)$partida->debe;
+            $totalHaber += (float)$partida->haber;
+        }
+        $this->assertEquals($totalDebe, $totalHaber);
+
+        // Z = (D + S) - (R + L) = 1300 - 1000 = 300
+        $this->assertEquals('4760000000', $partidas[4]->codsubcuenta);
+        $this->assertEquals(0, $partidas[4]->debe);
+        $this->assertEquals(300, $partidas[4]->haber);
+
+        // Retención a cero
+        $this->assertEquals('4751000000', $partidas[2]->codsubcuenta);
+        $this->assertEquals(0, $partidas[2]->debe);
+        $this->assertEquals(0, $partidas[2]->haber);
+
         $asiento->delete();
     }
 
