@@ -32,7 +32,7 @@ La Seguridad Social a cargo del trabajador se calcula de forma automática (vari
 • A = Terminación de la subcuenta 4751 de IRPF del trabajo (0 = predeterminada). Si usas subcuentas separadas para 111 y 115, indica aquí la del 111.
 • B = Importe a pagar en Hacienda.
 • C = Terminación de la subcuenta 572 del banco desde el que pagas."
-"7","Pago modelo 115 - Otras retenciones","Pago otras retenciones {PERIODO}","Rellena los datos del pago presentado en el modelo 115 (retenciones por arrendamientos):
+"7","Pago modelo 115 - arrendamientos","Pago retención alquiler {PERIODO}","Rellena los datos del pago presentado en el modelo 115 (retenciones por arrendamientos):
 
 • A = Terminación de la subcuenta 4751 de retenciones del 115 (0 = predeterminada). Si compartes la 4751 con el modelo 111, usa subcuentas distintas para separarlas.
 • B = Importe a pagar en Hacienda.
@@ -62,3 +62,18 @@ La diferencia (R − S) se lleva automáticamente a la 4750 como IVA a ingresar 
 • R = Retención de IRPF practicada al arrendador.
 
 El importe a pagar al arrendador (B + I − R) se calcula automáticamente en la 410 (variable Z)."
+"12","Pago alquiler con retención","Pago alquiler {NOMBREMES}","Registra el pago al arrendador de una factura de alquiler con retención ya contabilizada:
+
+• A = Terminación de la subcuenta 410 del arrendador (misma que usaste al contabilizar la factura).
+• B = Terminación de la subcuenta 572 del banco desde el que pagas.
+• I = Importe transferido al arrendador (debe coincidir con el saldo pendiente en la 410, normalmente base + IVA − retención)."
+"13","Pago impuesto sobre sociedades","Pago impuesto sociedades {ANYO}","Rellena los datos del pago del impuesto sobre sociedades:
+
+• A = Terminación de la subcuenta 4752 de Hacienda por impuesto sobre sociedades (0 = predeterminada).
+• B = Importe a pagar.
+• C = Terminación de la subcuenta 572 del banco desde el que pagas."
+"14","Pago comisiones bancarias","Comisiones bancarias {NOMBREMES}","Registra el cargo de comisiones del banco:
+
+• A = Terminación de la subcuenta 626 de servicios bancarios y similares (0 = predeterminada).
+• B = Importe de la comisión cargada por el banco.
+• C = Terminación de la subcuenta 572 del banco desde el que se cobra."

@@ -382,12 +382,12 @@ final class AsientosPredefinidosTest extends TestCase
         $this->assertCount(2, $partidas);
 
         $this->assertEquals('4751000000', $partidas[0]->codsubcuenta);
-        $this->assertEquals('Pago otras retenciones modelo 115', $partidas[0]->concepto);
+        $this->assertEquals('Pago retención alquiler modelo 115', $partidas[0]->concepto);
         $this->assertEquals(80, $partidas[0]->debe);
         $this->assertEquals(0, $partidas[0]->haber);
 
         $this->assertEquals('5720000000', $partidas[1]->codsubcuenta);
-        $this->assertEquals('Pago otras retenciones modelo 115', $partidas[1]->concepto);
+        $this->assertEquals('Pago retención alquiler modelo 115', $partidas[1]->concepto);
         $this->assertEquals(0, $partidas[1]->debe);
         $this->assertEquals(80, $partidas[1]->haber);
 
@@ -566,6 +566,118 @@ final class AsientosPredefinidosTest extends TestCase
         $this->assertEquals('4100000000', $partidas[3]->codsubcuenta);
         $this->assertEquals(0, $partidas[3]->debe);
         $this->assertEquals(510, $partidas[3]->haber);
+
+        $asiento->delete();
+    }
+
+    public function testAsientoPredefinidoPagoAlquilerConRetencion(): void
+    {
+        $empresa = Empresas::default();
+
+        $asientoPredefinido = new AsientoPredefinido();
+        $this->assertTrue($asientoPredefinido->loadFromCode(12));
+
+        $asiento = $asientoPredefinido->generate([
+            'idempresa' => $empresa->idempresa,
+            'fecha' => Tools::date(),
+            'canal' => 0,
+            'var_A' => 0,
+            'var_B' => 0,
+            'var_I' => 510,
+        ]);
+
+        $this->assertTrue($asiento->exists());
+        $this->assertEquals(510, $asiento->importe);
+
+        $textoMes = Tools::lang()->trans(strtolower(date('F', strtotime($asiento->fecha))));
+        $this->assertEquals('Pago alquiler ' . $textoMes, $asiento->concepto);
+
+        $partidas = $asiento->getLines();
+        $this->assertCount(2, $partidas);
+
+        $this->assertEquals('4100000000', $partidas[0]->codsubcuenta);
+        $this->assertEquals('Pago alquiler ' . $textoMes, $partidas[0]->concepto);
+        $this->assertEquals(510, $partidas[0]->debe);
+        $this->assertEquals(0, $partidas[0]->haber);
+
+        $this->assertEquals('5720000000', $partidas[1]->codsubcuenta);
+        $this->assertEquals('Pago alquiler ' . $textoMes, $partidas[1]->concepto);
+        $this->assertEquals(0, $partidas[1]->debe);
+        $this->assertEquals(510, $partidas[1]->haber);
+
+        $asiento->delete();
+    }
+
+    public function testAsientoPredefinidoPagoImpuestoSociedades(): void
+    {
+        $empresa = Empresas::default();
+
+        $asientoPredefinido = new AsientoPredefinido();
+        $this->assertTrue($asientoPredefinido->loadFromCode(13));
+
+        $asiento = $asientoPredefinido->generate([
+            'idempresa' => $empresa->idempresa,
+            'fecha' => Tools::date(),
+            'canal' => 0,
+            'var_A' => 0,
+            'var_B' => 1200,
+            'var_C' => 0,
+        ]);
+
+        $this->assertTrue($asiento->exists());
+        $this->assertEquals(1200, $asiento->importe);
+        $this->assertEquals('Pago impuesto sociedades ' . date('Y', strtotime($asiento->fecha)), $asiento->concepto);
+
+        $partidas = $asiento->getLines();
+        $this->assertCount(2, $partidas);
+
+        $this->assertEquals('4752000000', $partidas[0]->codsubcuenta);
+        $this->assertEquals('Pago impuesto sociedades', $partidas[0]->concepto);
+        $this->assertEquals(1200, $partidas[0]->debe);
+        $this->assertEquals(0, $partidas[0]->haber);
+
+        $this->assertEquals('5720000000', $partidas[1]->codsubcuenta);
+        $this->assertEquals('Pago impuesto sociedades', $partidas[1]->concepto);
+        $this->assertEquals(0, $partidas[1]->debe);
+        $this->assertEquals(1200, $partidas[1]->haber);
+
+        $asiento->delete();
+    }
+
+    public function testAsientoPredefinidoPagoComisionesBancarias(): void
+    {
+        $empresa = Empresas::default();
+
+        $asientoPredefinido = new AsientoPredefinido();
+        $this->assertTrue($asientoPredefinido->loadFromCode(14));
+
+        $asiento = $asientoPredefinido->generate([
+            'idempresa' => $empresa->idempresa,
+            'fecha' => Tools::date(),
+            'canal' => 0,
+            'var_A' => 0,
+            'var_B' => 18.50,
+            'var_C' => 0,
+        ]);
+
+        $this->assertTrue($asiento->exists());
+        $this->assertEquals(18.50, $asiento->importe);
+
+        $textoMes = Tools::lang()->trans(strtolower(date('F', strtotime($asiento->fecha))));
+        $this->assertEquals('Comisiones bancarias ' . $textoMes, $asiento->concepto);
+
+        $partidas = $asiento->getLines();
+        $this->assertCount(2, $partidas);
+
+        $this->assertEquals('6260000000', $partidas[0]->codsubcuenta);
+        $this->assertEquals('Comisiones bancarias ' . $textoMes, $partidas[0]->concepto);
+        $this->assertEquals(18.50, $partidas[0]->debe);
+        $this->assertEquals(0, $partidas[0]->haber);
+
+        $this->assertEquals('5720000000', $partidas[1]->codsubcuenta);
+        $this->assertEquals('Comisiones bancarias ' . $textoMes, $partidas[1]->concepto);
+        $this->assertEquals(0, $partidas[1]->debe);
+        $this->assertEquals(18.50, $partidas[1]->haber);
 
         $asiento->delete();
     }
