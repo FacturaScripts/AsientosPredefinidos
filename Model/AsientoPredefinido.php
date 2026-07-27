@@ -35,16 +35,16 @@ class AsientoPredefinido extends ModelClass
 {
     use ModelTrait;
 
-    /** @var string */
+    /** @var string concepto por defecto de las líneas del asiento generado */
     public $concepto;
 
-    /** @var string */
+    /** @var string descripción del asiento predefinido */
     public $descripcion;
 
-    /** @var int */
+    /** @var int clave primaria */
     public $id;
 
-    /** @var string */
+    /** @var string texto de ayuda mostrado al generar el asiento */
     public $textoayuda;
 
     public function generate(array $form): Asiento

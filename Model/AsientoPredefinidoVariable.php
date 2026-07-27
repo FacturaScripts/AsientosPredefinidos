@@ -28,22 +28,22 @@ class AsientoPredefinidoVariable extends ModelClass
     use ModelTrait;
 
     /**
-     * @var string
+     * @var string código de la variable
      */
     public $codigo;
 
     /**
-     * @var int
+     * @var int clave primaria
      */
     public $id;
 
     /**
-     * @var int
+     * @var int id del asiento predefinido al que pertenece la variable
      */
     public $idasientopre;
 
     /**
-     * @var string
+     * @var string mensaje mostrado al usuario para solicitar el valor de la variable
      */
     public $mensaje;
 

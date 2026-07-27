@@ -29,42 +29,42 @@ class AsientoPredefinidoLinea extends ModelClass
     use ModelTrait;
 
     /**
-     * @var string
+     * @var string código de la subcuenta de contrapartida
      */
     public $codcontrapartida;
 
     /**
-     * @var string
+     * @var string código de la subcuenta de la línea
      */
     public $codsubcuenta;
 
     /**
-     * @var string
+     * @var string concepto de la línea del asiento
      */
     public $concepto;
 
     /**
-     * @var string
+     * @var string importe del debe
      */
     public $debe;
 
     /**
-     * @var string
+     * @var string importe del haber
      */
     public $haber;
 
     /**
-     * @var int
+     * @var int clave primaria
      */
     public $id;
 
     /**
-     * @var int
+     * @var int id del asiento predefinido al que pertenece la línea
      */
     public $idasientopre;
 
     /**
-     * @var int
+     * @var int orden de la línea en el asiento predefinido
      */
     public $orden;
 
