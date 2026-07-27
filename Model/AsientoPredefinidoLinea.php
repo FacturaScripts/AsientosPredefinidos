@@ -24,6 +24,10 @@ use FacturaScripts\Core\Template\ModelClass;
 use FacturaScripts\Core\Template\ModelTrait;
 use FacturaScripts\Core\Tools;
 
+/**
+ * Modelo que representa la línea de un asiento predefinido, con su subcuenta, contrapartida,
+ * concepto, debe y haber.
+ */
 class AsientoPredefinidoLinea extends ModelClass
 {
     use ModelTrait;
