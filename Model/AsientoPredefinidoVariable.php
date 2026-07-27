@@ -23,27 +23,31 @@ use FacturaScripts\Core\Template\ModelClass;
 use FacturaScripts\Core\Template\ModelTrait;
 use FacturaScripts\Core\Tools;
 
+/**
+ * Modelo de variable de un asiento predefinido, usada para solicitar al
+ * usuario un valor al generar el asiento.
+ */
 class AsientoPredefinidoVariable extends ModelClass
 {
     use ModelTrait;
 
     /**
-     * @var string
+     * @var string código de la variable
      */
     public $codigo;
 
     /**
-     * @var int
+     * @var int clave primaria
      */
     public $id;
 
     /**
-     * @var int
+     * @var int id del asiento predefinido al que pertenece la variable
      */
     public $idasientopre;
 
     /**
-     * @var string
+     * @var string mensaje mostrado al usuario para solicitar el valor de la variable
      */
     public $mensaje;
 

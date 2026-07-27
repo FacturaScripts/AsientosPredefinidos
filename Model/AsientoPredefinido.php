@@ -27,6 +27,9 @@ use FacturaScripts\Dinamic\Model\Asiento;
 use FacturaScripts\Plugins\AsientosPredefinidos\Lib\AsientoPredefinidoGenerator;
 
 /**
+ * Modelo de un asiento predefinido, con concepto, descripción y texto de ayuda,
+ * a partir del cual se pueden generar asientos contables.
+ *
  * @author Carlos García Gómez            <carlos@facturascripts.com>
  * @author Daniel Fernández Giménez       <contacto@danielfg.es>
  * @author Jeronimo Pedro Sánchez Manzano <socger@gmail.com>
@@ -35,16 +38,16 @@ class AsientoPredefinido extends ModelClass
 {
     use ModelTrait;
 
-    /** @var string */
+    /** @var string concepto por defecto de las líneas del asiento generado */
     public $concepto;
 
-    /** @var string */
+    /** @var string descripción del asiento predefinido */
     public $descripcion;
 
-    /** @var int */
+    /** @var int clave primaria */
     public $id;
 
-    /** @var string */
+    /** @var string texto de ayuda mostrado al generar el asiento */
     public $textoayuda;
 
     public function generate(array $form): Asiento
