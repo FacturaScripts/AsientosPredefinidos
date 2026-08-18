@@ -108,6 +108,9 @@ class AsientoPredefinidoLinea extends ModelClass
         // reemplazamos la coma por punto
         $cantidad = str_replace(',', '.', $cantidad);
 
+        // convertimos las letras de las variables a mayúsculas
+        $cantidad = strtoupper($cantidad);
+
         // quitamos de $cantidad lo que no sean números, letras mayúsculas, punto, signo menos, signo más, signo *, signo / y espacios
         $aceptados = preg_replace('/[^A-Z0-9\.\-\+\*\/\s]/', '', $cantidad);
 
