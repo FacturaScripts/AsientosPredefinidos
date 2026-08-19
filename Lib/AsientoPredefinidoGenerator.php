@@ -225,7 +225,7 @@ class AsientoPredefinidoGenerator
             Where::eq('codsubcuenta', $valorFinal) // transforma el punto en ceros
         ];
         if (false === $subcuenta->loadFromCode('', $where)) {
-            Tools::log()->warning('subaccount-not-found', ['%subAccountCode%' => $valorFinal]);
+            Tools::log()->warning('subaccount-not-found', ['%code%' => $valorFinal]);
         }
         return $subcuenta;
     }
