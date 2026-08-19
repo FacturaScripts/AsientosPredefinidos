@@ -208,7 +208,7 @@ final class AsientosPredefinidosTest extends TestCase
 
         // cargamos el asiento predefinido
         $asientoPredefinido = new AsientoPredefinido();
-        $this->assertTrue($asientoPredefinido->loadFromCode(4));
+        $this->assertTrue($asientoPredefinido->load(4));
 
         // generamos el asiento
         $asiento = $asientoPredefinido->generate([
@@ -248,7 +248,7 @@ final class AsientosPredefinidosTest extends TestCase
 
         // cargamos el asiento predefinido
         $asientoPredefinido = new AsientoPredefinido();
-        $this->assertTrue($asientoPredefinido->loadFromCode(2));
+        $this->assertTrue($asientoPredefinido->load(2));
 
         // generamos el asiento
         $asiento = $asientoPredefinido->generate([
@@ -289,7 +289,7 @@ final class AsientosPredefinidosTest extends TestCase
 
         // cargamos el asiento predefinido
         $asientoPredefinido = new AsientoPredefinido();
-        $this->assertTrue($asientoPredefinido->loadFromCode(5));
+        $this->assertTrue($asientoPredefinido->load(5));
 
         // generamos el asiento
         $asiento = $asientoPredefinido->generate([
@@ -329,7 +329,7 @@ final class AsientosPredefinidosTest extends TestCase
         $empresa = Empresas::default();
 
         $asientoPredefinido = new AsientoPredefinido();
-        $this->assertTrue($asientoPredefinido->loadFromCode(6));
+        $this->assertTrue($asientoPredefinido->load(6));
 
         $asiento = $asientoPredefinido->generate([
             'idempresa' => $empresa->idempresa,
@@ -364,7 +364,7 @@ final class AsientosPredefinidosTest extends TestCase
         $empresa = Empresas::default();
 
         $asientoPredefinido = new AsientoPredefinido();
-        $this->assertTrue($asientoPredefinido->loadFromCode(7));
+        $this->assertTrue($asientoPredefinido->load(7));
 
         $asiento = $asientoPredefinido->generate([
             'idempresa' => $empresa->idempresa,
@@ -399,7 +399,7 @@ final class AsientosPredefinidosTest extends TestCase
         $empresa = Empresas::default();
 
         $asientoPredefinido = new AsientoPredefinido();
-        $this->assertTrue($asientoPredefinido->loadFromCode(8));
+        $this->assertTrue($asientoPredefinido->load(8));
 
         $asiento = $asientoPredefinido->generate([
             'idempresa' => $empresa->idempresa,
@@ -434,7 +434,7 @@ final class AsientosPredefinidosTest extends TestCase
         $empresa = Empresas::default();
 
         $asientoPredefinido = new AsientoPredefinido();
-        $this->assertTrue($asientoPredefinido->loadFromCode(9));
+        $this->assertTrue($asientoPredefinido->load(9));
 
         $asiento = $asientoPredefinido->generate([
             'idempresa' => $empresa->idempresa,
@@ -478,7 +478,7 @@ final class AsientosPredefinidosTest extends TestCase
         $empresa = Empresas::default();
 
         $asientoPredefinido = new AsientoPredefinido();
-        $this->assertTrue($asientoPredefinido->loadFromCode(10));
+        $this->assertTrue($asientoPredefinido->load(10));
 
         // R = 1000 repercutido, S = 300 soportado → Z = 700 a ingresar
         $asiento = $asientoPredefinido->generate([
@@ -524,7 +524,7 @@ final class AsientosPredefinidosTest extends TestCase
         $empresa = Empresas::default();
 
         $asientoPredefinido = new AsientoPredefinido();
-        $this->assertTrue($asientoPredefinido->loadFromCode(11));
+        $this->assertTrue($asientoPredefinido->load(11));
 
         // B=500, I=105 (21%), R=95 (19%) → Z = 500+105-95 = 510
         $asiento = $asientoPredefinido->generate([
@@ -575,7 +575,7 @@ final class AsientosPredefinidosTest extends TestCase
         $empresa = Empresas::default();
 
         $asientoPredefinido = new AsientoPredefinido();
-        $this->assertTrue($asientoPredefinido->loadFromCode(12));
+        $this->assertTrue($asientoPredefinido->load(12));
 
         $asiento = $asientoPredefinido->generate([
             'idempresa' => $empresa->idempresa,
@@ -613,7 +613,7 @@ final class AsientosPredefinidosTest extends TestCase
         $empresa = Empresas::default();
 
         $asientoPredefinido = new AsientoPredefinido();
-        $this->assertTrue($asientoPredefinido->loadFromCode(13));
+        $this->assertTrue($asientoPredefinido->load(13));
 
         $asiento = $asientoPredefinido->generate([
             'idempresa' => $empresa->idempresa,
@@ -649,7 +649,7 @@ final class AsientosPredefinidosTest extends TestCase
         $empresa = Empresas::default();
 
         $asientoPredefinido = new AsientoPredefinido();
-        $this->assertTrue($asientoPredefinido->loadFromCode(14));
+        $this->assertTrue($asientoPredefinido->load(14));
 
         $asiento = $asientoPredefinido->generate([
             'idempresa' => $empresa->idempresa,
