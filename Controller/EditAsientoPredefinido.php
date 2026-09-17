@@ -30,6 +30,8 @@ use FacturaScripts\Core\Where;
  */
 class EditAsientoPredefinido extends EditController
 {
+    public $variablesPredefinidas = [];
+
     public function getModelClassName(): string
     {
         return 'AsientoPredefinido';
@@ -133,6 +135,7 @@ class EditAsientoPredefinido extends EditController
             case 'EditAsientoPredefinidoVariable':
                 $where = [Where::eq('idasientopre', $id)];
                 $view->loadData('', $where, ['idasientopre' => 'ASC', 'codigo' => 'ASC']);
+                $this->variablesPredefinidas = $view->model->all($where);
                 break;
 
             case 'ListAsiento':

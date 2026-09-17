@@ -35,7 +35,7 @@
                     {{ trans("channel") }}
                     <input type="number" class="form-control mb-3" name="canal" value="" placeholder="{{ trans('optional') }}"/>
                 </div>
-                {% for variable in fsc.views.EditAsientoPredefinidoVariable.cursor %}
+                {% for variable in fsc.variablesPredefinidas %}
                     <div class="col-12 col-md-6 col-xl-4 col-xxl-3">
                         {{ variable.mensaje }}
                         <div class="input-group mb-3">
