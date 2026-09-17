@@ -24,7 +24,7 @@ use FacturaScripts\Core\Template\ModelClass;
 use FacturaScripts\Core\Template\ModelTrait;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Model\Asiento;
-use FacturaScripts\Plugins\AsientosPredefinidos\Lib\AsientoPredefinidoGenerator;
+use FacturaScripts\Dinamic\Lib\AsientoPredefinidoGenerator;
 
 /**
  * Modelo de un asiento predefinido, con concepto, descripción y texto de ayuda,

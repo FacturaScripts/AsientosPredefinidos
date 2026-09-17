@@ -21,7 +21,7 @@ namespace FacturaScripts\Test\Plugins;
 
 use FacturaScripts\Core\DataSrc\Empresas;
 use FacturaScripts\Core\Tools;
-use FacturaScripts\Plugins\AsientosPredefinidos\Model\AsientoPredefinido;
+use FacturaScripts\Dinamic\Model\AsientoPredefinido;
 use FacturaScripts\Test\Traits\DefaultSettingsTrait;
 use FacturaScripts\Test\Traits\LogErrorsTrait;
 use FacturaScripts\Test\Traits\RandomDataTrait;
