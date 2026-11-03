@@ -19,9 +19,13 @@
 
 namespace FacturaScripts\Test\Plugins;
 
+use FacturaScripts\Core\Base\MiniLog;
 use FacturaScripts\Core\DataSrc\Empresas;
 use FacturaScripts\Core\Tools;
+use FacturaScripts\Dinamic\Model\Asiento;
 use FacturaScripts\Dinamic\Model\AsientoPredefinido;
+use FacturaScripts\Dinamic\Model\AsientoPredefinidoLinea;
+use FacturaScripts\Dinamic\Model\AsientoPredefinidoVariable;
 use FacturaScripts\Test\Traits\DefaultSettingsTrait;
 use FacturaScripts\Test\Traits\LogErrorsTrait;
 use FacturaScripts\Test\Traits\RandomDataTrait;
@@ -32,6 +36,12 @@ final class AsientosPredefinidosTest extends TestCase
     use DefaultSettingsTrait;
     use LogErrorsTrait;
     use RandomDataTrait;
+
+    /** @var Asiento[] asientos generados por el test, para borrarlos al terminar */
+    private $asientos = [];
+
+    /** @var AsientoPredefinido[] plantillas creadas por el test, para borrarlas al terminar */
+    private $predefinidos = [];
 
     public static function setUpBeforeClass(): void
     {
@@ -716,6 +726,67 @@ final class AsientosPredefinidosTest extends TestCase
         $asiento->delete();
     }
 
+    /**
+     * Un saldo residual en coma flotante (5.55e-17) no debe romper la fórmula de Z
+     * ni mezclarse con la variable E del formulario.
+     */
+    public function testSaldoZConNotacionCientifica(): void
+    {
+        // plantilla con variables A, B, C y E; la línea 4 usa Z (0.1 + 0.2 - 0.3 = 5.55e-17)
+        $predefinido = $this->crearPredefinido('Test saldo Z', ['A', 'B', 'C', 'E'], [
+            ['5700000000', 'A', '0'],
+            ['5700000000', 'B', '0'],
+            ['5720000000', '0', 'C'],
+            ['5700000000', 'Z', '0'],
+        ]);
+
+        // generamos el asiento
+        $asiento = $predefinido->generate([
+            'idempresa' => Empresas::default()->idempresa,
+            'fecha' => Tools::date(),
+            'canal' => 0,
+            'var_A' => 0.1,
+            'var_B' => 0.2,
+            'var_C' => 0.3,
+            'var_E' => 4.14,
+        ]);
+        $this->asientos[] = $asiento;
+
+        // el asiento se crea con 4 partidas y queda cuadrado; la que usa Z vale 0
+        $this->assertTrue($asiento->exists());
+        $partidas = $asiento->getLines();
+        $this->assertCount(4, $partidas);
+        $this->assertEqualsWithDelta(0.3, $asiento->importe, 0.0001);
+        $this->assertEqualsWithDelta(0.3, array_sum(array_column($partidas, 'debe')), 0.0001);
+        $this->assertEqualsWithDelta(0.3, array_sum(array_column($partidas, 'haber')), 0.0001);
+    }
+
+    /**
+     * Una fórmula que no se puede evaluar debe avisar y no lanzar una excepción.
+     */
+    public function testFormulaNoEvaluable(): void
+    {
+        $predefinido = $this->crearPredefinido('Test fórmula inválida', ['A'], [
+            ['5700000000', 'A*', '0'],
+            ['5720000000', '0', 'A'],
+        ]);
+
+        $asiento = $predefinido->generate([
+            'idempresa' => Empresas::default()->idempresa,
+            'fecha' => Tools::date(),
+            'canal' => 0,
+            'var_A' => 10,
+        ]);
+
+        // no se crea el asiento y se ha avisado al usuario
+        $this->assertFalse($asiento->exists());
+        $avisos = array_filter(
+            array_column(MiniLog::read('', ['warning']), 'message'),
+            fn($mensaje) => false !== strpos($mensaje, 'A*')
+        );
+        $this->assertNotEmpty($avisos);
+    }
+
     public function testMethodTest(): void
     {
         $asientoPredefinido = new AsientoPredefinido();
@@ -724,8 +795,72 @@ final class AsientosPredefinidosTest extends TestCase
         $this->assertTrue($asientoPredefinido->test());
     }
 
+    /**
+     * Crea un asiento predefinido de prueba con sus variables y líneas.
+     *
+     * @param string $descripcion descripción de la plantilla
+     * @param string[] $variables códigos de las variables
+     * @param array $lineas líneas como [codsubcuenta, debe, haber]
+     *
+     * @return AsientoPredefinido
+     */
+    protected function crearPredefinido(string $descripcion, array $variables, array $lineas): AsientoPredefinido
+    {
+        $predefinido = new AsientoPredefinido();
+        $predefinido->descripcion = $descripcion;
+        $predefinido->concepto = $descripcion;
+        $this->assertTrue($predefinido->save());
+        $this->predefinidos[] = $predefinido;
+
+        foreach ($variables as $codigo) {
+            $variable = new AsientoPredefinidoVariable();
+            $variable->idasientopre = $predefinido->id;
+            $variable->codigo = $codigo;
+            $variable->mensaje = 'Variable ' . $codigo;
+            $this->assertTrue($variable->save());
+        }
+
+        foreach ($lineas as $orden => [$codsubcuenta, $debe, $haber]) {
+            $linea = new AsientoPredefinidoLinea();
+            $linea->idasientopre = $predefinido->id;
+            $linea->codsubcuenta = $codsubcuenta;
+            $linea->codcontrapartida = '';
+            $linea->concepto = 'Línea ' . ($orden + 1);
+            $linea->debe = $debe;
+            $linea->haber = $haber;
+            $linea->orden = $orden;
+            $this->assertTrue($linea->save());
+        }
+
+        return $predefinido;
+    }
+
     protected function tearDown(): void
     {
+        // borramos lo creado en el test, cada elemento por separado para no interferir con el resto
+        foreach ($this->asientos as $asiento) {
+            try {
+                $asiento->delete();
+            } catch (\Throwable $exception) {
+                // ignoramos errores de limpieza
+            }
+        }
+        foreach ($this->predefinidos as $predefinido) {
+            try {
+                foreach ($predefinido->getLines() as $linea) {
+                    $linea->delete();
+                }
+                foreach ($predefinido->getVariables() as $variable) {
+                    $variable->delete();
+                }
+                $predefinido->delete();
+            } catch (\Throwable $exception) {
+                // ignoramos errores de limpieza
+            }
+        }
+        $this->asientos = [];
+        $this->predefinidos = [];
+
         $this->logErrors();
     }
 }
