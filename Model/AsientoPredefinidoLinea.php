@@ -23,6 +23,8 @@ namespace FacturaScripts\Plugins\AsientosPredefinidos\Model;
 use FacturaScripts\Core\Template\ModelClass;
 use FacturaScripts\Core\Template\ModelTrait;
 use FacturaScripts\Core\Tools;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+use Throwable;
 
 /**
  * Modelo que representa la línea de un asiento predefinido, con su subcuenta, contrapartida,
@@ -119,6 +121,21 @@ class AsientoPredefinidoLinea extends ModelClass
             Tools::log()->warning('Para el ' . $etiqueta . ' introdujo ' . $cantidad
                 . '. Pero el ' . $etiqueta . ' sólo puede tener números, letras en mayúsculas (A-Z) y operadores matemáticos (+ - * /).');
             return false;
+        }
+
+        if ('' !== trim($cantidad)) {
+            try {
+                $expresion = preg_replace('/[A-Z]/', '1', $cantidad);
+                (new ExpressionLanguage())->parse($expresion, []);
+            } catch (Throwable $e) {
+                Tools::log()->warning('predefined-line-invalid-formula', [
+                    '%field%' => Tools::trans($etiqueta === 'debe' ? 'debit' : 'credit'),
+                    '%line%' => $this->orden,
+                    '%subaccount%' => $this->codsubcuenta,
+                    '%formula%' => $cantidad,
+                ]);
+                return false;
+            }
         }
 
         return true;

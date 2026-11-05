@@ -19,9 +19,12 @@
 
 namespace FacturaScripts\Test\Plugins;
 
+use FacturaScripts\Core\Base\DataBase;
 use FacturaScripts\Core\DataSrc\Empresas;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Model\AsientoPredefinido;
+use FacturaScripts\Dinamic\Model\AsientoPredefinidoLinea;
+use FacturaScripts\Dinamic\Model\AsientoPredefinidoVariable;
 use FacturaScripts\Test\Traits\DefaultSettingsTrait;
 use FacturaScripts\Test\Traits\LogErrorsTrait;
 use FacturaScripts\Test\Traits\RandomDataTrait;
@@ -722,6 +725,27 @@ final class AsientosPredefinidosTest extends TestCase
         $asientoPredefinido->descripcion = null;
         $asientoPredefinido->concepto = null;
         $this->assertTrue($asientoPredefinido->test());
+    }
+
+    public function testLineaFormulaValidaEInvalida(): void
+    {
+        // fórmula válida
+        $linea = new AsientoPredefinidoLinea();
+        $linea->idasientopre = 1;
+        $linea->codsubcuenta = '6000000000';
+        $linea->codcontrapartida = '';
+        $linea->debe = 'N*20*1.21';
+        $linea->haber = '0';
+        $this->assertTrue($linea->test());
+
+        // fórmula inválida: punto final de más
+        $linea->debe = 'N*20*1.21.';
+        $this->assertFalse($linea->test());
+
+        // fórmula inválida en el haber: operador sin segundo operando
+        $linea->debe = '0';
+        $linea->haber = 'A+';
+        $this->assertFalse($linea->test());
     }
 
     protected function tearDown(): void

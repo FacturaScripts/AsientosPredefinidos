@@ -29,6 +29,7 @@ use FacturaScripts\Dinamic\Model\AsientoPredefinido;
 use FacturaScripts\Dinamic\Model\AsientoPredefinidoLinea;
 use FacturaScripts\Dinamic\Model\AsientoPredefinidoVariable;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+use Throwable;
 
 /**
  * @author Carlos García Gómez            <carlos@facturascripts.com>
@@ -75,8 +76,21 @@ class AsientoPredefinidoGenerator
             // Partida::getLines() devuelve por orden DESC. Invertimos aquí para
             // conservar en el asiento final el orden visual definido en la plantilla.
             $newLine->orden = $lineCount - $index;
-            $newLine->debe = static::cantidadReplace($line->debe, $variables, $form, $saldoDebe, $saldoHaber);
-            $newLine->haber = static::cantidadReplace($line->haber, $variables, $form, $saldoDebe, $saldoHaber);
+            try {
+                $newLine->debe = static::cantidadReplace($line->debe, $variables, $form, $saldoDebe, $saldoHaber);
+                $newLine->haber = static::cantidadReplace($line->haber, $variables, $form, $saldoDebe, $saldoHaber);
+            } catch (Throwable $e) {
+                // fórmula mal escrita (por ejemplo, guardada antes de validarse al guardar la línea)
+                Tools::log()->warning('predefined-line-invalid-formula-generate', [
+                    '%line%' => $line->orden,
+                    '%subaccount%' => $line->codsubcuenta,
+                    '%debit%' => $line->debe,
+                    '%credit%' => $line->haber,
+                ]);
+                $asiento->delete();
+                $database->rollback();
+                return $asiento;
+            }
 
             // redondeamos
             $decimals = Tools::settings('default', 'decimals', 2);

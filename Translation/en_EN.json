@@ -2,5 +2,7 @@
     "generated-acc-entries": "Seats generated",
     "predefined-acc-entries": "Predefined seats",
     "predefined-acc-entry": "Predefined seat",
+    "predefined-line-invalid-formula": "The %field% formula of line %line% (subaccount %subaccount%) is not valid: %formula%",
+    "predefined-line-invalid-formula-generate": "The formula of line %line% (subaccount %subaccount%) is not valid. Debit: %debit%, credit: %credit%. Fix it in the lines tab.",
     "required-field": "Mandatory %field% field"
 }
