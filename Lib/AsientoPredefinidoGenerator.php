@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of AsientoPredefinido plugin for FacturaScripts
- * Copyright (C) 2021-2024 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2021-2026 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -37,6 +37,16 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
  */
 class AsientoPredefinidoGenerator
 {
+    /**
+     * Genera un asiento contable a partir de un asiento predefinido y los valores del formulario.
+     * Si algo falla (variables sin valor, subcuenta inexistente o fórmula no evaluable) avisa
+     * con un mensaje y devuelve un asiento que no existe en la base de datos.
+     *
+     * @param AsientoPredefinido $predefinido
+     * @param array $form
+     *
+     * @return Asiento
+     */
     public static function generate(AsientoPredefinido $predefinido, array $form): Asiento
     {
         $asiento = new Asiento();
@@ -75,8 +85,19 @@ class AsientoPredefinidoGenerator
             // Partida::getLines() devuelve por orden DESC. Invertimos aquí para
             // conservar en el asiento final el orden visual definido en la plantilla.
             $newLine->orden = $lineCount - $index;
-            $newLine->debe = static::cantidadReplace($line->debe, $variables, $form, $saldoDebe, $saldoHaber);
-            $newLine->haber = static::cantidadReplace($line->haber, $variables, $form, $saldoDebe, $saldoHaber);
+            try {
+                $newLine->debe = static::cantidadReplace($line->debe, $variables, $form, $saldoDebe, $saldoHaber);
+                $newLine->haber = static::cantidadReplace($line->haber, $variables, $form, $saldoDebe, $saldoHaber);
+            } catch (\Throwable $exception) {
+                // la fórmula no se puede evaluar: avisamos y cancelamos la generación
+                Tools::log()->warning('invalid-formula', [
+                    '%formula%' => $line->debe . ' / ' . $line->haber,
+                    '%error%' => $exception->getMessage()
+                ]);
+                $asiento->delete();
+                $database->rollback();
+                return $asiento;
+            }
 
             // redondeamos
             $decimals = Tools::settings('default', 'decimals', 2);
@@ -127,6 +148,13 @@ class AsientoPredefinidoGenerator
     }
 
     /**
+     * Calcula el importe de una cantidad (debe o haber) de una línea, sustituyendo
+     * las variables por sus valores y evaluando la fórmula resultante.
+     *
+     * La variable Z (saldo acumulado) se redondea a los decimales configurados y todos los
+     * valores se escriben sin notación científica. La sustitución se hace en una sola
+     * pasada, para que el valor de una variable nunca se vuelva a sustituir por otra.
+     *
      * @param string $cantidad
      * @param AsientoPredefinidoVariable[] $variables
      * @param array $form
@@ -134,17 +162,21 @@ class AsientoPredefinidoGenerator
      * @param float $saldoHaber
      *
      * @return float
+     * @throws \Throwable si la fórmula resultante no se puede evaluar
      */
     protected static function cantidadReplace(string $cantidad, array $variables, array $form, float $saldoDebe, float $saldoHaber): float
     {
-        // reemplazamos las variables por sus valores
-        $search = ['Z'];
-        $replace = [$saldoDebe - $saldoHaber];
+        // reemplazamos las variables por sus valores, en una sola pasada
+        $decimals = (int)Tools::settings('default', 'decimals', 2);
+        $replacements = ['Z' => static::formatNumber(round($saldoDebe - $saldoHaber, $decimals))];
         foreach ($variables as $var) {
-            $search[] = $var->codigo;
-            $replace[] = $form['var_' . $var->codigo];
+            if ('' === (string)$var->codigo) {
+                continue;
+            }
+            $valorVar = $form['var_' . $var->codigo];
+            $replacements[$var->codigo] = is_numeric($valorVar) ? static::formatNumber((float)$valorVar) : (string)$valorVar;
         }
-        $valor = str_replace($search, $replace, $cantidad);
+        $valor = strtr($cantidad, $replacements);
 
         // Si es una fórmula, calculamos
         foreach (['+', '-', '/', '*'] as $operator) {
@@ -155,6 +187,20 @@ class AsientoPredefinidoGenerator
         }
 
         return (float)$valor;
+    }
+
+    /**
+     * Convierte un número a texto con punto decimal y sin notación científica
+     * (por ejemplo, 5.55E-17 se convierte en "0" y -2.5 se queda en "-2.5").
+     *
+     * @param float $numero
+     *
+     * @return string
+     */
+    protected static function formatNumber(float $numero): string
+    {
+        $texto = rtrim(rtrim(number_format($numero, 10, '.', ''), '0'), '.');
+        return in_array($texto, ['', '-', '-0'], true) ? '0' : $texto;
     }
 
     /**
