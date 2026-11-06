@@ -19,6 +19,7 @@
 
 namespace FacturaScripts\Test\Plugins;
 
+use FacturaScripts\Core\Base\DataBase;
 use FacturaScripts\Core\Base\MiniLog;
 use FacturaScripts\Core\DataSrc\Empresas;
 use FacturaScripts\Core\Tools;
@@ -766,25 +767,22 @@ final class AsientosPredefinidosTest extends TestCase
      */
     public function testFormulaNoEvaluable(): void
     {
-        // una fórmula inválida en el debe y otra en el haber
-        foreach (['debe' => ['A*', '0'], 'haber' => ['0', 'A/']] as $columna => [$debe, $haber]) {
-            $predefinido = $this->crearPredefinido('Test fórmula inválida en ' . $columna, ['A'], [
-                ['5700000000', $debe, $haber],
-                ['5720000000', '0', 'A'],
-            ]);
+        // en el debe, una división entre cero que solo falla al generar con los valores reales
+        $predefinido = $this->crearPredefinido('Test fórmula no evaluable en debe', ['A', 'B'], [
+            ['5700000000', 'A/B', '0'],
+            ['5720000000', '0', 'A'],
+        ]);
+        $this->assertGeneracionCancelada($predefinido, ['var_A' => 10, 'var_B' => 0], 'A/B');
 
-            MiniLog::clear();
-            $asiento = $predefinido->generate([
-                'idempresa' => Empresas::default()->idempresa,
-                'fecha' => Tools::date(),
-                'canal' => 0,
-                'var_A' => 10,
-            ]);
-
-            // no se crea el asiento y se avisa indicando solo la fórmula que falla
-            $this->assertFalse($asiento->exists(), 'fórmula inválida en ' . $columna);
-            $this->assertSame([$columna === 'debe' ? $debe : $haber], $this->formulasInvalidasAvisadas());
-        }
+        // en el haber, una fórmula mal escrita guardada antes de que se validara al guardar la línea
+        $predefinido = $this->crearPredefinido('Test fórmula antigua inválida en haber', ['A'], [
+            ['5700000000', '0', '0'],
+            ['5720000000', '0', 'A'],
+        ]);
+        $sql = 'UPDATE ' . AsientoPredefinidoLinea::tableName() . " SET haber = 'A/'"
+            . ' WHERE id = ' . (int)$predefinido->getLines()[0]->id;
+        $this->assertTrue((new DataBase())->exec($sql));
+        $this->assertGeneracionCancelada($predefinido, ['var_A' => 10], 'A/');
     }
 
     /**
@@ -819,6 +817,38 @@ final class AsientosPredefinidosTest extends TestCase
         $asientoPredefinido->descripcion = null;
         $asientoPredefinido->concepto = null;
         $this->assertTrue($asientoPredefinido->test());
+    }
+
+    /**
+     * Al guardar una línea se rechazan las fórmulas que no se pueden interpretar, avisando de cuál es.
+     */
+    public function testLineaFormulaValidaEInvalida(): void
+    {
+        $linea = new AsientoPredefinidoLinea();
+        $linea->idasientopre = 1;
+        $linea->codsubcuenta = '6000000000';
+        $linea->codcontrapartida = '';
+
+        // fórmulas válidas
+        foreach (['N*20*1.21', '-5', 'A', 'A + B / 2', ''] as $formula) {
+            $linea->debe = $formula;
+            $linea->haber = '0';
+            MiniLog::clear();
+            $this->assertTrue($linea->test(), 'fórmula válida: ' . $formula);
+            $this->assertSame([], $this->formulasAvisadas('%subaccount%'), 'fórmula válida: ' . $formula);
+        }
+
+        // fórmulas inválidas en el debe y en el haber: punto final de más, operador sin segundo
+        // operando y variables pegadas a un número o a otra variable
+        foreach (['N*20*1.21.', 'A+', '2A', 'AB'] as $formula) {
+            foreach (['debe', 'haber'] as $columna) {
+                $linea->debe = $columna === 'debe' ? $formula : '0';
+                $linea->haber = $columna === 'haber' ? $formula : '0';
+                MiniLog::clear();
+                $this->assertFalse($linea->test(), $formula . ' en el ' . $columna);
+                $this->assertSame([$formula], $this->formulasAvisadas('%subaccount%'), $formula . ' en el ' . $columna);
+            }
+        }
     }
 
     /**
@@ -862,15 +892,39 @@ final class AsientosPredefinidosTest extends TestCase
     }
 
     /**
-     * Devuelve las fórmulas de los avisos 'invalid-formula' registrados, sin depender del idioma.
+     * Genera el asiento y comprueba que no se crea y que se avisa solo de la fórmula que falla.
+     *
+     * @param AsientoPredefinido $predefinido
+     * @param array $valores valores de las variables (var_X)
+     * @param string $formula fórmula de la que se debe avisar
+     */
+    protected function assertGeneracionCancelada(AsientoPredefinido $predefinido, array $valores, string $formula): void
+    {
+        MiniLog::clear();
+        $asiento = $predefinido->generate(array_merge([
+            'idempresa' => Empresas::default()->idempresa,
+            'fecha' => Tools::date(),
+            'canal' => 0,
+        ], $valores));
+
+        $this->assertFalse($asiento->exists(), $formula);
+        $this->assertSame([$formula], $this->formulasAvisadas('%error%'), $formula);
+    }
+
+    /**
+     * Devuelve las fórmulas de los avisos de fórmula inválida registrados, sin depender del idioma.
+     * Los avisos se distinguen por su contexto: '%error%' para los de la generación
+     * (invalid-formula) y '%subaccount%' para los de guardar la línea (predefined-line-invalid-formula).
+     *
+     * @param string $claveContexto
      *
      * @return string[]
      */
-    protected function formulasInvalidasAvisadas(): array
+    protected function formulasAvisadas(string $claveContexto): array
     {
         $formulas = [];
         foreach (MiniLog::read('', ['warning']) as $aviso) {
-            if (isset($aviso['context']['%formula%'], $aviso['context']['%error%'])) {
+            if (isset($aviso['context']['%formula%'], $aviso['context'][$claveContexto])) {
                 $formulas[] = $aviso['context']['%formula%'];
             }
         }

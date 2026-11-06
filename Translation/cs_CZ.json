@@ -3,5 +3,6 @@
     "invalid-formula": "No se puede calcular la fórmula %formula%: %error%",
     "predefined-acc-entries": "Asientos predefinidos",
     "predefined-acc-entry": "Asiento predefinido",
+    "predefined-line-invalid-formula": "La fórmula del %field% de la línea %line% (subcuenta %subaccount%) no es válida: %formula%",
     "required-field": "Pole %field% je povinné"
 }

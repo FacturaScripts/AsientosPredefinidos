@@ -180,12 +180,45 @@ class AsientoPredefinidoGenerator
         // Si es una fórmula, calculamos
         foreach (['+', '-', '/', '*'] as $operator) {
             if (false !== strpos($valor, $operator)) {
-                static::$expressionLanguage ??= new ExpressionLanguage();
-                return (float)static::$expressionLanguage->evaluate($valor);
+                return (float)static::expressionLanguage()->evaluate($valor);
             }
         }
 
         return (float)$valor;
+    }
+
+    /**
+     * Comprueba que la fórmula de una cantidad (debe o haber) se puede interpretar, tratando
+     * cada letra de la A a la Z como una variable. Así se rechazan, por ejemplo, "A+", "1.21."
+     * o variables pegadas a números u otras variables ("2A", "AB").
+     *
+     * @param string $cantidad fórmula en mayúsculas
+     *
+     * @return string mensaje de error, o cadena vacía si la fórmula es válida
+     */
+    public static function formulaError(string $cantidad): string
+    {
+        if ('' === trim($cantidad)) {
+            return '';
+        }
+
+        try {
+            static::expressionLanguage()->parse($cantidad, range('A', 'Z'));
+        } catch (\Throwable $exception) {
+            return $exception->getMessage();
+        }
+
+        return '';
+    }
+
+    /**
+     * Devuelve la instancia compartida de ExpressionLanguage, para aprovechar su caché de expresiones.
+     *
+     * @return ExpressionLanguage
+     */
+    protected static function expressionLanguage(): ExpressionLanguage
+    {
+        return static::$expressionLanguage ??= new ExpressionLanguage();
     }
 
     /**

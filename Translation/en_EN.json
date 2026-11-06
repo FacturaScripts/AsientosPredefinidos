@@ -3,5 +3,6 @@
     "invalid-formula": "No se puede calcular la fórmula %formula%: %error%",
     "predefined-acc-entries": "Predefined seats",
     "predefined-acc-entry": "Predefined seat",
+    "predefined-line-invalid-formula": "The %field% formula of line %line% (subaccount %subaccount%) is not valid: %formula%",
     "required-field": "Mandatory %field% field"
 }
