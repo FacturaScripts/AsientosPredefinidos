@@ -871,6 +871,38 @@ final class AsientosPredefinidosTest extends TestCase
     }
 
     /**
+     * En la nómina, el sueldo (640) y la retención (4751) llevan como contrapartida la subcuenta 465
+     * del empleado, que es lo que usa el modelo 111 para identificar a cada perceptor.
+     */
+    public function testNominaConContrapartidaDelEmpleado(): void
+    {
+        $this->assertTrue(AsientoPredefinidoRestorer::restore('ESP'));
+
+        $predefinido = new AsientoPredefinido();
+        $this->assertTrue($predefinido->loadWhere([Where::eq('descripcion', 'Asiento de una nómina')]));
+
+        $asiento = $predefinido->generate([
+            'idempresa' => Empresas::default()->idempresa,
+            'fecha' => Tools::date(),
+            'var_A' => 0,
+            'var_B' => 0,
+            'var_S' => 300,
+            'var_D' => 2000,
+            'var_R' => 200,
+            'var_L' => 1500,
+        ]);
+        $this->asientos[] = $asiento;
+        $this->assertTrue($asiento->exists());
+
+        $contrapartidas = [];
+        foreach ($asiento->getLines() as $partida) {
+            $contrapartidas[substr($partida->codsubcuenta, 0, 4)] = $partida->codcontrapartida;
+        }
+        $this->assertSame('4650000000', $contrapartidas['6400']);
+        $this->assertSame('4650000000', $contrapartidas['4751']);
+    }
+
+    /**
      * Una plantilla sin líneas no genera un asiento vacío.
      */
     public function testPlantillaSinLineas(): void
