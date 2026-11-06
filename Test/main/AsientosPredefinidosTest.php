@@ -990,6 +990,63 @@ final class AsientosPredefinidosTest extends TestCase
     /**
      * Al guardar una línea se rechazan las fórmulas que no se pueden interpretar, avisando de cuál es.
      */
+    /**
+     * Por la API la contrapartida, la subcuenta, el debe o el haber pueden llegar vacíos (null):
+     * la línea se valida sin lanzar un TypeError (informe de fallo 8723).
+     */
+    public function testLineaConCamposNulos(): void
+    {
+        $linea = new AsientoPredefinidoLinea();
+        $linea->idasientopre = 1;
+        $linea->codsubcuenta = '5700000000';
+        $linea->codcontrapartida = null;
+        $linea->debe = null;
+        $linea->haber = null;
+        $this->assertTrue($linea->test());
+        $this->assertSame('0', $linea->debe);
+        $this->assertSame('0', $linea->haber);
+
+        // sin subcuenta no es válida, pero tampoco lanza un TypeError
+        $linea->codsubcuenta = null;
+        $this->assertFalse($linea->test());
+    }
+
+    /**
+     * Los decimales escritos sin el cero (.21) se aceptan al guardar y al generar.
+     */
+    public function testDecimalesSinCero(): void
+    {
+        // al guardar la línea se añade el cero
+        $linea = new AsientoPredefinidoLinea();
+        $linea->idasientopre = 1;
+        $linea->codsubcuenta = '5700000000';
+        $linea->codcontrapartida = '';
+        $linea->debe = 'a*20*.21';
+        $linea->haber = '-.5+1';
+        $this->assertTrue($linea->test());
+        $this->assertSame('A*20*0.21', $linea->debe);
+        $this->assertSame('-0.5+1', $linea->haber);
+
+        // una fórmula guardada antes de validarse también se calcula al generar
+        $predefinido = $this->crearPredefinido('Test decimales sin cero', ['A'], [
+            ['5700000000', '0', '0'],
+            ['5720000000', '0', 'Z'],
+        ]);
+        $sql = 'UPDATE ' . AsientoPredefinidoLinea::tableName() . " SET debe = 'A*20*.21'"
+            . ' WHERE id = ' . (int)$predefinido->getLines()[0]->id;
+        $this->assertTrue((new DataBase())->exec($sql));
+
+        $asiento = $predefinido->generate([
+            'idempresa' => Empresas::default()->idempresa,
+            'fecha' => Tools::date(),
+            'var_A' => 3,
+        ]);
+        $this->asientos[] = $asiento;
+
+        $this->assertTrue($asiento->exists());
+        $this->assertEqualsWithDelta(12.6, $asiento->importe, 0.001);
+    }
+
     public function testLineaFormulaValidaEInvalida(): void
     {
         $linea = new AsientoPredefinidoLinea();

@@ -245,7 +245,8 @@ class AsientoPredefinidoGenerator
         foreach ($variables as $var) {
             $replacements[$var->codigo] = static::formatNumber((float)$form['var_' . $var->codigo]);
         }
-        $valor = strtr($cantidad, $replacements);
+        // las fórmulas guardadas antes de validarse pueden tener decimales sin el cero (.21)
+        $valor = strtr(static::normalizeFormula($cantidad), $replacements);
 
         // Si es una fórmula, calculamos
         foreach (['+', '-', '/', '*'] as $operator) {
@@ -255,6 +256,20 @@ class AsientoPredefinidoGenerator
         }
 
         return (float)$valor;
+    }
+
+    /**
+     * Añade el cero a los decimales escritos sin él, para que se puedan calcular:
+     * ".21" pasa a "0.21", "20*.21" a "20*0.21" y "-.91" a "-0.91". No toca los puntos
+     * que van detrás de un número, una variable u otro punto.
+     *
+     * @param string $formula
+     *
+     * @return string
+     */
+    public static function normalizeFormula(string $formula): string
+    {
+        return preg_replace('/(?<![0-9A-Z.])\.(?=[0-9])/', '0.', $formula);
     }
 
     /**

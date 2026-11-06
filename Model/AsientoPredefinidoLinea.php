@@ -97,8 +97,12 @@ class AsientoPredefinidoLinea extends ModelClass
         $this->codsubcuenta = Tools::noHtml($this->codsubcuenta);
         $this->concepto = Tools::noHtml($this->concepto);
 
-        return $this->testSubcuenta($this->codsubcuenta) &&
-            $this->testSubcuenta($this->codcontrapartida) &&
+        // por la API pueden llegar vacíos (null): un debe o haber vacío es 0
+        $this->debe = (string)($this->debe ?? '0');
+        $this->haber = (string)($this->haber ?? '0');
+
+        return $this->testSubcuenta((string)$this->codsubcuenta) &&
+            $this->testSubcuenta((string)$this->codcontrapartida) &&
             $this->testCantidad($this->debe, 'debe') &&
             $this->testCantidad($this->haber, 'haber') &&
             parent::test();
@@ -106,11 +110,9 @@ class AsientoPredefinidoLinea extends ModelClass
 
     private function testCantidad(string &$cantidad, string $etiqueta): bool
     {
-        // reemplazamos la coma por punto
-        $cantidad = str_replace(',', '.', $cantidad);
-
-        // convertimos las letras de las variables a mayúsculas
-        $cantidad = strtoupper($cantidad);
+        // reemplazamos la coma por punto, ponemos el cero a los decimales escritos sin él (.21)
+        // y convertimos las letras de las variables a mayúsculas
+        $cantidad = AsientoPredefinidoGenerator::normalizeFormula(strtoupper(str_replace(',', '.', $cantidad)));
 
         // quitamos de $cantidad lo que no sean números, letras mayúsculas, punto, signo menos, signo más, signo *, signo / y espacios
         $aceptados = preg_replace('/[^A-Z0-9\.\-\+\*\/\s]/', '', $cantidad);
