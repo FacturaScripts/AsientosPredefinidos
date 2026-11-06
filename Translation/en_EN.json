@@ -3,6 +3,16 @@
     "invalid-formula": "No se puede calcular la fórmula %formula%: %error%",
     "predefined-acc-entries": "Predefined seats",
     "predefined-acc-entry": "Predefined seat",
+    "predefined-line-invalid-chars": "The %field% %value% can only contain numbers, uppercase letters (A-Z) and the operators + - * \/.",
     "predefined-line-invalid-formula": "The %field% formula of line %line% (subaccount %subaccount%) is not valid: %formula%",
+    "predefined-subaccount-invalid-chars": "Subaccount %subaccount% can only contain numbers (0-9), a dot and uppercase letters (A-Z).",
+    "predefined-subaccount-multiple-dots": "Subaccount %subaccount% cannot have more than one dot.",
+    "predefined-subaccount-multiple-variables": "Subaccount %subaccount% cannot have more than one variable.",
+    "predefined-subaccount-z-variable": "Subaccount %subaccount% cannot use variable Z, which is only used in debit or credit.",
+    "predefined-unbalanced-entry": "The generated entry is not balanced: debit %debit%, credit %credit%.",
+    "predefined-variable-not-registered": "Variable %variable% is not registered.",
+    "predefined-variable-without-value": "Variable %variable% has no value.",
+    "predefined-variable-z-not-needed": "There is no need to register variable Z: it is the pending balance of the entry.",
+    "predefined-without-lines": "The predefined entry has no lines.",
     "required-field": "Mandatory %field% field"
 }

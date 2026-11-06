@@ -5,7 +5,7 @@
             <column name="description" order="100">
                 <widget type="text" fieldname="descripcion" maxlength="150" required="true"/>
             </column>
-            <column name="concepto" title="Concepto para el asiento" order="100">
+            <column name="concept" order="100">
                 <widget type="text" fieldname="concepto" maxlength="255" required="true"/>
             </column>
             <column name="help-text" title="help" order="110" numcolumns="12">

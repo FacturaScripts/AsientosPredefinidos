@@ -67,7 +67,7 @@ class AsientoPredefinidoVariable extends ModelClass
         $this->mensaje = Tools::noHtml($this->mensaje);
 
         if ($this->codigo === 'Z') {
-            Tools::log()->warning('No es necesario registrar la variable Z.');
+            Tools::log()->warning('predefined-variable-z-not-needed');
             return false;
         }
 

@@ -23,6 +23,8 @@ use FacturaScripts\Core\Base\DataBase;
 use FacturaScripts\Core\Base\MiniLog;
 use FacturaScripts\Core\DataSrc\Empresas;
 use FacturaScripts\Core\Tools;
+use FacturaScripts\Core\Where;
+use FacturaScripts\Dinamic\Lib\AsientoPredefinidoRestorer;
 use FacturaScripts\Dinamic\Model\Asiento;
 use FacturaScripts\Dinamic\Model\AsientoPredefinido;
 use FacturaScripts\Dinamic\Model\AsientoPredefinidoLinea;
@@ -811,6 +813,172 @@ final class AsientosPredefinidosTest extends TestCase
         }
     }
 
+    /**
+     * Restaurar las plantillas incluidas no debe tocar las del usuario, aunque ocupen un id del CSV
+     * (como en instalaciones anteriores a la 3.6), ni duplicar plantillas al repetirlo.
+     */
+    public function testRestaurarNoSobrescribePlantillasDelUsuario(): void
+    {
+        $plantillasCsv = $this->leerCsv('asientospre.csv');
+        $ultima = end($plantillasCsv);
+
+        // dejamos libre el id de la última plantilla incluida y creamos con ese id una plantilla del usuario
+        $existente = new AsientoPredefinido();
+        if ($existente->load($ultima['id'])) {
+            $this->assertTrue($existente->delete());
+        }
+        $propia = new AsientoPredefinido();
+        $propia->id = (int)$ultima['id'];
+        $propia->descripcion = 'Plantilla propia del usuario';
+        $propia->concepto = 'Concepto propio';
+        $this->assertTrue($propia->save());
+        $this->predefinidos[] = $propia;
+        $linea = new AsientoPredefinidoLinea();
+        $linea->idasientopre = $propia->id;
+        $linea->codsubcuenta = '5700000000';
+        $linea->codcontrapartida = '';
+        $linea->concepto = 'Línea propia';
+        $this->assertTrue($linea->save());
+
+        // restauramos dos veces
+        $this->assertTrue(AsientoPredefinidoRestorer::restore('ESP'));
+        $this->assertTrue(AsientoPredefinidoRestorer::restore('ESP'));
+
+        // la plantilla del usuario sigue igual, con su línea
+        $this->assertTrue($propia->load($propia->id));
+        $this->assertSame('Plantilla propia del usuario', $propia->descripcion);
+        $this->assertSame('Concepto propio', $propia->concepto);
+        $this->assertCount(1, $propia->getLines());
+
+        // cada plantilla incluida existe una sola vez y con sus líneas y variables del CSV
+        $lineasCsv = array_count_values(array_column($this->leerCsv('asientospre_lineas.csv'), 'idasientopre'));
+        $variablesCsv = array_count_values(array_column($this->leerCsv('asientospre_variables.csv'), 'idasientopre'));
+        foreach ($plantillasCsv as $plantilla) {
+            $where = [Where::eq('descripcion', $plantilla['descripcion'])];
+            $this->assertSame(1, AsientoPredefinido::count($where), $plantilla['descripcion']);
+
+            $predefinido = new AsientoPredefinido();
+            $this->assertTrue($predefinido->loadWhere($where));
+            $this->assertCount($lineasCsv[$plantilla['id']] ?? 0, $predefinido->getLines(), $plantilla['descripcion']);
+            $this->assertCount($variablesCsv[$plantilla['id']] ?? 0, $predefinido->getVariables(), $plantilla['descripcion']);
+        }
+
+        // después de restaurar se pueden crear plantillas, líneas y variables (secuencias al día en PostgreSQL)
+        $this->crearPredefinido('Test tras restaurar', ['A'], [
+            ['5700000000', 'A', '0'],
+            ['5720000000', '0', 'A'],
+        ]);
+    }
+
+    /**
+     * Una plantilla sin líneas no genera un asiento vacío.
+     */
+    public function testPlantillaSinLineas(): void
+    {
+        $predefinido = $this->crearPredefinido('Test sin líneas', [], []);
+
+        MiniLog::clear();
+        $asiento = $predefinido->generate([
+            'idempresa' => Empresas::default()->idempresa,
+            'fecha' => Tools::date(),
+        ]);
+
+        $this->assertFalse($asiento->exists());
+        $this->assertContains('predefined-without-lines', $this->clavesAvisadas());
+    }
+
+    /**
+     * Si el asiento generado no cuadra se avisa, pero se crea para poder completarlo a mano.
+     */
+    public function testAsientoDescuadrado(): void
+    {
+        $predefinido = $this->crearPredefinido('Test descuadrado', ['A', 'B'], [
+            ['5700000000', 'A', '0'],
+            ['5720000000', '0', 'B'],
+        ]);
+
+        MiniLog::clear();
+        $asiento = $predefinido->generate([
+            'idempresa' => Empresas::default()->idempresa,
+            'fecha' => Tools::date(),
+            'var_A' => 10,
+            'var_B' => 5,
+        ]);
+        $this->asientos[] = $asiento;
+
+        $this->assertTrue($asiento->exists());
+        $this->assertContains('predefined-unbalanced-entry', $this->clavesAvisadas());
+    }
+
+    /**
+     * Un debe o haber "Z" cuadra el asiento esté en la línea que esté, como en las plantillas
+     * que ponen primero la línea del cliente (430) y después las de ingreso e IVA.
+     */
+    public function testZCuadraElAsientoEnCualquierLinea(): void
+    {
+        $casos = [
+            'Z en el debe de la primera línea' => [
+                ['4300000000', 'Z', '0'],
+                ['7000000000', '0', 'B'],
+                ['4770000000', '0', 'C'],
+            ],
+            'Z en el debe de la última línea' => [
+                ['7000000000', '0', 'B'],
+                ['4770000000', '0', 'C'],
+                ['4300000000', 'Z', '0'],
+            ],
+            'Z en el haber de la primera línea' => [
+                ['4000000000', '0', 'Z'],
+                ['6000000000', 'B', '0'],
+                ['4720000000', 'C', '0'],
+            ],
+        ];
+        foreach ($casos as $caso => $lineas) {
+            $predefinido = $this->crearPredefinido('Test ' . $caso, ['B', 'C'], $lineas);
+
+            MiniLog::clear();
+            $asiento = $predefinido->generate([
+                'idempresa' => Empresas::default()->idempresa,
+                'fecha' => Tools::date(),
+                'var_B' => 1000,
+                'var_C' => 210,
+            ]);
+            $this->asientos[] = $asiento;
+
+            $this->assertTrue($asiento->exists(), $caso);
+            $this->assertNotContains('predefined-unbalanced-entry', $this->clavesAvisadas(), $caso);
+            $this->assertEqualsWithDelta(1210, $asiento->importe, 0.001, $caso);
+            foreach ($asiento->getLines() as $partida) {
+                $this->assertGreaterThanOrEqual(0, $partida->debe, $caso);
+                $this->assertGreaterThanOrEqual(0, $partida->haber, $caso);
+            }
+        }
+    }
+
+    /**
+     * Los errores de subcuenta se avisan con claves de traducción e indican la subcuenta.
+     */
+    public function testAvisosDeSubcuenta(): void
+    {
+        $casos = [
+            '57-00' => 'predefined-subaccount-invalid-chars',
+            '57Z' => 'predefined-subaccount-z-variable',
+            '57AB' => 'predefined-subaccount-multiple-variables',
+            '57.0.1' => 'predefined-subaccount-multiple-dots',
+        ];
+        foreach ($casos as $codsubcuenta => $clave) {
+            $linea = new AsientoPredefinidoLinea();
+            $linea->idasientopre = 1;
+            $linea->codsubcuenta = $codsubcuenta;
+            $linea->codcontrapartida = '';
+
+            MiniLog::clear();
+            $this->assertFalse($linea->test(), $codsubcuenta);
+            $this->assertSame([$clave], $this->clavesAvisadas(), $codsubcuenta);
+            $this->assertSame($codsubcuenta, MiniLog::read('', ['warning'])[0]['context']['%subaccount%']);
+        }
+    }
+
     public function testMethodTest(): void
     {
         $asientoPredefinido = new AsientoPredefinido();
@@ -909,6 +1077,38 @@ final class AsientosPredefinidosTest extends TestCase
 
         $this->assertFalse($asiento->exists(), $formula);
         $this->assertSame([$formula], $this->formulasAvisadas('%error%'), $formula);
+    }
+
+    /**
+     * Devuelve las claves (sin traducir) de los avisos registrados.
+     *
+     * @return string[]
+     */
+    protected function clavesAvisadas(): array
+    {
+        return array_column(MiniLog::read('', ['warning']), 'original');
+    }
+
+    /**
+     * Lee un CSV de las plantillas incluidas para España.
+     *
+     * @param string $fichero
+     *
+     * @return array[]
+     */
+    protected function leerCsv(string $fichero): array
+    {
+        $handle = fopen(Tools::folder('Plugins', 'AsientosPredefinidos', 'Data', 'Codpais', 'ESP', $fichero), 'rb');
+        $this->assertNotFalse($handle, $fichero);
+
+        $filas = [];
+        $cabecera = fgetcsv($handle, 0, ',', '"', '\\');
+        while (false !== ($fila = fgetcsv($handle, 0, ',', '"', '\\'))) {
+            $filas[] = array_combine($cabecera, $fila);
+        }
+        fclose($handle);
+
+        return $filas;
     }
 
     /**

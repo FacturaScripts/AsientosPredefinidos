@@ -3,6 +3,16 @@
     "invalid-formula": "No se puede calcular la fórmula %formula%: %error%",
     "predefined-acc-entries": "Ön tanımlı muhasebe kayıtları",
     "predefined-acc-entry": "Ön tanımlı kayıt",
+    "predefined-line-invalid-chars": "El %field% %value% solo puede tener números, letras en mayúsculas (A-Z) y los operadores + - * \/.",
     "predefined-line-invalid-formula": "La fórmula del %field% de la línea %line% (subcuenta %subaccount%) no es válida: %formula%",
+    "predefined-subaccount-invalid-chars": "La subcuenta %subaccount% solo puede tener números (0-9), punto y letras en mayúsculas (A-Z).",
+    "predefined-subaccount-multiple-dots": "La subcuenta %subaccount% no puede tener más de un punto.",
+    "predefined-subaccount-multiple-variables": "La subcuenta %subaccount% no puede tener más de una variable.",
+    "predefined-subaccount-z-variable": "La subcuenta %subaccount% no puede usar la variable Z, que solo se usa en el debe o el haber.",
+    "predefined-unbalanced-entry": "El asiento generado no cuadra: debe %debit%, haber %credit%.",
+    "predefined-variable-not-registered": "La variable %variable% no está registrada.",
+    "predefined-variable-without-value": "La variable %variable% no tiene valor.",
+    "predefined-variable-z-not-needed": "No es necesario registrar la variable Z: es el saldo pendiente del asiento.",
+    "predefined-without-lines": "El asiento predefinido no tiene líneas.",
     "required-field": "%field% alanı zorunludur"
 }

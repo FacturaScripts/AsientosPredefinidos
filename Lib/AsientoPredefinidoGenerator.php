@@ -57,7 +57,17 @@ class AsientoPredefinidoGenerator
         // Comprobamos las variables
         $variables = $predefinido->getVariables();
         $lines = $predefinido->getLines();
-        if (false === static::checkVariables($form, $variables, $lines)) {
+        if (empty($lines)) {
+            Tools::log()->warning('predefined-without-lines');
+            return $asiento; // Devolvemos el asiento incompleto, vacío.
+        } elseif (false === static::checkVariables($form, $variables, $lines)) {
+            return $asiento; // Devolvemos el asiento incompleto, vacío.
+        }
+
+        // calculamos los importes de todas las líneas antes de crear nada
+        $decimals = (int)Tools::settings('default', 'decimals', 2);
+        $importes = static::calculateAmounts($lines, $variables, $form, $decimals);
+        if (null === $importes) {
             return $asiento; // Devolvemos el asiento incompleto, vacío.
         }
 
@@ -71,14 +81,12 @@ class AsientoPredefinidoGenerator
         $asiento->concepto = CodePatterns::trans($concepto, $asiento);
         $asiento->canal = $form["canal"] ?? null;
         if (false === $asiento->save()) {
-            Tools::log()->warning('no-can-create-accounting-entry');
+            Tools::log()->warning('record-save-error');
             $database->rollback();
             return $asiento; // Devolvemos el asiento incompleto, vacío.
         }
 
         // Recorremos todas las líneas/partidas del asiento predefinido para crearlas en el asiento que estamos creando
-
-        $decimals = (int)Tools::settings('default', 'decimals', 2);
         $saldoDebe = 0.0;
         $saldoHaber = 0.0;
         $lineCount = count($lines);
@@ -89,23 +97,8 @@ class AsientoPredefinidoGenerator
             // Partida::getLines() devuelve por orden DESC. Invertimos aquí para
             // conservar en el asiento final el orden visual definido en la plantilla.
             $newLine->orden = $lineCount - $index;
-
-            // calculamos y redondeamos el debe y el haber
-            $formula = $line->debe;
-            try {
-                $newLine->debe = round(static::cantidadReplace($line->debe, $variables, $form, $saldoDebe, $saldoHaber), $decimals);
-                $formula = $line->haber;
-                $newLine->haber = round(static::cantidadReplace($line->haber, $variables, $form, $saldoDebe, $saldoHaber), $decimals);
-            } catch (\Throwable $exception) {
-                // la fórmula no se puede evaluar: avisamos indicando cuál es y cancelamos la generación
-                Tools::log()->warning('invalid-formula', [
-                    '%formula%' => $formula,
-                    '%error%' => $exception->getMessage()
-                ]);
-                $asiento->delete();
-                $database->rollback();
-                return $asiento;
-            }
+            $newLine->debe = $importes[$index]['debe'];
+            $newLine->haber = $importes[$index]['haber'];
 
             // obtenemos la subcuenta
             $subcuenta = static::subcuentaReplace($line->codsubcuenta, $variables, $form, $asiento->codejercicio);
@@ -139,6 +132,14 @@ class AsientoPredefinidoGenerator
             $saldoHaber = round($saldoHaber + $newLine->haber, $decimals);
         }
 
+        // avisamos si el asiento no cuadra (algunas plantillas se completan a mano después de generarlas)
+        if (false === Tools::floatCmp($saldoDebe, $saldoHaber, $decimals, true)) {
+            Tools::log()->warning('predefined-unbalanced-entry', [
+                '%debit%' => Tools::number($saldoDebe, $decimals),
+                '%credit%' => Tools::number($saldoHaber, $decimals),
+            ]);
+        }
+
         // Rellenamos el importe del asiento
         $asiento->importe = $saldoDebe;
         if (false === $asiento->save()) {
@@ -152,10 +153,79 @@ class AsientoPredefinidoGenerator
     }
 
     /**
+     * Calcula y redondea el debe y el haber de todas las líneas.
+     *
+     * Un debe o un haber que sea solo "Z" (y Z no esté declarada como variable) es el importe que
+     * cuadra el asiento: se calcula al final con el resto de líneas, esté donde esté. En el debe
+     * vale haber - debe y en el haber, debe - haber.
+     *
+     * @param AsientoPredefinidoLinea[] $lines
+     * @param AsientoPredefinidoVariable[] $variables
+     * @param array $form
+     * @param int $decimals
+     *
+     * @return array[]|null importes [índice => ['debe' => float, 'haber' => float]], o null si una fórmula falla
+     */
+    protected static function calculateAmounts(array $lines, array $variables, array $form, int $decimals): ?array
+    {
+        // las plantillas antiguas pueden declarar Z como variable: entonces se usa el valor del usuario
+        $zCuadra = true;
+        foreach ($variables as $var) {
+            if ('Z' === $var->codigo) {
+                $zCuadra = false;
+            }
+        }
+
+        $importes = [];
+        $pendientes = [];
+        $saldoDebe = 0.0;
+        $saldoHaber = 0.0;
+        foreach ($lines as $index => $line) {
+            foreach (['debe', 'haber'] as $campo) {
+                $formula = (string)$line->{$campo};
+                if ($zCuadra && 'Z' === strtoupper(trim($formula))) {
+                    $importes[$index][$campo] = 0.0;
+                    $pendientes[] = [$index, $campo];
+                    continue;
+                }
+
+                try {
+                    $importe = static::cantidadReplace($formula, $variables, $form, $saldoDebe, $saldoHaber);
+                    $importes[$index][$campo] = round($importe, $decimals);
+                } catch (\Throwable $exception) {
+                    // la fórmula no se puede evaluar: avisamos indicando cuál es
+                    Tools::log()->warning('invalid-formula', [
+                        '%formula%' => $formula,
+                        '%error%' => $exception->getMessage()
+                    ]);
+                    return null;
+                }
+            }
+
+            $saldoDebe = round($saldoDebe + $importes[$index]['debe'], $decimals);
+            $saldoHaber = round($saldoHaber + $importes[$index]['haber'], $decimals);
+        }
+
+        // calculamos los importes que cuadran el asiento
+        foreach ($pendientes as [$index, $campo]) {
+            if ('debe' === $campo) {
+                $importes[$index]['debe'] = round($saldoHaber - $saldoDebe, $decimals);
+                $saldoDebe = round($saldoDebe + $importes[$index]['debe'], $decimals);
+                continue;
+            }
+
+            $importes[$index]['haber'] = round($saldoDebe - $saldoHaber, $decimals);
+            $saldoHaber = round($saldoHaber + $importes[$index]['haber'], $decimals);
+        }
+
+        return $importes;
+    }
+
+    /**
      * Calcula el importe de una cantidad (debe o haber) de una línea, sustituyendo
      * las variables por sus valores y evaluando la fórmula resultante.
      *
-     * La variable Z es el saldo acumulado (debe - haber). Todos los valores se escriben sin
+     * Dentro de una fórmula, Z es el saldo acumulado hasta esta línea (debe - haber). Todos los valores se escriben sin
      * notación científica y la sustitución se hace en una sola pasada, para que el valor de
      * una variable nunca se vuelva a sustituir por otra.
      *
@@ -260,7 +330,7 @@ class AsientoPredefinidoGenerator
         foreach ($variables as $var) {
             $valor = $form['var_' . $var->codigo] ?? '';
             if (false === is_numeric($valor)) {
-                Tools::log()->warning('La variable ' . $var->codigo . ' no tiene valor.');
+                Tools::log()->warning('predefined-variable-without-value', ['%variable%' => $var->codigo]);
                 return false;
             }
         }
@@ -276,7 +346,7 @@ class AsientoPredefinidoGenerator
 
                 $valor = $form['var_' . $aislado[$i]] ?? '';
                 if (false === is_numeric($valor)) {
-                    Tools::log()->warning('La variable ' . $aislado[$i] . ' no está registrada.');
+                    Tools::log()->warning('predefined-variable-not-registered', ['%variable%' => $aislado[$i]]);
                     return false;
                 }
             }

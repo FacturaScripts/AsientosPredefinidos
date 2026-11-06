@@ -117,8 +117,10 @@ class AsientoPredefinidoLinea extends ModelClass
 
         // Comprobamos si introdujo algún caracter no admitido
         if (strlen($aceptados) != strlen($cantidad)) {
-            Tools::log()->warning('Para el ' . $etiqueta . ' introdujo ' . $cantidad
-                . '. Pero el ' . $etiqueta . ' sólo puede tener números, letras en mayúsculas (A-Z) y operadores matemáticos (+ - * /).');
+            Tools::log()->warning('predefined-line-invalid-chars', [
+                '%field%' => Tools::trans($etiqueta === 'debe' ? 'debit' : 'credit'),
+                '%value%' => $cantidad,
+            ]);
             return false;
         }
 
@@ -143,8 +145,7 @@ class AsientoPredefinidoLinea extends ModelClass
 
         // Comprobamos si introdujo algún caracter no admitido
         if (strlen($aceptados) != strlen($codsubcuenta)) {
-            Tools::log()->warning('Para la subcuenta introdujo ' . $codsubcuenta
-                . '. Pero la subcuenta sólo puede tener números(0-9), punto o letras en mayúsculas (A-Z)');
+            Tools::log()->warning('predefined-subaccount-invalid-chars', ['%subaccount%' => $codsubcuenta]);
             return false;
         }
 
@@ -154,8 +155,7 @@ class AsientoPredefinidoLinea extends ModelClass
         for ($i = 0; $i < strlen($codsubcuenta); $i++) {
             $variable = preg_replace("/[^A-Z]/", "", $codsubcuenta[$i]);
             if ($variable === 'Z') {
-                Tools::log()->warning('Para la subcuenta introdujo ' . $codsubcuenta
-                    . '. Pero la variable Z no puede usarse en subcuentas, solamente en debe o haber.');
+                Tools::log()->warning('predefined-subaccount-z-variable', ['%subaccount%' => $codsubcuenta]);
                 return false;
             }
             if (strlen($variable) > 0) {
@@ -163,16 +163,14 @@ class AsientoPredefinidoLinea extends ModelClass
             }
         }
         if ($contadorVariables > 1) {
-            Tools::log()->warning('Para la subcuenta introdujo ' . $codsubcuenta
-                . '. Pero la subcuenta no puede tener más de una variable.');
+            Tools::log()->warning('predefined-subaccount-multiple-variables', ['%subaccount%' => $codsubcuenta]);
             return false;
         }
 
         // Comprobamos que no hubiera más de un punto
         $puntos = substr_count($codsubcuenta, '.');
         if ($puntos > 1) {
-            Tools::log()->warning('Para la subcuenta introdujo ' . $codsubcuenta
-                . ". Pero la subcuenta no puede tener más de un punto.");
+            Tools::log()->warning('predefined-subaccount-multiple-dots', ['%subaccount%' => $codsubcuenta]);
             return false;
         }
 

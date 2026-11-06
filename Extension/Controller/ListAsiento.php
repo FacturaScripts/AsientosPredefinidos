@@ -20,11 +20,8 @@
 namespace FacturaScripts\Plugins\AsientosPredefinidos\Extension\Controller;
 
 use Closure;
-use FacturaScripts\Core\Lib\Import\CSVImport;
 use FacturaScripts\Core\Tools;
-use FacturaScripts\Dinamic\Model\AsientoPredefinido;
-use FacturaScripts\Dinamic\Model\AsientoPredefinidoLinea;
-use FacturaScripts\Dinamic\Model\AsientoPredefinidoVariable;
+use FacturaScripts\Dinamic\Lib\AsientoPredefinidoRestorer;
 
 class ListAsiento
 {
@@ -73,75 +70,11 @@ class ListAsiento
                 return;
             }
 
-            $codpais = Tools::settings('default', 'codpais', 'ESP');
-            $basePath = dirname(__DIR__, 2) . '/Data/Codpais/' . $codpais;
-            if (false === is_dir($basePath)) {
-                $basePath = dirname(__DIR__, 2) . '/Data/Codpais/ESP';
+            // restauramos las plantillas incluidas sin tocar las creadas por el usuario
+            $codpais = (string)Tools::settings('default', 'codpais', 'ESP');
+            if (AsientoPredefinidoRestorer::restore($codpais)) {
+                Tools::log()->notice('record-updated-correctly');
             }
-
-            $preFile = $basePath . '/asientospre.csv';
-            $lineFile = $basePath . '/asientospre_lineas.csv';
-            $varFile = $basePath . '/asientospre_variables.csv';
-            foreach ([$preFile, $lineFile, $varFile] as $filePath) {
-                if (false === file_exists($filePath)) {
-                    Tools::log()->warning('file-not-found');
-                    return;
-                }
-            }
-
-            $templateIds = [];
-            $handle = fopen($preFile, 'rb');
-            if (false === $handle) {
-                Tools::log()->error('record-save-error');
-                return;
-            }
-
-            $headers = fgetcsv($handle);
-            $idColumn = false === is_array($headers) ? false : array_search('id', $headers, true);
-            while (false !== $idColumn && ($row = fgetcsv($handle)) !== false) {
-                if (empty($row[$idColumn])) {
-                    continue;
-                }
-
-                $templateIds[] = (int)$row[$idColumn];
-            }
-            fclose($handle);
-
-            $templateIds = array_values(array_unique(array_filter($templateIds)));
-            if (empty($templateIds)) {
-                Tools::log()->error('record-save-error');
-                return;
-            }
-
-            $in = implode(',', array_map('intval', $templateIds));
-            $mainSql = CSVImport::importFileSQL(AsientoPredefinido::tableName(), $preFile, true);
-            $lineSql = CSVImport::importFileSQL(AsientoPredefinidoLinea::tableName(), $lineFile);
-            $varSql = CSVImport::importFileSQL(AsientoPredefinidoVariable::tableName(), $varFile);
-            if (empty($mainSql) || empty($lineSql) || empty($varSql)) {
-                Tools::log()->error('record-save-error');
-                return;
-            }
-
-            $this->dataBase->beginTransaction();
-
-            if (
-                false === $this->dataBase->exec($mainSql)
-                || false === $this->dataBase->exec(
-                    'DELETE FROM ' . AsientoPredefinidoLinea::tableName() . ' WHERE idasientopre IN (' . $in . ');'
-                )
-                || false === $this->dataBase->exec(
-                    'DELETE FROM ' . AsientoPredefinidoVariable::tableName() . ' WHERE idasientopre IN (' . $in . ');'
-                )
-                || false === $this->dataBase->exec($lineSql)
-                || false === $this->dataBase->exec($varSql)
-            ) {
-                $this->dataBase->rollback();
-                Tools::log()->error('record-save-error');
-                return;
-            }
-
-            $this->dataBase->commit();
-            Tools::log()->notice('record-updated-correctly');
         };
     }
 }

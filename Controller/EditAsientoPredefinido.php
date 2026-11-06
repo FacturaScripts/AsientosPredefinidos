@@ -98,7 +98,10 @@ class EditAsientoPredefinido extends EditController
     protected function generateAccountingAction(): void
     {
         $form = $this->request->request->all();
-        if (false === $this->validateFormToken()) {
+        if (false === $this->permissions->allowUpdate) {
+            Tools::log()->warning('not-allowed-modify');
+            return;
+        } elseif (false === $this->validateFormToken()) {
             return;
         } elseif (empty($form['idempresa'])) {
             Tools::log()->warning('required-field', ['%field%' => Tools::lang()->trans('company')]);
