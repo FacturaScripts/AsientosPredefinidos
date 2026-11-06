@@ -1,5 +1,6 @@
 {
     "generated-acc-entries": "Posti generati",
+    "invalid-formula": "No se puede calcular la fórmula %formula%: %error%",
     "predefined-acc-entries": "Voci di bilancio predefinite",
     "predefined-acc-entry": "Voce contabile predefinita",
     "required-field": "Campo %field% obbligatorio"

@@ -766,25 +766,51 @@ final class AsientosPredefinidosTest extends TestCase
      */
     public function testFormulaNoEvaluable(): void
     {
-        $predefinido = $this->crearPredefinido('Test fórmula inválida', ['A'], [
-            ['5700000000', 'A*', '0'],
-            ['5720000000', '0', 'A'],
+        // una fórmula inválida en el debe y otra en el haber
+        foreach (['debe' => ['A*', '0'], 'haber' => ['0', 'A/']] as $columna => [$debe, $haber]) {
+            $predefinido = $this->crearPredefinido('Test fórmula inválida en ' . $columna, ['A'], [
+                ['5700000000', $debe, $haber],
+                ['5720000000', '0', 'A'],
+            ]);
+
+            MiniLog::clear();
+            $asiento = $predefinido->generate([
+                'idempresa' => Empresas::default()->idempresa,
+                'fecha' => Tools::date(),
+                'canal' => 0,
+                'var_A' => 10,
+            ]);
+
+            // no se crea el asiento y se avisa indicando solo la fórmula que falla
+            $this->assertFalse($asiento->exists(), 'fórmula inválida en ' . $columna);
+            $this->assertSame([$columna === 'debe' ? $debe : $haber], $this->formulasInvalidasAvisadas());
+        }
+    }
+
+    /**
+     * Los importes grandes se calculan sin perder precisión al pasarlos a la fórmula.
+     */
+    public function testFormulaConImportesGrandes(): void
+    {
+        $predefinido = $this->crearPredefinido('Test importes grandes', ['A', 'B'], [
+            ['5700000000', 'A+B', '0'],
+            ['5720000000', '0', 'Z'],
         ]);
 
         $asiento = $predefinido->generate([
             'idempresa' => Empresas::default()->idempresa,
             'fecha' => Tools::date(),
             'canal' => 0,
-            'var_A' => 10,
+            'var_A' => '1234567.89',
+            'var_B' => '0.01',
         ]);
+        $this->asientos[] = $asiento;
 
-        // no se crea el asiento y se ha avisado al usuario
-        $this->assertFalse($asiento->exists());
-        $avisos = array_filter(
-            array_column(MiniLog::read('', ['warning']), 'message'),
-            fn($mensaje) => false !== strpos($mensaje, 'A*')
-        );
-        $this->assertNotEmpty($avisos);
+        $this->assertTrue($asiento->exists());
+        $this->assertEqualsWithDelta(1234567.9, $asiento->importe, 0.001);
+        foreach ($asiento->getLines() as $partida) {
+            $this->assertEqualsWithDelta(1234567.9, $partida->debe + $partida->haber, 0.001);
+        }
     }
 
     public function testMethodTest(): void
@@ -833,6 +859,22 @@ final class AsientosPredefinidosTest extends TestCase
         }
 
         return $predefinido;
+    }
+
+    /**
+     * Devuelve las fórmulas de los avisos 'invalid-formula' registrados, sin depender del idioma.
+     *
+     * @return string[]
+     */
+    protected function formulasInvalidasAvisadas(): array
+    {
+        $formulas = [];
+        foreach (MiniLog::read('', ['warning']) as $aviso) {
+            if (isset($aviso['context']['%formula%'], $aviso['context']['%error%'])) {
+                $formulas[] = $aviso['context']['%formula%'];
+            }
+        }
+        return $formulas;
     }
 
     protected function tearDown(): void

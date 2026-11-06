@@ -1,5 +1,6 @@
 {
     "generated-acc-entries": "Generierte Sitze",
+    "invalid-formula": "No se puede calcular la fórmula %formula%: %error%",
     "predefined-acc-entries": "Vordefinierte Buchungen",
     "predefined-acc-entry": "Vordefinierter Buchungsposten",
     "required-field": "Erforderliches Feld %field%"

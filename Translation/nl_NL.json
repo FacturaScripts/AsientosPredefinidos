@@ -1,5 +1,6 @@
 {
     "generated-acc-entries": "Gegenereerde boekingen",
+    "invalid-formula": "No se puede calcular la fórmula %formula%: %error%",
     "predefined-acc-entries": "Vooraf gedefinieerde boekingen",
     "predefined-acc-entry": "Vooraf gedefinieerde boeking",
     "required-field": "Veld %field% is verplicht"

@@ -1,5 +1,6 @@
 {
     "generated-acc-entries": "Wygenerowane siedzenia",
+    "invalid-formula": "No se puede calcular la fórmula %formula%: %error%",
     "predefined-acc-entries": "Zdefiniowane wpisy konta",
     "predefined-acc-entry": "Predefiniowany wpis",
     "required-field": "Pole %field% jest wymagane"

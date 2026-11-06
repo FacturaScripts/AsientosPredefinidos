@@ -1,5 +1,6 @@
 {
     "generated-acc-entries": "Assentaments generats",
+    "invalid-formula": "No se puede calcular la fórmula %formula%: %error%",
     "predefined-acc-entries": "Assentaments predefinits",
     "predefined-acc-entry": "Assentament predefinit",
     "required-field": "Camp %field% obligatori"

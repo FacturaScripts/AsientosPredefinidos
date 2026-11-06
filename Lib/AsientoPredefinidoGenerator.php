@@ -37,6 +37,9 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
  */
 class AsientoPredefinidoGenerator
 {
+    /** @var ExpressionLanguage|null se reutiliza para aprovechar su caché de expresiones */
+    protected static $expressionLanguage;
+
     /**
      * Genera un asiento contable a partir de un asiento predefinido y los valores del formulario.
      * Si algo falla (variables sin valor, subcuenta inexistente o fórmula no evaluable) avisa
@@ -75,6 +78,7 @@ class AsientoPredefinidoGenerator
 
         // Recorremos todas las líneas/partidas del asiento predefinido para crearlas en el asiento que estamos creando
 
+        $decimals = (int)Tools::settings('default', 'decimals', 2);
         $saldoDebe = 0.0;
         $saldoHaber = 0.0;
         $lineCount = count($lines);
@@ -85,24 +89,23 @@ class AsientoPredefinidoGenerator
             // Partida::getLines() devuelve por orden DESC. Invertimos aquí para
             // conservar en el asiento final el orden visual definido en la plantilla.
             $newLine->orden = $lineCount - $index;
+
+            // calculamos y redondeamos el debe y el haber
+            $formula = $line->debe;
             try {
-                $newLine->debe = static::cantidadReplace($line->debe, $variables, $form, $saldoDebe, $saldoHaber);
-                $newLine->haber = static::cantidadReplace($line->haber, $variables, $form, $saldoDebe, $saldoHaber);
+                $newLine->debe = round(static::cantidadReplace($line->debe, $variables, $form, $saldoDebe, $saldoHaber), $decimals);
+                $formula = $line->haber;
+                $newLine->haber = round(static::cantidadReplace($line->haber, $variables, $form, $saldoDebe, $saldoHaber), $decimals);
             } catch (\Throwable $exception) {
-                // la fórmula no se puede evaluar: avisamos y cancelamos la generación
+                // la fórmula no se puede evaluar: avisamos indicando cuál es y cancelamos la generación
                 Tools::log()->warning('invalid-formula', [
-                    '%formula%' => $line->debe . ' / ' . $line->haber,
+                    '%formula%' => $formula,
                     '%error%' => $exception->getMessage()
                 ]);
                 $asiento->delete();
                 $database->rollback();
                 return $asiento;
             }
-
-            // redondeamos
-            $decimals = Tools::settings('default', 'decimals', 2);
-            $newLine->debe = round($newLine->debe, $decimals);
-            $newLine->haber = round($newLine->haber, $decimals);
 
             // obtenemos la subcuenta
             $subcuenta = static::subcuentaReplace($line->codsubcuenta, $variables, $form, $asiento->codejercicio);
@@ -131,16 +134,17 @@ class AsientoPredefinidoGenerator
                 return $asiento;
             }
 
-            // Recalculamos saldos de asiento
-            $saldoDebe += $newLine->debe;
-            $saldoHaber += $newLine->haber;
+            // Recalculamos saldos de asiento, redondeados para no acumular errores de coma flotante
+            $saldoDebe = round($saldoDebe + $newLine->debe, $decimals);
+            $saldoHaber = round($saldoHaber + $newLine->haber, $decimals);
         }
 
         // Rellenamos el importe del asiento
         $asiento->importe = $saldoDebe;
         if (false === $asiento->save()) {
-            $database->rollback();
             $asiento->delete();
+            $database->rollback();
+            return $asiento;
         }
 
         $database->commit();
@@ -151,13 +155,13 @@ class AsientoPredefinidoGenerator
      * Calcula el importe de una cantidad (debe o haber) de una línea, sustituyendo
      * las variables por sus valores y evaluando la fórmula resultante.
      *
-     * La variable Z (saldo acumulado) se redondea a los decimales configurados y todos los
-     * valores se escriben sin notación científica. La sustitución se hace en una sola
-     * pasada, para que el valor de una variable nunca se vuelva a sustituir por otra.
+     * La variable Z es el saldo acumulado (debe - haber). Todos los valores se escriben sin
+     * notación científica y la sustitución se hace en una sola pasada, para que el valor de
+     * una variable nunca se vuelva a sustituir por otra.
      *
      * @param string $cantidad
      * @param AsientoPredefinidoVariable[] $variables
-     * @param array $form
+     * @param array $form valores ya validados por checkVariables()
      * @param float $saldoDebe
      * @param float $saldoHaber
      *
@@ -167,22 +171,17 @@ class AsientoPredefinidoGenerator
     protected static function cantidadReplace(string $cantidad, array $variables, array $form, float $saldoDebe, float $saldoHaber): float
     {
         // reemplazamos las variables por sus valores, en una sola pasada
-        $decimals = (int)Tools::settings('default', 'decimals', 2);
-        $replacements = ['Z' => static::formatNumber(round($saldoDebe - $saldoHaber, $decimals))];
+        $replacements = ['Z' => static::formatNumber($saldoDebe - $saldoHaber)];
         foreach ($variables as $var) {
-            if ('' === (string)$var->codigo) {
-                continue;
-            }
-            $valorVar = $form['var_' . $var->codigo];
-            $replacements[$var->codigo] = is_numeric($valorVar) ? static::formatNumber((float)$valorVar) : (string)$valorVar;
+            $replacements[$var->codigo] = static::formatNumber((float)$form['var_' . $var->codigo]);
         }
         $valor = strtr($cantidad, $replacements);
 
         // Si es una fórmula, calculamos
         foreach (['+', '-', '/', '*'] as $operator) {
             if (false !== strpos($valor, $operator)) {
-                $expressionLanguage = new ExpressionLanguage();
-                return (float)$expressionLanguage->evaluate($valor);
+                static::$expressionLanguage ??= new ExpressionLanguage();
+                return (float)static::$expressionLanguage->evaluate($valor);
             }
         }
 
@@ -190,8 +189,9 @@ class AsientoPredefinidoGenerator
     }
 
     /**
-     * Convierte un número a texto con punto decimal y sin notación científica
-     * (por ejemplo, 5.55E-17 se convierte en "0" y -2.5 se queda en "-2.5").
+     * Convierte un número a texto con punto decimal y sin notación científica.
+     * Usa 15 cifras significativas, las que un float representa sin ruido, por lo que
+     * 1234567.89 se queda en "1234567.89", -2.5 en "-2.5" y 5.55E-17 en "0.0000000000000000555111512312578".
      *
      * @param float $numero
      *
@@ -199,8 +199,17 @@ class AsientoPredefinidoGenerator
      */
     protected static function formatNumber(float $numero): string
     {
-        $texto = rtrim(rtrim(number_format($numero, 10, '.', ''), '0'), '.');
-        return in_array($texto, ['', '-', '-0'], true) ? '0' : $texto;
+        if (0.0 === $numero) {
+            return '0';
+        }
+
+        $decimales = max(0, 14 - (int)floor(log10(abs($numero))));
+        $texto = number_format($numero, $decimales, '.', '');
+        if (str_contains($texto, '.')) {
+            $texto = rtrim(rtrim($texto, '0'), '.');
+        }
+
+        return $texto === '-0' ? '0' : $texto;
     }
 
     /**
@@ -253,14 +262,13 @@ class AsientoPredefinidoGenerator
      */
     protected static function subcuentaReplace(string $codsubcuenta, array $variables, array $form, string $codejercicio): Subcuenta
     {
-        // reemplazamos las variables por sus valores
-        $search = [];
-        $replace = [];
+        // reemplazamos las variables por sus valores tal cual se escribieron (para conservar
+        // ceros a la izquierda), en una sola pasada para no volver a sustituir un valor ya puesto
+        $replacements = [];
         foreach ($variables as $var) {
-            $search[] = $var->codigo;
-            $replace[] = $form['var_' . $var->codigo];
+            $replacements[$var->codigo] = (string)$form['var_' . $var->codigo];
         }
-        $valor = str_replace($search, $replace, $codsubcuenta);
+        $valor = strtr($codsubcuenta, $replacements);
 
         // buscamos la subcuenta
         $subcuenta = new Subcuenta();

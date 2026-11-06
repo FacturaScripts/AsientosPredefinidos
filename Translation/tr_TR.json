@@ -1,5 +1,6 @@
 {
     "generated-acc-entries": "Oluşturulan girişler",
+    "invalid-formula": "No se puede calcular la fórmula %formula%: %error%",
     "predefined-acc-entries": "Ön tanımlı muhasebe kayıtları",
     "predefined-acc-entry": "Ön tanımlı kayıt",
     "required-field": "%field% alanı zorunludur"

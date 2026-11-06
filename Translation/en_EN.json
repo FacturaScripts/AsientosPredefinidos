@@ -1,5 +1,6 @@
 {
     "generated-acc-entries": "Seats generated",
+    "invalid-formula": "No se puede calcular la fórmula %formula%: %error%",
     "predefined-acc-entries": "Predefined seats",
     "predefined-acc-entry": "Predefined seat",
     "required-field": "Mandatory %field% field"

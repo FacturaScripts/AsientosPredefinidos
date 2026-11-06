@@ -1,5 +1,6 @@
 {
     "generated-acc-entries": "Asientos generados",
+    "invalid-formula": "No se puede calcular la fórmula %formula%: %error%",
     "predefined-acc-entries": "Asientos predefinidos",
     "predefined-acc-entry": "Asiento predefinido",
     "required-field": "Campo %field% obligatorio"
