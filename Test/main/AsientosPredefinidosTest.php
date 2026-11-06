@@ -96,7 +96,7 @@ final class AsientosPredefinidosTest extends TestCase
         // Comprobamos que el asiento que ha creado correctamente
         $this->assertTrue($asiento->exists());
 
-        $textoMes = Tools::lang()->trans(strtolower(date('F', strtotime($asiento->fecha))));
+        $textoMes = Tools::trans(strtolower(date('F', strtotime($asiento->fecha))));
         $this->assertEquals('Nómina ' . $textoMes, $asiento->concepto);
         $this->assertEquals(2000, $asiento->importe);
 
@@ -207,7 +207,7 @@ final class AsientosPredefinidosTest extends TestCase
         $this->asientos[] = $asiento;
 
         // Comprobamos que el asiento que ha creado correctamente
-        $textoMes = Tools::lang()->trans(strtolower(date('F', strtotime($asiento->fecha))));
+        $textoMes = Tools::trans(strtolower(date('F', strtotime($asiento->fecha))));
         $this->assertEquals('Cuota de autónomo ' . $textoMes, $asiento->concepto);
         $this->assertEquals(123, $asiento->importe);
 
@@ -245,7 +245,7 @@ final class AsientosPredefinidosTest extends TestCase
         $this->asientos[] = $asiento;
 
         // Comprobamos que el asiento que ha creado correctamente
-        $textoMes = Tools::lang()->trans(strtolower(date('F', strtotime($asiento->fecha))));
+        $textoMes = Tools::trans(strtolower(date('F', strtotime($asiento->fecha))));
         $this->assertEquals('Pago cuota autónomo ' . $textoMes, $asiento->concepto);
         $this->assertEquals(123, $asiento->importe);
 
@@ -284,7 +284,7 @@ final class AsientosPredefinidosTest extends TestCase
         $this->asientos[] = $asiento;
 
         // Comprobamos que el asiento que ha creado correctamente
-        $textoMes = Tools::lang()->trans(strtolower(date('F', strtotime($asiento->fecha))));
+        $textoMes = Tools::trans(strtolower(date('F', strtotime($asiento->fecha))));
         $this->assertEquals('Pago nómina ' . $textoMes, $asiento->concepto);
         $this->assertEquals(123, $asiento->importe);
 
@@ -464,7 +464,7 @@ final class AsientosPredefinidosTest extends TestCase
         $this->assertTrue($asiento->exists());
         $this->assertEquals(800, $asiento->importe);
 
-        $textoMes = Tools::lang()->trans(strtolower(date('F', strtotime($asiento->fecha))));
+        $textoMes = Tools::trans(strtolower(date('F', strtotime($asiento->fecha))));
         $this->assertEquals('Pago SS ' . $textoMes, $asiento->concepto);
 
         $partidas = $asiento->getLines();
@@ -602,7 +602,7 @@ final class AsientosPredefinidosTest extends TestCase
         $this->assertTrue($asiento->exists());
         $this->assertEquals(510, $asiento->importe);
 
-        $textoMes = Tools::lang()->trans(strtolower(date('F', strtotime($asiento->fecha))));
+        $textoMes = Tools::trans(strtolower(date('F', strtotime($asiento->fecha))));
         $this->assertEquals('Pago alquiler ' . $textoMes, $asiento->concepto);
 
         $partidas = $asiento->getLines();
@@ -674,7 +674,7 @@ final class AsientosPredefinidosTest extends TestCase
         $this->assertTrue($asiento->exists());
         $this->assertEquals(18.50, $asiento->importe);
 
-        $textoMes = Tools::lang()->trans(strtolower(date('F', strtotime($asiento->fecha))));
+        $textoMes = Tools::trans(strtolower(date('F', strtotime($asiento->fecha))));
         $this->assertEquals('Comisiones bancarias ' . $textoMes, $asiento->concepto);
 
         $partidas = $asiento->getLines();

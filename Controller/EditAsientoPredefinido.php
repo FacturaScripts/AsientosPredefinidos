@@ -104,10 +104,10 @@ class EditAsientoPredefinido extends EditController
         } elseif (false === $this->validateFormToken()) {
             return;
         } elseif (empty($form['idempresa'])) {
-            Tools::log()->warning('required-field', ['%field%' => Tools::lang()->trans('company')]);
+            Tools::log()->warning('required-field', ['%field%' => Tools::trans('company')]);
             return;
         } elseif (empty($form['fecha'])) {
-            Tools::log()->warning('required-field', ['%field%' => Tools::lang()->trans('date')]);
+            Tools::log()->warning('required-field', ['%field%' => Tools::trans('date')]);
             return;
         }
 
