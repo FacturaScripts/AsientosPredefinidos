@@ -127,7 +127,7 @@ class EditAsientoPredefinido extends EditController
 
     protected function loadData($viewName, $view)
     {
-        $id = $this->getViewModelValue($this->getMainViewName(), 'id');
+        $id = $this->tabModelValue($this->mainTabName(), 'id');
 
         switch ($viewName) {
             case 'EditAsientoPredefinidoLinea':
