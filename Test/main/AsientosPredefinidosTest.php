@@ -22,6 +22,7 @@ namespace FacturaScripts\Test\Plugins;
 use FacturaScripts\Core\Base\DataBase;
 use FacturaScripts\Core\Base\MiniLog;
 use FacturaScripts\Core\DataSrc\Empresas;
+use FacturaScripts\Core\Model\WorkEvent;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Core\Where;
 use FacturaScripts\Dinamic\Lib\AsientoPredefinidoRestorer;
@@ -46,12 +47,27 @@ final class AsientosPredefinidosTest extends TestCase
     /** @var AsientoPredefinido[] plantillas creadas por el test, para borrarlas al terminar */
     private $predefinidos = [];
 
+    /** @var int último evento de la cola de trabajos antes de los tests */
+    private static $lastWorkEventId = 0;
+
     public static function setUpBeforeClass(): void
     {
         self::setDefaultSettings();
         self::loadCoreModels();
         self::installAccountingPlan();
         self::removeTaxRegularization();
+
+        // guardar o borrar asientos y partidas añade eventos a la cola de trabajos:
+        // anotamos el último para borrar al terminar los que creen los tests
+        new WorkEvent();
+        $row = WorkEvent::table()->select('id')->orderBy('id', 'DESC')->first();
+        self::$lastWorkEventId = (int)($row['id'] ?? 0);
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        // eliminamos los eventos creados por los tests, para que no se ejecuten en otros tests
+        WorkEvent::deleteWhere([Where::gt('id', self::$lastWorkEventId)]);
     }
 
     public function testAsientoPredefinidoNomina(): void
@@ -75,6 +91,7 @@ final class AsientosPredefinidosTest extends TestCase
             'var_R' => 200,
             'var_D' => 1500,
         ]);
+        $this->asientos[] = $asiento;
 
         // Comprobamos que el asiento que ha creado correctamente
         $this->assertTrue($asiento->exists());
@@ -120,9 +137,6 @@ final class AsientosPredefinidosTest extends TestCase
         $this->assertEquals('Seguridad Social Acreedora', $partidas[4]->concepto);
         $this->assertEquals(0, $partidas[4]->debe);
         $this->assertEquals(600, $partidas[4]->haber);
-
-        // borramos el asiento
-        $asiento->delete();
     }
 
     public function testAsientoPredefinidoNominaSinRetencion(): void
@@ -146,6 +160,7 @@ final class AsientosPredefinidosTest extends TestCase
             'var_R' => 0,
             'var_D' => 1000,
         ]);
+        $this->asientos[] = $asiento;
 
         $this->assertTrue($asiento->exists());
         $this->assertEquals(1300, $asiento->importe);
@@ -170,8 +185,6 @@ final class AsientosPredefinidosTest extends TestCase
         $this->assertEquals('4751000000', $partidas[2]->codsubcuenta);
         $this->assertEquals(0, $partidas[2]->debe);
         $this->assertEquals(0, $partidas[2]->haber);
-
-        $asiento->delete();
     }
 
     public function testAsientoPredefinidoCuotaAutonomo(): void
@@ -191,6 +204,7 @@ final class AsientosPredefinidosTest extends TestCase
             'var_A' => 0,
             'var_B' => 123,
         ]);
+        $this->asientos[] = $asiento;
 
         // Comprobamos que el asiento que ha creado correctamente
         $textoMes = Tools::lang()->trans(strtolower(date('F', strtotime($asiento->fecha))));
@@ -209,9 +223,6 @@ final class AsientosPredefinidosTest extends TestCase
         $this->assertEquals('Cuota autónomo ' . $textoMes, $partidas[1]->concepto);
         $this->assertEquals(0, $partidas[1]->debe);
         $this->assertEquals(123, $partidas[1]->haber);
-
-        // borramos el asiento
-        $asiento->delete();
     }
 
     public function testAsientoPredefinidoPagoCuotaAutonomo(): void
@@ -231,6 +242,7 @@ final class AsientosPredefinidosTest extends TestCase
             'var_A' => 0,
             'var_B' => 123,
         ]);
+        $this->asientos[] = $asiento;
 
         // Comprobamos que el asiento que ha creado correctamente
         $textoMes = Tools::lang()->trans(strtolower(date('F', strtotime($asiento->fecha))));
@@ -249,9 +261,6 @@ final class AsientosPredefinidosTest extends TestCase
         $this->assertEquals('Pago cuota autónomo ' . $textoMes, $partidas[1]->concepto);
         $this->assertEquals(0, $partidas[1]->debe);
         $this->assertEquals(123, $partidas[1]->haber);
-
-        // borramos el asiento
-        $asiento->delete();
     }
 
     public function testAsientoPredefinidoPagoNomina(): void
@@ -272,6 +281,7 @@ final class AsientosPredefinidosTest extends TestCase
             'var_B' => 0,
             'var_I' => 123,
         ]);
+        $this->asientos[] = $asiento;
 
         // Comprobamos que el asiento que ha creado correctamente
         $textoMes = Tools::lang()->trans(strtolower(date('F', strtotime($asiento->fecha))));
@@ -290,9 +300,6 @@ final class AsientosPredefinidosTest extends TestCase
         $this->assertEquals('Pago nómina ' . $textoMes, $partidas[1]->concepto);
         $this->assertEquals(0, $partidas[1]->debe);
         $this->assertEquals(123, $partidas[1]->haber);
-
-        // borramos el asiento
-        $asiento->delete();
     }
 
     public function testAsientoPredefinidoPagoModelo303(): void
@@ -313,6 +320,7 @@ final class AsientosPredefinidosTest extends TestCase
             'var_B' => 123,
             'var_C' => 0,
         ]);
+        $this->asientos[] = $asiento;
 
         // Comprobamos que el asiento que ha creado correctamente
         $this->assertTrue($asiento->exists());
@@ -332,9 +340,6 @@ final class AsientosPredefinidosTest extends TestCase
         $this->assertEquals('Pago IVA modelo 303', $partidas[1]->concepto);
         $this->assertEquals(0, $partidas[1]->debe);
         $this->assertEquals(123, $partidas[1]->haber);
-
-        // borramos el asiento
-        $asiento->delete();
     }
 
     public function testAsientoPredefinidoPagoModelo111(): void
@@ -352,6 +357,7 @@ final class AsientosPredefinidosTest extends TestCase
             'var_B' => 250,
             'var_C' => 0,
         ]);
+        $this->asientos[] = $asiento;
 
         $this->assertTrue($asiento->exists());
         $this->assertEquals(250, $asiento->importe);
@@ -368,8 +374,6 @@ final class AsientosPredefinidosTest extends TestCase
         $this->assertEquals('Pago retención IRPF modelo 111', $partidas[1]->concepto);
         $this->assertEquals(0, $partidas[1]->debe);
         $this->assertEquals(250, $partidas[1]->haber);
-
-        $asiento->delete();
     }
 
     public function testAsientoPredefinidoPagoModelo115(): void
@@ -387,6 +391,7 @@ final class AsientosPredefinidosTest extends TestCase
             'var_B' => 80,
             'var_C' => 0,
         ]);
+        $this->asientos[] = $asiento;
 
         $this->assertTrue($asiento->exists());
         $this->assertEquals(80, $asiento->importe);
@@ -403,8 +408,6 @@ final class AsientosPredefinidosTest extends TestCase
         $this->assertEquals('Pago retención alquiler modelo 115', $partidas[1]->concepto);
         $this->assertEquals(0, $partidas[1]->debe);
         $this->assertEquals(80, $partidas[1]->haber);
-
-        $asiento->delete();
     }
 
     public function testAsientoPredefinidoPagoModelo130(): void
@@ -422,6 +425,7 @@ final class AsientosPredefinidosTest extends TestCase
             'var_B' => 450,
             'var_C' => 0,
         ]);
+        $this->asientos[] = $asiento;
 
         $this->assertTrue($asiento->exists());
         $this->assertEquals(450, $asiento->importe);
@@ -438,8 +442,6 @@ final class AsientosPredefinidosTest extends TestCase
         $this->assertEquals('Pago fraccionado IRPF modelo 130', $partidas[1]->concepto);
         $this->assertEquals(0, $partidas[1]->debe);
         $this->assertEquals(450, $partidas[1]->haber);
-
-        $asiento->delete();
     }
 
     public function testAsientoPredefinidoPagoSeguridadSocial(): void
@@ -457,6 +459,7 @@ final class AsientosPredefinidosTest extends TestCase
             'var_B' => 800,
             'var_C' => 0,
         ]);
+        $this->asientos[] = $asiento;
 
         $this->assertTrue($asiento->exists());
         $this->assertEquals(800, $asiento->importe);
@@ -482,8 +485,6 @@ final class AsientosPredefinidosTest extends TestCase
         $this->assertEquals('5720000000', $partidas[1]->codsubcuenta);
         $this->assertEquals(0, $partidas[1]->debe);
         $this->assertEquals(800, $partidas[1]->haber);
-
-        $asiento->delete();
     }
 
     public function testAsientoPredefinidoRegularizacionIva(): void
@@ -502,6 +503,7 @@ final class AsientosPredefinidosTest extends TestCase
             'var_R' => 1000,
             'var_S' => 300,
         ]);
+        $this->asientos[] = $asiento;
 
         $this->assertTrue($asiento->exists());
         $this->assertEquals(1000, $asiento->importe);
@@ -528,8 +530,6 @@ final class AsientosPredefinidosTest extends TestCase
         $this->assertEquals('4750000000', $partidas[2]->codsubcuenta);
         $this->assertEquals(0, $partidas[2]->debe);
         $this->assertEquals(700, $partidas[2]->haber);
-
-        $asiento->delete();
     }
 
     public function testAsientoPredefinidoAlquilerConRetencion(): void
@@ -549,6 +549,7 @@ final class AsientosPredefinidosTest extends TestCase
             'var_I' => 105,
             'var_R' => 95,
         ]);
+        $this->asientos[] = $asiento;
 
         $this->assertTrue($asiento->exists());
         $this->assertEquals(605, $asiento->importe);
@@ -579,8 +580,6 @@ final class AsientosPredefinidosTest extends TestCase
         $this->assertEquals('4100000000', $partidas[3]->codsubcuenta);
         $this->assertEquals(0, $partidas[3]->debe);
         $this->assertEquals(510, $partidas[3]->haber);
-
-        $asiento->delete();
     }
 
     public function testAsientoPredefinidoPagoAlquilerConRetencion(): void
@@ -598,6 +597,7 @@ final class AsientosPredefinidosTest extends TestCase
             'var_B' => 0,
             'var_I' => 510,
         ]);
+        $this->asientos[] = $asiento;
 
         $this->assertTrue($asiento->exists());
         $this->assertEquals(510, $asiento->importe);
@@ -617,8 +617,6 @@ final class AsientosPredefinidosTest extends TestCase
         $this->assertEquals('Pago alquiler ' . $textoMes, $partidas[1]->concepto);
         $this->assertEquals(0, $partidas[1]->debe);
         $this->assertEquals(510, $partidas[1]->haber);
-
-        $asiento->delete();
     }
 
     public function testAsientoPredefinidoPagoImpuestoSociedades(): void
@@ -636,6 +634,7 @@ final class AsientosPredefinidosTest extends TestCase
             'var_B' => 1200,
             'var_C' => 0,
         ]);
+        $this->asientos[] = $asiento;
 
         $this->assertTrue($asiento->exists());
         $this->assertEquals(1200, $asiento->importe);
@@ -653,8 +652,6 @@ final class AsientosPredefinidosTest extends TestCase
         $this->assertEquals('Pago impuesto sociedades', $partidas[1]->concepto);
         $this->assertEquals(0, $partidas[1]->debe);
         $this->assertEquals(1200, $partidas[1]->haber);
-
-        $asiento->delete();
     }
 
     public function testAsientoPredefinidoPagoComisionesBancarias(): void
@@ -672,6 +669,7 @@ final class AsientosPredefinidosTest extends TestCase
             'var_B' => 18.50,
             'var_C' => 0,
         ]);
+        $this->asientos[] = $asiento;
 
         $this->assertTrue($asiento->exists());
         $this->assertEquals(18.50, $asiento->importe);
@@ -691,8 +689,6 @@ final class AsientosPredefinidosTest extends TestCase
         $this->assertEquals('Comisiones bancarias ' . $textoMes, $partidas[1]->concepto);
         $this->assertEquals(0, $partidas[1]->debe);
         $this->assertEquals(18.50, $partidas[1]->haber);
-
-        $asiento->delete();
     }
 
     public function testAsientoPredefinidoConConceptoPersonalizado(): void
@@ -718,15 +714,13 @@ final class AsientosPredefinidosTest extends TestCase
             'var_R' => 200,
             'var_D' => 1500,
         ]);
+        $this->asientos[] = $asiento;
 
         // comprobamos que el asiento se ha creado correctamente
         $this->assertTrue($asiento->exists());
 
         // comprobamos que el concepto del asiento es el personalizado y no el del predefinido
         $this->assertEquals($conceptoPersonalizado, $asiento->concepto);
-
-        // borramos el asiento
-        $asiento->delete();
     }
 
     /**
