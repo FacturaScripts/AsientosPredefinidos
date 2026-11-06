@@ -19,12 +19,10 @@
 
 namespace FacturaScripts\Test\Plugins;
 
-use FacturaScripts\Core\Base\DataBase;
 use FacturaScripts\Core\DataSrc\Empresas;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Model\AsientoPredefinido;
 use FacturaScripts\Dinamic\Model\AsientoPredefinidoLinea;
-use FacturaScripts\Dinamic\Model\AsientoPredefinidoVariable;
 use FacturaScripts\Test\Traits\DefaultSettingsTrait;
 use FacturaScripts\Test\Traits\LogErrorsTrait;
 use FacturaScripts\Test\Traits\RandomDataTrait;
