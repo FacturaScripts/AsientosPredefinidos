@@ -25,9 +25,9 @@ use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Lib\CodePatterns;
 use FacturaScripts\Dinamic\Model\Asiento;
 use FacturaScripts\Dinamic\Model\Subcuenta;
-use FacturaScripts\Plugins\AsientosPredefinidos\Model\AsientoPredefinido;
-use FacturaScripts\Plugins\AsientosPredefinidos\Model\AsientoPredefinidoLinea;
-use FacturaScripts\Plugins\AsientosPredefinidos\Model\AsientoPredefinidoVariable;
+use FacturaScripts\Dinamic\Model\AsientoPredefinido;
+use FacturaScripts\Dinamic\Model\AsientoPredefinidoLinea;
+use FacturaScripts\Dinamic\Model\AsientoPredefinidoVariable;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 /**
@@ -224,8 +224,8 @@ class AsientoPredefinidoGenerator
             Where::eq('codejercicio', $codejercicio),
             Where::eq('codsubcuenta', $valorFinal) // transforma el punto en ceros
         ];
-        if (false === $subcuenta->loadFromCode('', $where)) {
-            Tools::log()->warning('subaccount-not-found', ['%subAccountCode%' => $valorFinal]);
+        if (false === $subcuenta->loadWhere($where)) {
+            Tools::log()->warning('subaccount-not-found', ['%code%' => $valorFinal]);
         }
         return $subcuenta;
     }

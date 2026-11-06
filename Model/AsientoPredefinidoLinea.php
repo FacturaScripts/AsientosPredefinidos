@@ -24,47 +24,51 @@ use FacturaScripts\Core\Template\ModelClass;
 use FacturaScripts\Core\Template\ModelTrait;
 use FacturaScripts\Core\Tools;
 
+/**
+ * Modelo que representa la línea de un asiento predefinido, con su subcuenta, contrapartida,
+ * concepto, debe y haber.
+ */
 class AsientoPredefinidoLinea extends ModelClass
 {
     use ModelTrait;
 
     /**
-     * @var string
+     * @var string código de la subcuenta de contrapartida
      */
     public $codcontrapartida;
 
     /**
-     * @var string
+     * @var string código de la subcuenta de la línea
      */
     public $codsubcuenta;
 
     /**
-     * @var string
+     * @var string concepto de la línea del asiento
      */
     public $concepto;
 
     /**
-     * @var string
+     * @var string importe del debe
      */
     public $debe;
 
     /**
-     * @var string
+     * @var string importe del haber
      */
     public $haber;
 
     /**
-     * @var int
+     * @var int clave primaria
      */
     public $id;
 
     /**
-     * @var int
+     * @var int id del asiento predefinido al que pertenece la línea
      */
     public $idasientopre;
 
     /**
-     * @var int
+     * @var int orden de la línea en el asiento predefinido
      */
     public $orden;
 
@@ -103,6 +107,9 @@ class AsientoPredefinidoLinea extends ModelClass
     {
         // reemplazamos la coma por punto
         $cantidad = str_replace(',', '.', $cantidad);
+
+        // convertimos las letras de las variables a mayúsculas
+        $cantidad = strtoupper($cantidad);
 
         // quitamos de $cantidad lo que no sean números, letras mayúsculas, punto, signo menos, signo más, signo *, signo / y espacios
         $aceptados = preg_replace('/[^A-Z0-9\.\-\+\*\/\s]/', '', $cantidad);

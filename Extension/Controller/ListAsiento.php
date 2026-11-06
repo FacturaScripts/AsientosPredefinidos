@@ -22,9 +22,9 @@ namespace FacturaScripts\Plugins\AsientosPredefinidos\Extension\Controller;
 use Closure;
 use FacturaScripts\Core\Lib\Import\CSVImport;
 use FacturaScripts\Core\Tools;
-use FacturaScripts\Plugins\AsientosPredefinidos\Model\AsientoPredefinido;
-use FacturaScripts\Plugins\AsientosPredefinidos\Model\AsientoPredefinidoLinea;
-use FacturaScripts\Plugins\AsientosPredefinidos\Model\AsientoPredefinidoVariable;
+use FacturaScripts\Dinamic\Model\AsientoPredefinido;
+use FacturaScripts\Dinamic\Model\AsientoPredefinidoLinea;
+use FacturaScripts\Dinamic\Model\AsientoPredefinidoVariable;
 
 class ListAsiento
 {
